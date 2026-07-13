@@ -1,0 +1,14 @@
+{
+  "output_dir": "results/sample-2",
+  "swf_path": "data/theta21cln.swf",
+  "max_submits": 2147483647,
+  "start_job_index": 0,
+  "mode": "real",
+  "maintenance_csv": "data/theta21cln.mlog",
+  "maintenance_notice_hours": 48.0,
+  "drivers": [
+    {"type": "fcfs", "tag": "FCFS", "backfilling": true},
+    {"type": "sjf", "tag": "SJF", "window_size": 256, "backfilling": true},
+    {"type": "wfp3", "tag": "WFP3", "window_size": 256, "backfilling": true}
+  ]
+}
