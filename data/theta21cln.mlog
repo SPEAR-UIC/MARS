@@ -1,0 +1,34 @@
+# Polaris 2024 maintenance log
+# Source: ANL-ALCF-MACHINESTATUS-THETA_20210101_20211231.csv.gz
+# Fields: start_unix end_unix type note
+#   type S = scheduled (known in advance)
+#   type U = unscheduled (emergency, no advance notice)
+# Total windows: 28
+1610377200 1610409600 S
+1611586800 1611619200 S
+1612796400 1612828541 S
+1614006000 1614038400 S
+1615215600 1615248000 S
+1616421600 1616472774 S
+1617631200 1617667200 S
+1618840800 1618876800 S
+1620050400 1620075145 S
+1622038642 1622068391 U water main break
+1623876156 1623878960 U An electrical fault occurred during a hot-swappable blower replacement
+1624411538 1624416620 U theta-fs0 issue, unable to use login nodes
+1624456800 1624578277 S
+1626620400 1626825600 S
+1627308000 1627324527 S
+1627502997 1627516800 U cabinet c11 crashed due to too many rectifiers failing. happened around 1pm. Took out most of the jobs because most of the jobs were using that cabinet. although no service nodes in this cabinet, there were weird state issues with DVS and Aires. Then this (or something else) caused hangs which there was hope that would clear up but did not, and so a reboot was called for. Expected return around 7pm (needs to be verified). Theta Sonexion was not directly affected
+1628517600 1628553600 S
+1630332000 1630368000 S
+1632146400 1632182400 S
+1633894020 1633901434 U cabinet c3 crash, hung IO nodes, scheduler stopped
+1634565600 1634601600 S
+1635284584 1635294960 U c4 lost rectifiers and EPOd, took out mom3 and all scheduling with it
+1635775200 1635811200 S
+1636383600 1636416000 S
+1637337542 1637625600 S
+1638360685 1638369487 U
+1638802800 1638835200 S
+1639407600 1639440000 S

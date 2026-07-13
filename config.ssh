@@ -1,0 +1,111 @@
+Host ccred2
+        HostName 10.52.3.149
+        User cc
+        IdentityFile ~/.ssh/id_ed25519
+        IdentitiesOnly yes
+        StrictHostKeyChecking no
+        UserKnownHostsFile /dev/null
+
+Host ccred3
+        HostName 10.52.0.237
+        User cc
+        IdentityFile ~/.ssh/id_ed25519
+        IdentitiesOnly yes
+        StrictHostKeyChecking no
+        UserKnownHostsFile /dev/null
+
+Host ccred4
+        HostName 10.52.2.215
+        User cc
+        IdentityFile ~/.ssh/id_ed25519
+        IdentitiesOnly yes
+        StrictHostKeyChecking no
+        UserKnownHostsFile /dev/null
+
+Host ccred5
+        HostName 10.52.3.29
+        User cc
+        IdentityFile ~/.ssh/id_ed25519
+        IdentitiesOnly yes
+        StrictHostKeyChecking no
+        UserKnownHostsFile /dev/null
+
+Host ccred6
+        HostName 10.52.3.210
+        User cc
+        IdentityFile ~/.ssh/id_ed25519
+        IdentitiesOnly yes
+        StrictHostKeyChecking no
+        UserKnownHostsFile /dev/null
+--
+Host ccred7
+        HostName 10.52.2.223
+        User cc
+        IdentityFile ~/.ssh/id_ed25519
+        IdentitiesOnly yes
+        StrictHostKeyChecking no
+        UserKnownHostsFile /dev/null
+
+Host ccred8
+        HostName 10.52.0.54
+        User cc
+        IdentityFile ~/.ssh/id_ed25519
+        IdentitiesOnly yes
+        StrictHostKeyChecking no
+        UserKnownHostsFile /dev/null
+
+Host ccred9
+        HostName 10.52.3.179
+        User cc
+        IdentityFile ~/.ssh/id_ed25519
+        IdentitiesOnly yes
+        StrictHostKeyChecking no
+        UserKnownHostsFile /dev/null
+
+Host ccred10
+        HostName 10.52.3.225
+        User cc
+        IdentityFile ~/.ssh/id_ed25519
+        IdentitiesOnly yes
+        StrictHostKeyChecking no
+        UserKnownHostsFile /dev/null
+
+Host ccred11
+        HostName 10.52.0.24
+        User cc
+        IdentityFile ~/.ssh/id_ed25519
+        IdentitiesOnly yes
+        StrictHostKeyChecking no
+        UserKnownHostsFile /dev/null
+
+Host ccred12
+        HostName 10.52.0.181
+        User cc
+        IdentityFile ~/.ssh/id_ed25519
+        IdentitiesOnly yes
+        StrictHostKeyChecking no
+        UserKnownHostsFile /dev/null
+
+Host ccred13
+        HostName 10.52.3.117
+        User cc
+        IdentityFile ~/.ssh/id_ed25519
+        IdentitiesOnly yes
+        StrictHostKeyChecking no
+        UserKnownHostsFile /dev/null
+
+Host ccred14
+        HostName 10.52.2.232
+        User cc
+        IdentityFile ~/.ssh/id_ed25519
+        IdentitiesOnly yes
+        StrictHostKeyChecking no
+        UserKnownHostsFile /dev/null
+
+Host ccred15
+        HostName 10.52.3.52
+        User cc
+        IdentityFile ~/.ssh/id_ed25519
+        IdentitiesOnly yes
+        StrictHostKeyChecking no
+        UserKnownHostsFile /dev/null

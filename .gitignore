@@ -1,0 +1,14 @@
+build/
+results/
+*.o
+*.a
+*.so
+*.dylib
+.DS_Store
+*.swp
+*.swo
+cmake-build-*/
+.idea/
+.vscode/
+compile_commands.json
+__pycache__/

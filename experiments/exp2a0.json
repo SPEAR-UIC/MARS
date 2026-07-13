@@ -1,0 +1,21 @@
+{
+  "output_dir": "results/exp2a",
+  "swf_path": "data/theta21cln.swf",
+  "max_submits": 2147483647,
+  "start_job_index": 0,
+  "mode": "real",
+  "maintenance_csv": "data/theta21cln.mlog",
+  "maintenance_notice_hours": 48.0,
+  "size_bins": [],
+  "walltime_bins": [],
+  "drivers": [
+    {"type": "fcfs",  "tag": "FCFS",     "backfilling": true},
+    {"type": "sjf",   "tag": "SJF-w1024","window_size": 1024, "backfilling": true},
+    {"type": "f1",    "tag": "F1-w256",  "window_size": 256,  "backfilling": true},
+    {"type": "wfp3",    "tag": "WFP3-w256",  "window_size": 256,  "backfilling": true},
+    {"type": "mcts", "tag": "MCTS-CW", "window_size": 1024, "backfilling": true, "time_limit_ms": 15000, "max_depth": 50, "reward_type": "invcumwait", "exploration": 10000.0, "selection": "uct", "discount": 0.99, "dynamic_exploration": true, "num_cores": 256, "branching": "comprehensive_heuristic", "seed": 17, "log_file": false},
+    {"type": "mcts", "tag": "MCTS-CB", "window_size": 1024, "backfilling": true, "time_limit_ms": 15000, "max_depth": 50, "reward_type": "invcumbsld", "exploration": 10000.0, "selection": "uct", "discount": 0.99, "dynamic_exploration": true, "num_cores": 256, "branching": "comprehensive_heuristic", "seed": 17, "log_file": false},
+    {"type": "mcts", "tag": "MCTS-IU", "window_size": 1024, "backfilling": true, "time_limit_ms": 15000, "max_depth": 50, "reward_type": "instutil", "exploration": 10000.0, "selection": "uct", "discount": 0.99, "dynamic_exploration": true, "num_cores": 256, "branching": "comprehensive_heuristic", "seed": 17, "log_file": false},
+    {"type": "mcts", "tag": "MCTS-CU", "window_size": 1024, "backfilling": true, "time_limit_ms": 15000, "max_depth": 50, "reward_type": "cumutil", "exploration": 10000.0, "selection": "uct", "discount": 0.99, "dynamic_exploration": true, "num_cores": 256, "branching": "comprehensive_heuristic", "seed": 17, "log_file": false}
+  ]
+}

@@ -1,0 +1,17 @@
+# Polaris 2024 maintenance log
+# Source: ANL-ALCF-MACHINESTATUS-POLARIS_20240101_20241231.csv.gz
+# Fields: start_unix end_unix type note
+#   type S = scheduled (known in advance)
+#   type U = unscheduled (emergency, no advance notice)
+# Total windows: 11
+1704726000 1704767903 S
+1704828968 1704839002 U Polaris will be shut down immediately for unscheduled maintenance to address recent image issues. Job failed to load conda modules
+1705935600 1705972863 S
+1707768894 1707778910 U Image update to remove the grand hardware from Polaris
+1709564400 1709605621 S
+1710770400 1710803170 S
+1711980000 1712004104 S
+1713787200 1714096201 S Polaris Upgrade: The management software on Polaris has been successfully upgraded to HPCM 1.10. see oar_2024_outages.txt
+1714399200 1714440962 S
+1725890400 1726003753 S
+1733151558 1733182082 S

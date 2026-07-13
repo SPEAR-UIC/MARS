@@ -1,0 +1,70 @@
+
+[1mDIST-STATUS — exp2a (8 drivers)[0m
+  D#    Node        Tag                               Core   CoreRange    Session                 State       Progress
+  ----  ----------  --------------------------------  -----  -----------  ----------------------  ----------  --------
+  0     ccred12     FCFS                              0      0            cqsim-exp2a-d0          [0;32mrunning[0m  100% (34696/34696)
+  1     ccred14     SJF-w1024                         0      0            cqsim-exp2a-d1          [0;32mrunning[0m  100% (34696/34696)
+  2     ccred12     F1-w256                           0      0            cqsim-exp2a-d2          [0;32mrunning[0m  100% (34696/34696)
+  3     ccred14     WFP3-w256                         0      0            cqsim-exp2a-d3          [0;32mrunning[0m  100% (34696/34696)
+  4     local       MARS-CW                           250    0-249        cqsim-exp2a-d4          [0;32mrunning[0m  10% (3771/34696)
+  5     ccred3      MARS-CB                           250    0-249        cqsim-exp2a-d5          [0;32mrunning[0m  13% (4664/34696)
+  6     ccred5      MARS-CU                           250    0-249        cqsim-exp2a-d6          [0;32mrunning[0m  16% (5563/34696)
+  7     ccred7      MARS-IU                           250    0-249        cqsim-exp2a-d7          [0;32mrunning[0m  13% (4750/34696)
+
+
+[1mDIST-STATUS — exp2b (8 drivers)[0m
+  D#    Node        Tag                               Core   CoreRange    Session                 State       Progress
+  ----  ----------  --------------------------------  -----  -----------  ----------------------  ----------  --------
+  0     ccred13     FCFS                              0      0            cqsim-exp2b-d1          [0;32mrunning[0m  100% (52616/52616)
+  1     ccred15     SJF-w1024                         0      0            cqsim-exp2b-d2          [0;32mrunning[0m  100% (52616/52616)
+  2     ccred13     F1-w256                           0      0            cqsim-exp2b-d3          [0;32mrunning[0m  100% (52616/52616)
+  3     ccred15     WFP3-w256                         0      0            cqsim-exp2b-d4          [0;32mrunning[0m  100% (52616/52616)
+  4     ccred2      MARS-CW                           250    0-249        cqsim-exp2b-d5          [0;32mrunning[0m  10% (5530/52616)
+  5     ccred4      MARS-CB                           250    0-249        cqsim-exp2b-d6          [0;32mrunning[0m  12% (6592/52616)
+  6     ccred6      MARS-CU                           250    0-249        cqsim-exp2b-d7          [0;32mrunning[0m  13% (7181/52616)
+  7     ccred8      MARS-IU                           250    0-249        cqsim-exp2b-d8          [0;32mrunning[0m  13% (7005/52616)
+
+
+[1mDIST-STATUS — exp3a (6 drivers)[0m
+  D#    Node        Tag                               Core   CoreRange    Session                 State       Progress
+  ----  ----------  --------------------------------  -----  -----------  ----------------------  ----------  --------
+  0     ccred9      MARS-D2                           64     0-63         cqsim-exp3a-d0          [0;32mrunning[0m  10% (3520/34696)
+  1     ccred13     MARS-D5                           64     0-63         cqsim-exp3a-d1          [0;32mrunning[0m  10% (3615/34696)
+  2     ccred10     MARS-D10                          64     64-127       cqsim-exp3a-d2          [0;32mrunning[0m  11% (3859/34696)
+  3     ccred14     MARS-D25                          64     64-127       cqsim-exp3a-d3          [0;32mrunning[0m  10% (3564/34696)
+  4     ccred11     MARS-D50                          64     128-191      cqsim-exp3a-d4          [0;32mrunning[0m  10% (3513/34696)
+  5     ccred15     MARS-D100                         64     128-191      cqsim-exp3a-d5          [0;32mrunning[0m  10% (3557/34696)
+
+
+[1mDIST-STATUS — exp3b (6 drivers)[0m
+  D#    Node        Tag                               Core   CoreRange    Session                 State       Progress
+  ----  ----------  --------------------------------  -----  -----------  ----------------------  ----------  --------
+  0     ccred10     MARS-D2                           64     0-63         cqsim-exp3b-d1          [0;32mrunning[0m  9% (5187/52616)
+  1     ccred14     MARS-D5                           64     0-63         cqsim-exp3b-d2          [0;32mrunning[0m  10% (5378/52616)
+  2     ccred11     MARS-D10                          64     64-127       cqsim-exp3b-d3          [0;32mrunning[0m  10% (5539/52616)
+  3     ccred15     MARS-D25                          64     64-127       cqsim-exp3b-d4          [0;32mrunning[0m  10% (5388/52616)
+  4     ccred12     MARS-D50                          64     128-191      cqsim-exp3b-d5          [0;32mrunning[0m  10% (5305/52616)
+  5     ccred9      MARS-D100                         64     192-255      cqsim-exp3b-d6          [0;32mrunning[0m  10% (5298/52616)
+
+
+[1mDIST-STATUS — exp4a (6 drivers)[0m
+  D#    Node        Tag                               Core   CoreRange    Session                 State       Progress
+  ----  ----------  --------------------------------  -----  -----------  ----------------------  ----------  --------
+  0     ccred11     MARS-T1                           64     0-63         cqsim-exp4a-d0          [0;32mrunning[0m  75% (26323/34696)
+  1     ccred15     MARS-T2.5                         64     0-63         cqsim-exp4a-d1          [0;32mrunning[0m  45% (15769/34696)
+  2     ccred12     MARS-T5                           64     64-127       cqsim-exp4a-d2          [0;32mrunning[0m  26% (9196/34696)
+  3     ccred9      MARS-T15                          64     128-191      cqsim-exp4a-d3          [0;32mrunning[0m  10% (3592/34696)
+  4     ccred13     MARS-T30                          64     128-191      cqsim-exp4a-d4          [0;32mrunning[0m  6% (2167/34696)
+  5     ccred10     MARS-T60                          64     192-255      cqsim-exp4a-d5          [0;32mrunning[0m  2% (825/34696)
+
+
+[1mDIST-STATUS — exp4b (6 drivers)[0m
+  D#    Node        Tag                               Core   CoreRange    Session                 State       Progress
+  ----  ----------  --------------------------------  -----  -----------  ----------------------  ----------  --------
+  0     ccred12     MARS-T1                           64     0-63         cqsim-exp4b-d1          [0;32mrunning[0m  54% (28684/52616)
+  1     ccred9      MARS-T2.5                         64     64-127       cqsim-exp4b-d2          [0;32mrunning[0m  34% (18379/52616)
+  2     ccred13     MARS-T5                           64     64-127       cqsim-exp4b-d3          [0;32mrunning[0m  21% (11571/52616)
+  3     ccred10     MARS-T15                          64     128-191      cqsim-exp4b-d4          [0;32mrunning[0m  10% (5344/52616)
+  4     ccred14     MARS-T30                          64     128-191      cqsim-exp4b-d5          [0;32mrunning[0m  6% (3335/52616)
+  5     ccred11     MARS-T60                          64     192-255      cqsim-exp4b-d6          [0;32mrunning[0m  3% (1634/52616)
+

@@ -1,0 +1,51 @@
+{
+  "output_dir": "results/exp4b",
+  "swf_path": "data/polaris24cln.swf",
+  "max_submits": 2147483647,
+  "start_job_index": 0,
+  "mode": "real",
+  "maintenance_csv": "data/polaris24cln.mlog",
+  "maintenance_notice_hours": 48.0,
+  "size_bins": [],
+  "walltime_bins": [],
+  "drivers": [
+    {"type": "fcfs",  "tag": "FCFS",     "backfilling": true},
+    {"type": "rlscheduler", "tag": "RLScheduler", "csv_path": "data/polaris24cln_rlscheduler.csv"},
+    {
+      "type": "mcts", "tag": "MARS-T1",
+      "num_cores": 64, "time_limit_ms": 1000, "max_depth": 64,
+      "reward_type": "invcumwait", "branching": "comprehensive_heuristic",
+      "dynamic_exploration": true, "discount": 0.99
+    },
+    {
+      "type": "mcts", "tag": "MARS-T2.5",
+      "num_cores": 64, "time_limit_ms": 2500, "max_depth": 64,
+      "reward_type": "invcumwait", "branching": "comprehensive_heuristic",
+      "dynamic_exploration": true, "discount": 0.99
+    },
+    {
+      "type": "mcts", "tag": "MARS-T5",
+      "num_cores": 64, "time_limit_ms": 5000, "max_depth": 64,
+      "reward_type": "invcumwait", "branching": "comprehensive_heuristic",
+      "dynamic_exploration": true, "discount": 0.99
+    },
+    {
+      "type": "mcts", "tag": "MARS-T15",
+      "num_cores": 64, "time_limit_ms": 15000, "max_depth": 64,
+      "reward_type": "invcumwait", "branching": "comprehensive_heuristic",
+      "dynamic_exploration": true, "discount": 0.99
+    },
+    {
+      "type": "mcts", "tag": "MARS-T30",
+      "num_cores": 64, "time_limit_ms": 30000, "max_depth": 64,
+      "reward_type": "invcumwait", "branching": "comprehensive_heuristic",
+      "dynamic_exploration": true, "discount": 0.99
+    },
+    {
+      "type": "mcts", "tag": "MARS-T60",
+      "num_cores": 64, "time_limit_ms": 60000, "max_depth": 64,
+      "reward_type": "invcumwait", "branching": "comprehensive_heuristic",
+      "dynamic_exploration": true, "discount": 0.99
+    }
+  ]
+}
