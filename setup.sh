@@ -73,7 +73,7 @@ install_cmake_upstream() {
     # Remove system cmake if present
     if dpkg -l cmake &>/dev/null 2>&1; then
         info "  Removing system cmake package..."
-        sudo apt-get remove --purge cmake -y
+        sudo DEBIAN_FRONTEND=noninteractive apt-get remove --purge -y cmake
     fi
 
     local tmp
@@ -99,22 +99,23 @@ if $DO_CPP; then
 
     # Check cmake
     if ! command -v cmake &>/dev/null; then
-        warn "cmake not found. Run:  $0 --install-cmake"
-        error "cmake required for C++ build."
+        warn "cmake not found; installing automatically..."
+        install_cmake_upstream "$CMAKE_VERSION"
     fi
     CMAKE_VER_INSTALLED="$(cmake --version | head -1 | awk '{print $3}')"
     info "  Using CMake ${CMAKE_VER_INSTALLED}"
 
     # Check C++ compiler
     if ! command -v g++ &>/dev/null && ! command -v clang++ &>/dev/null; then
-        error "No C++ compiler found. Install: sudo apt-get install build-essential"
+        info "  No C++ compiler found; installing build-essential..."
+        sudo DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential
     fi
 
     # Check OpenMP (required by parallel MCTS)
     if ! g++ -fopenmp -x c++ - -o /dev/null <<< '#include<omp.h>
 int main(){return 0;}' 2>/dev/null; then
         info "  OpenMP not found; installing libomp-dev..."
-        sudo apt-get install -y libomp-dev
+        sudo DEBIAN_FRONTEND=noninteractive apt-get install -y libomp-dev
     fi
     info "  OpenMP OK"
 
@@ -148,16 +149,23 @@ if $DO_PYTHON; then
     "$PYTHON" -c "import sys; sys.exit(0 if sys.version_info >= (3,8) else 1)" \
         || error "Python 3.8+ required (found $PY_VERSION)"
 
-    # Create or reuse venv
+    # Create or reuse venv (rebuild if it exists but is broken — e.g. its
+    # scripts' shebangs point at a stale absolute path, which happens if the
+    # repo directory was moved or renamed after the venv was created)
+    VENV_PY="$VENV_DIR/bin/python"
+    VENV_PIP="$VENV_DIR/bin/pip"
+
+    if [ -d "$VENV_DIR" ] && { [ ! -x "$VENV_PY" ] || ! "$VENV_PY" -c "" &>/dev/null || [ ! -x "$VENV_PIP" ] || ! "$VENV_PIP" --version &>/dev/null; }; then
+        warn "Existing virtual environment at .venv/ is broken; recreating..."
+        rm -rf "$VENV_DIR"
+    fi
+
     if [ ! -d "$VENV_DIR" ]; then
         info "Creating virtual environment at .venv/ ..."
         "$PYTHON" -m venv "$VENV_DIR"
     else
         info "Reusing existing virtual environment at .venv/ ..."
     fi
-
-    VENV_PY="$VENV_DIR/bin/python"
-    VENV_PIP="$VENV_DIR/bin/pip"
 
     info "Upgrading pip..."
     "$VENV_PIP" install --upgrade pip --quiet
