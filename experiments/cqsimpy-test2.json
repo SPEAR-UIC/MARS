@@ -1,0 +1,10 @@
+{
+  "output_dir": "results/cqsimpt-test2",
+  "swf_path": "data/polaris24cln.swf",
+  "max_submits": 2147483647,
+  "start_job_index": 0,
+  "mode": "real",
+  "drivers": [
+    {"type": "fcfs", "tag": "FCFS", "backfilling": true}
+  ]
+}
