@@ -14,3 +14,5 @@ compile_commands.json
 __pycache__/
 .venv
 cqsimcpp
+!results/exp2a
+!results/exp2b
