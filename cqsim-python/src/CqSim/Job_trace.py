@@ -203,6 +203,10 @@ class Job_trace:
         self.start_offset_A = config_data['start_offset']
         self.start_date = config_data['date']
     
+    def unix_time (self, sim_time):
+        #self.debug.debug("* "+self.myInfo+" -- unix_time",6)
+        return sim_time + self.start_offset_B
+
     def submit_list (self):
         #self.debug.debug("* "+self.myInfo+" -- submit_list",6)
         return self.job_submit_list
