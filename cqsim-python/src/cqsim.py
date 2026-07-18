@@ -218,6 +218,9 @@ if __name__ == "__main__":
     p.add_option("--ext_ai", dest="ext_ai", type="string",\
         #default=".adp", \
         help="adapt information log extension type")
+    p.add_option("--ext_je", dest="ext_je", type="string",\
+        #default="_events.csv", \
+        help="job event log extension type")
     p.add_option("--ext_d", dest="ext_debug", type="string",\
         #default=".log", \
         help="debug log extension type")
@@ -385,6 +388,7 @@ if __name__ == "__main__":
     inputPara['ext_jr']=opts.ext_jr
     inputPara['ext_si']=opts.ext_si
     inputPara['ext_ai']=opts.ext_ai
+    inputPara['ext_je']=opts.ext_je
     inputPara['ext_debug']=opts.ext_debug
     inputPara['debug_lvl']=opts.alg
     inputPara['alg']=opts.alg

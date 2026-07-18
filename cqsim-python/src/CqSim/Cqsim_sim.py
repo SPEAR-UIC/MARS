@@ -271,23 +271,26 @@ class Cqsim_sim:
         #self.debug.debug("# "+self.myInfo+" -- submit",5) 
         self.debug.debug("[Submit]  "+str(job_index),3)
         self.module['job'].job_submit(job_index)
+        self.module['output'].print_event(self.currentTime,"Submit",job_index)
         return
-    
+
     def finish(self, job_index):
-        #self.debug.debug("# "+self.myInfo+" -- finish",5) 
+        #self.debug.debug("# "+self.myInfo+" -- finish",5)
         self.debug.debug("[Finish]  "+str(job_index),3)
         self.module['node'].node_release(job_index,self.currentTime)
         self.module['job'].job_finish(job_index)
         self.module['output'].print_result(self.module['job'], job_index)
+        self.module['output'].print_event(self.currentTime,"End",job_index)
         self.module['job'].remove_job_from_dict(job_index)
         return
-    
+
     def start(self, job_index):
-        #self.debug.debug("# "+self.myInfo+" -- start",5) 
+        #self.debug.debug("# "+self.myInfo+" -- start",5)
         self.debug.debug("[Start]  "+str(job_index),3)
         self.module['node'].node_allocate(self.module['job'].job_info(job_index)['reqProc'], job_index,\
          self.currentTime, self.currentTime + self.module['job'].job_info(job_index)['reqTime'])
         self.module['job'].job_start(job_index, self.currentTime)
+        self.module['output'].print_event(self.currentTime,"Run",job_index)
         self.insert_event(1,self.currentTime+self.module['job'].job_info(job_index)['reqTime'],1,[2,job_index])
         return
     
@@ -429,8 +432,9 @@ class Cqsim_sim:
         self.module['output'].print_adapt(adapt_info)
     
     def print_result(self):
-        #self.debug.debug("# "+self.myInfo+" -- print_result",5) 
+        #self.debug.debug("# "+self.myInfo+" -- print_result",5)
         self.module['output'].print_sys_info()
         self.debug.debug(lvl=1)
         self.module['output'].print_result(self.module['job'])
+        self.module['output'].print_event()
         

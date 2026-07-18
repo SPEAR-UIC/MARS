@@ -33,7 +33,8 @@ def  cqsim_main(para_list):
     output_sys = para_list['path_out'] + para_list['output'] + para_list['ext_si']
     output_adapt = para_list['path_out'] + para_list['output'] + para_list['ext_ai']
     output_result = para_list['path_out'] + para_list['output'] + para_list['ext_jr']
-    output_fn = {'sys':output_sys, 'adapt':output_adapt, 'result':output_result}
+    output_event = para_list['path_out'] + para_list['output'] + para_list['ext_je']
+    output_fn = {'sys':output_sys, 'adapt':output_adapt, 'result':output_result, 'event':output_event}
     log_freq_int = para_list['log_freq']
     read_input_freq = para_list['read_input_freq']
 

@@ -16,3 +16,6 @@ __pycache__/
 cqsimcpp
 !results/exp2a
 !results/exp2b
+cqsim-python/data/Debug/
+cqsim-python/data/Results/
+cqsim-python/data/Fmt

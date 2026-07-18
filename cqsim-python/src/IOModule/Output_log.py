@@ -8,15 +8,17 @@ class Output_log:
         self.output_path = output
         self.sys_info_buf = []
         self.job_buf = []
+        self.event_buf = []
         self.log_freq = log_freq
         #print('log_freq+++++++',self.log_freq)
         self.reset_output()
-    
+
     def reset(self, output = None, log_freq = 1):
         if output:
             self.output_path = output
             self.sys_info_buf = []
             self.job_buf = []
+            self.event_buf = []
             self.log_freq = log_freq
             self.reset_output()
 
@@ -37,8 +39,15 @@ class Output_log:
         self.job_result.reset(self.output_path['result'],0)
         self.job_result.file_open()
         self.job_result.file_close()
-        self.job_result.reset(self.output_path['result'],1)              
-            
+        self.job_result.reset(self.output_path['result'],1)
+
+        self.event_info = Log_print.Log_print(self.output_path['event'],0)
+        self.event_info.reset(self.output_path['event'],0)
+        self.event_info.file_open()
+        self.event_info.log_print("sim_time,event,id",1)
+        self.event_info.file_close()
+        self.event_info.reset(self.output_path['event'],1)
+
 
     def print_sys_info(self, sys_info = None):
         '''
@@ -127,6 +136,23 @@ class Output_log:
             self.job_result.file_close()
             self.job_buf = []
     
+    def print_event(self, sim_time = None, event = None, job_id = None):
+        if event != None:
+            self.event_buf.append({"time":sim_time, "event":event, "id":job_id})
+        if (len(self.event_buf) >= self.log_freq) or (event == None):
+            self.event_info.file_open()
+            sep_sign=","
+            for temp_event in self.event_buf:
+                context = ""
+                context += str(temp_event['time'])
+                context += sep_sign
+                context += str(temp_event['event'])
+                context += sep_sign
+                context += str(temp_event['id'])
+                self.event_info.log_print(context,1)
+            self.event_info.file_close()
+            self.event_buf = []
+
     '''
     def print_result(self, job_module):
         sep_sign=";"
