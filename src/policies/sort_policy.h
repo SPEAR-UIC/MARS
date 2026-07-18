@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <climits>
 #include "../core/policy.h"
+#include "../core/backfill.h"
 
 // Base for policies that sort a window of pending jobs then dispatch greedily.
 // Subclasses implement compare() to define priority ordering.
@@ -21,28 +22,7 @@ public:
 
         last_head_job_id_ = jobs.empty() ? -1 : jobs[0]->id;
 
-        std::vector<NodeInfo> nodes = s.nodes;
-        std::vector<Decision> decisions;
-        bool any_higher_skipped = false;
-
-        for (int i = 0; i < static_cast<int>(jobs.size()); ++i) {
-            const Job* job = jobs[i];
-            bool is_backfill = any_higher_skipped || (i >= w);
-
-            bool scheduled = false;
-            for (NodeInfo& node : nodes) {
-                if (node.can_fit(job->requested)) {
-                    node.allocate(job->requested);
-                    decisions.push_back({DecisionType::Start, job->id, {node.id}, is_backfill});
-                    scheduled = true;
-                    break;
-                }
-            }
-
-            if (!scheduled && i < w)
-                any_higher_skipped = true;
-        }
-        return decisions;
+        return schedule_with_backfill_reservation(jobs, s);
     }
 
     int last_cycle_root_branching() const override { return 1; }
