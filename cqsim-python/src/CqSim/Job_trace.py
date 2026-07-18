@@ -76,7 +76,7 @@ class Job_trace:
         regex_str = "([^;\\n]*)[;\\n]"
         while (self.i<self.read_num or self.read_num<=0) and temp_n<self.read_input_freq:
             tempStr = self.jobFile.readline()
-            if self.i==self.read_num-1 or not tempStr :    # break when no more line
+            if not tempStr :    # break when no more line
                 self.jobFile.close()
                 return -1
                 #break

@@ -336,7 +336,7 @@ class Filter_job_SWF(filter_job.Filter_job):
     def input_check(self,jobInfo):
         if (int(jobInfo['run'])>int(jobInfo['reqTime'])):
             jobInfo['run']=jobInfo['reqTime']
-        if (int(jobInfo['id'])<=0):
+        if (int(jobInfo['id'])<0):
             return -2
         if (int(jobInfo['submit'])<0):
             return -3   
