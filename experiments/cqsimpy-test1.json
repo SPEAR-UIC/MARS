@@ -3,7 +3,7 @@
   "swf_path": "data/theta21cln.swf",
   "max_submits": 2147483647,
   "start_job_index": 0,
-  "mode": "real",
+  "mode": "prediction",
   "drivers": [
     {"type": "fcfs", "tag": "FCFS", "backfilling": true}
   ]

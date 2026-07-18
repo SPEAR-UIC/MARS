@@ -1,0 +1,57 @@
+....................
+resource_job: 0
+resource_node: 0
+job_trace: theta21cln_regulate.swf
+node_struc: theta21cln_regulate.swf
+job_save: theta21cln_regulate
+node_save: theta21cln_regulate_node
+cluster_fraction: 1.0
+start: 0.0
+start_date: None
+anchor: 0
+read_num: 10000000000
+pre_name: CQSIM_
+output: theta21cln_regulate
+debug: debug_theta21cln_regulate
+ext_fmt_j: .csv
+ext_fmt_n: .csv
+ext_fmt_j_c: .con
+ext_fmt_n_c: .con
+path_in: ../data/InputFiles/
+path_out: ../data/Results/
+path_fmt: ../data/Fmt/
+path_debug: ../data/Debug/
+ext_jr: .rst
+ext_si: .ult
+ext_ai: .adp
+ext_debug: .log
+debug_lvl: 1
+alg: ['w', '+', '2']
+alg_sign: [1, 0, 1]
+backfill: 1
+bf_para: None
+win: 5
+win_para: ['5', '0', '0']
+ad_win: 0
+ad_win_para: None
+ad_bf: 0
+ad_bf_para: ['ad_bf_para.set']
+ad_alg: 0
+ad_alg_para: None
+config_n: config_n.set
+config_sys: config_sys.set
+monitor: 500
+log_freq: 1
+read_input_freq: 1000
+....................
+.................... Debug
+.................... Job Filter
+.................... Node Filter
+.................... Job Trace
+.................... Node Structure
+.................... Backfill
+.................... Start Window
+.................... Basic Algorithm
+.................... Information Collect
+.................... Output Log
+.................... Cqsim Simulator

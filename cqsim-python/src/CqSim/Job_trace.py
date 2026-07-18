@@ -275,7 +275,7 @@ class Job_trace:
         self.jobTrace[job_index]["state"]=2
         self.jobTrace[job_index]['start']=time
         self.jobTrace[job_index]['wait']=time-self.jobTrace[job_index]['submit']
-        self.jobTrace[job_index]['end'] = time+self.jobTrace[job_index]['run']
+        self.jobTrace[job_index]['end'] = time+self.jobTrace[job_index]['reqTime']
         self.job_wait_list.remove(job_index)
         self.job_run_list.append(job_index)
         self.job_wait_size -= self.jobTrace[job_index]["reqProc"]

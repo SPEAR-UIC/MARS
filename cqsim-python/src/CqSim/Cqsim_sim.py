@@ -288,7 +288,7 @@ class Cqsim_sim:
         self.module['node'].node_allocate(self.module['job'].job_info(job_index)['reqProc'], job_index,\
          self.currentTime, self.currentTime + self.module['job'].job_info(job_index)['reqTime'])
         self.module['job'].job_start(job_index, self.currentTime)
-        self.insert_event(1,self.currentTime+self.module['job'].job_info(job_index)['run'],1,[2,job_index])
+        self.insert_event(1,self.currentTime+self.module['job'].job_info(job_index)['reqTime'],1,[2,job_index])
         return
     
     def score_calculate(self):
@@ -346,9 +346,9 @@ class Cqsim_sim:
         while (i < max_num):
             temp_job = self.module['job'].job_info(temp_wait_A[i])
             temp_wait_info.append({"index":temp_wait_A[i],"proc":temp_job['reqProc'],\
-             "node":temp_job['reqProc'],"run":temp_job['run'],"score":temp_job['score']})
-            i += 1 
-            
+             "node":temp_job['reqProc'],"run":temp_job['reqTime'],"score":temp_job['score']})
+            i += 1
+
         temp_wait_A = self.module['win'].start_window(temp_wait_info,{"time":self.currentTime})
         temp_wait_B[0:0] = temp_wait_A
         return temp_wait_B
@@ -361,7 +361,7 @@ class Cqsim_sim:
         while (i < max_num):
             temp_job = self.module['job'].job_info(temp_wait[i])
             temp_wait_info.append({"index":temp_wait[i],"proc":temp_job['reqProc'],\
-             "node":temp_job['reqProc'],"run":temp_job['run'],"score":temp_job['score']})
+             "node":temp_job['reqProc'],"run":temp_job['reqTime'],"score":temp_job['score']})
             i += 1
         backfill_list = self.module['backfill'].backfill(temp_wait_info, {'time':self.currentTime})
         #self.debug.debug("HHHHHHHHHHHHH "+str(backfill_list)+" -- backfill",2) 
