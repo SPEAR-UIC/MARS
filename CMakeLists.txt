@@ -134,8 +134,8 @@ add_scheduler_test(test_job      tests/test_job.cpp)
 add_scheduler_test(test_node       tests/test_node.cpp)
 add_scheduler_test(test_swf_reader  tests/test_swf_reader.cpp  src/io/swf_reader.cpp)
 add_scheduler_test(test_simulator   tests/test_simulator.cpp   src/adapters/simulation/simulator.cpp)
-add_scheduler_test(test_fifo        tests/test_fifo.cpp)
-add_scheduler_test(test_policies    tests/test_policies.cpp)
+add_scheduler_test(test_fifo        tests/test_fifo.cpp        src/adapters/simulation/simulator.cpp)
+add_scheduler_test(test_policies    tests/test_policies.cpp    src/adapters/simulation/simulator.cpp)
 add_scheduler_test(test_mcts        tests/test_mcts.cpp
                                     src/adapters/simulation/simulator.cpp
                                     src/mcts/mcts.cpp)
