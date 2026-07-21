@@ -22,24 +22,30 @@ class Output_log:
             self.log_freq = log_freq
             self.reset_output()
 
-    def reset_output(self):   
-        self.sys_info = Log_print.Log_print(self.output_path['sys'],0)
-        self.sys_info.reset(self.output_path['sys'],0)
-        self.sys_info.file_open()
-        self.sys_info.file_close()
-        self.sys_info.reset(self.output_path['sys'],1)   
-        
-        self.adapt_info = Log_print.Log_print(self.output_path['adapt'],0)
-        self.adapt_info.reset(self.output_path['adapt'],0)
-        self.adapt_info.file_open()
-        self.adapt_info.file_close()
-        self.adapt_info.reset(self.output_path['adapt'],1)
-        
-        self.job_result = Log_print.Log_print(self.output_path['result'],0)
-        self.job_result.reset(self.output_path['result'],0)
-        self.job_result.file_open()
-        self.job_result.file_close()
-        self.job_result.reset(self.output_path['result'],1)
+    def reset_output(self):
+        self.sys_info = None
+        if self.output_path['sys']:
+            self.sys_info = Log_print.Log_print(self.output_path['sys'],0)
+            self.sys_info.reset(self.output_path['sys'],0)
+            self.sys_info.file_open()
+            self.sys_info.file_close()
+            self.sys_info.reset(self.output_path['sys'],1)
+
+        self.adapt_info = None
+        if self.output_path['adapt']:
+            self.adapt_info = Log_print.Log_print(self.output_path['adapt'],0)
+            self.adapt_info.reset(self.output_path['adapt'],0)
+            self.adapt_info.file_open()
+            self.adapt_info.file_close()
+            self.adapt_info.reset(self.output_path['adapt'],1)
+
+        self.job_result = None
+        if self.output_path['result']:
+            self.job_result = Log_print.Log_print(self.output_path['result'],0)
+            self.job_result.reset(self.output_path['result'],0)
+            self.job_result.file_open()
+            self.job_result.file_close()
+            self.job_result.reset(self.output_path['result'],1)
 
         self.event_info = Log_print.Log_print(self.output_path['event'],0)
         self.event_info.reset(self.output_path['event'],0)
@@ -73,6 +79,9 @@ class Output_log:
         '''
         if sys_info != None:
             self.sys_info_buf.append(sys_info)
+        if self.sys_info is None:
+            self.sys_info_buf = []
+            return
         if (len(self.sys_info_buf) >= self.log_freq) or (sys_info == None):
             sep_sign=";"
             sep_sign_B=" "
@@ -100,6 +109,8 @@ class Output_log:
         
     
     def print_adapt(self, adapt_info):
+        if self.adapt_info is None:
+            return
         sep_sign=";"
         context = ""
         self.adapt_info.file_open()
@@ -109,6 +120,9 @@ class Output_log:
     def print_result(self, job_module, job_index = None):
         if job_index != None:
             self.job_buf.append(job_module.job_info(job_index))
+        if self.job_result is None:
+            self.job_buf = []
+            return
         if (len(self.job_buf) >= self.log_freq) or (job_index == None):
             self.job_result.file_open()
             sep_sign=";"

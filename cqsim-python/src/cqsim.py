@@ -221,6 +221,8 @@ if __name__ == "__main__":
     p.add_option("--ext_je", dest="ext_je", type="string",\
         #default="_events.csv", \
         help="job event log extension type")
+    p.add_option("-e", "--event_save", dest="output_event", type="string",\
+        help="file name of the job events log (overrides output name + ext_je)")
     p.add_option("--ext_d", dest="ext_debug", type="string",\
         #default=".log", \
         help="debug log extension type")
@@ -277,6 +279,8 @@ if __name__ == "__main__":
         help="system config file")
     p.add_option("-m", "--monitor", dest="monitor", type="int",\
         help="monitor interval time")
+    p.add_option("-x", "--no_extra_output", dest="minimal_output", action="store_true", default=False,\
+        help="do not generate the .adp, .rst, and .ult files (only the events log is produced)")
 
     #41
     p.add_option("-I", "--log_freq", dest="log_freq", type="int",\
@@ -389,6 +393,7 @@ if __name__ == "__main__":
     inputPara['ext_si']=opts.ext_si
     inputPara['ext_ai']=opts.ext_ai
     inputPara['ext_je']=opts.ext_je
+    inputPara['output_event']=opts.output_event
     inputPara['ext_debug']=opts.ext_debug
     inputPara['debug_lvl']=opts.alg
     inputPara['alg']=opts.alg
@@ -406,6 +411,7 @@ if __name__ == "__main__":
     inputPara['config_n']=opts.config_n
     inputPara['config_sys']=opts.config_sys
     inputPara['monitor']=opts.monitor
+    inputPara['minimal_output']=opts.minimal_output
     inputPara['log_freq']=opts.log_freq
     inputPara['read_input_freq']=opts.read_input_freq
 

@@ -30,10 +30,14 @@ def  cqsim_main(para_list):
     save_name_n = para_list['path_fmt'] + para_list['node_save'] + para_list['ext_fmt_n'] 
     config_name_n = para_list['path_fmt'] + para_list['node_save'] + para_list['ext_fmt_n_c'] 
     
-    output_sys = para_list['path_out'] + para_list['output'] + para_list['ext_si']
-    output_adapt = para_list['path_out'] + para_list['output'] + para_list['ext_ai']
-    output_result = para_list['path_out'] + para_list['output'] + para_list['ext_jr']
-    output_event = para_list['path_out'] + para_list['output'] + para_list['ext_je']
+    minimal_output = para_list.get('minimal_output', False)
+    output_sys = None if minimal_output else para_list['path_out'] + para_list['output'] + para_list['ext_si']
+    output_adapt = None if minimal_output else para_list['path_out'] + para_list['output'] + para_list['ext_ai']
+    output_result = None if minimal_output else para_list['path_out'] + para_list['output'] + para_list['ext_jr']
+    if para_list.get('output_event'):
+        output_event = para_list['path_out'] + para_list['output_event']
+    else:
+        output_event = para_list['path_out'] + para_list['output'] + para_list['ext_je']
     output_fn = {'sys':output_sys, 'adapt':output_adapt, 'result':output_result, 'event':output_event}
     log_freq_int = para_list['log_freq']
     read_input_freq = para_list['read_input_freq']
