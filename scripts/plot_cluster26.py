@@ -52,9 +52,6 @@ _TAG_ORDER = ["RLSCHEDULER", "RANDOM", "WFP3", "WFP", "MARS-CW", "MARS-CU",
 def display_tag(tag):
     return re.sub(r"-w\d+$", "", str(tag), flags=re.IGNORECASE)
 
-def tag_slug(tag):
-    return display_tag(tag).strip().lower().replace("-", "_").replace(" ", "_")
-
 def get_color(tag):
     u = tag.upper()
     if u.startswith("MARS"):
@@ -486,22 +483,156 @@ def load_backfill_overview(results_dir, tag, procs_map, system):
     pct = 100.0 * n_backfill / total_jobs if total_jobs else 0.0
     return (n_backfill, total_jobs, pct), backfill_group, total_group
 
-def load_mars_drain_4grp(results_dir, drain_dir, tag, procs_map, system):
-    """Return {('drain'|'nondrain', grp): [wait_hours]}"""
+def _drain_decision_rows(results_dir, tag):
+    """Per-cycle (policy, jobs_run, sim_time) rows used to detect DRAIN episodes.
+
+    Only cycles with root_branching_factor >= 2 are considered "real" scheduling
+    decisions (rbf < 2 means there was at most one feasible action, so the
+    scheduler wasn't actually choosing to drain).
+    """
+    perf_p = os.path.join(results_dir, tag, "performance.csv")
+    dec_p  = os.path.join(results_dir, tag, "descisions.csv")
+    if not os.path.exists(perf_p) or not os.path.exists(dec_p):
+        return []
+    perf = {}
+    with open(perf_p) as f:
+        for row in csv.DictReader(f):
+            try:
+                c = int(row["cycle"])
+                jobs_run = int(float(row.get("jobs_run", 0) or 0))
+                sim_time = float(row["sim_time"])
+            except (KeyError, ValueError, TypeError):
+                continue
+            perf[c] = (jobs_run, sim_time)
+    rows = []
+    with open(dec_p) as f:
+        for row in csv.DictReader(f):
+            try:
+                c   = int(row["cycle"])
+                rbf = int(float(row["root_branching_factor"]))
+                pol = row["selected_policy"].strip().upper()
+            except (KeyError, ValueError, TypeError):
+                continue
+            if rbf < 2 or c not in perf:
+                continue
+            jobs_run, sim_time = perf[c]
+            rows.append({"cycle": c, "pol": pol, "jobs_run": jobs_run, "sim_time": sim_time})
+    return rows
+
+def _ordered_run_events(results_dir, tag):
+    """(sim_time, job_id) for every Run event in events.csv, chronologically
+    (ties broken by file order)."""
+    events_path = os.path.join(results_dir, tag, "events.csv")
+    if not os.path.exists(events_path):
+        return []
+    records = []
+    with open(events_path) as f:
+        seq = 0
+        for row in csv.DictReader(f):
+            if row.get("event") != "Run":
+                continue
+            try:
+                sim_time = float(row["sim_time"])
+                jid = int(row["id"])
+            except (KeyError, ValueError):
+                continue
+            records.append((sim_time, seq, jid))
+            seq += 1
+    records.sort(key=lambda item: (item[0], item[1]))
+    return [(t, jid) for t, _, jid in records]
+
+def _collapse_drain_rows_by_run_events(drain_rows, run_events):
+    """Collapse consecutive DRAIN decision cycles into one episode, unless a
+    job actually started running somewhere in between them -- in which case
+    they're distinct drain episodes rather than one continuous stall."""
+    if not drain_rows:
+        return []
+    if not run_events:
+        return list(drain_rows)
+    run_times = [t for t, _ in run_events]
+    collapsed = []
+    current = drain_rows[0]
+    for row in drain_rows[1:]:
+        lo = bisect.bisect_right(run_times, current["sim_time"])
+        hi = bisect.bisect_right(run_times, row["sim_time"])
+        if hi > lo:
+            collapsed.append(current)
+        current = row
+    collapsed.append(current)
+    return collapsed
+
+def compute_drain_episodes(results_dir, tag):
+    """Detect MARS DRAIN episodes directly from descisions.csv + performance.csv.
+
+    DRAIN cycles never run a job themselves (jobs_run is always 0 while the
+    scheduler is holding the queue), so an episode can't be detected by
+    watching for jobs_run > 0 on a DRAIN row. Instead, consecutive
+    DRAIN-policy decision cycles (root_branching_factor >= 2) collapse into
+    one episode unless an actual Run event happened somewhere between them --
+    that Run event means the drain broke and a *new* stall is a separate
+    episode. This mirrors the deleted scripts/exp2_plot.py methodology
+    (write_driver_drain_run_sequence_table / _collapse_drain_rows_by_run_events).
+
+    Returns (rows, episodes): `rows` is every rbf>=2 decision cycle (the
+    denominator for drain rate), `episodes` is the list of collapsed DRAIN
+    rows (each the anchor cycle/sim_time for one drain episode).
+    """
+    rows = _drain_decision_rows(results_dir, tag)
+    raw_drain_rows = [r for r in rows if r["pol"] == "DRAIN"]
+    if not raw_drain_rows:
+        return rows, []
+    run_events = _ordered_run_events(results_dir, tag)
+    episodes = _collapse_drain_rows_by_run_events(raw_drain_rows, run_events)
+    return rows, episodes
+
+def load_drain_pct(results_dir, tag):
+    rows, episodes = compute_drain_episodes(results_dir, tag)
+    total = len(rows)
+    drain_ep = len(episodes)
+    pct = 100.0 * drain_ep / total if total else 0.0
+    return drain_ep, total, pct
+
+def load_drain_run_sequences(results_dir, tag, procs_map, system, max_jobs=3):
+    """For each drain episode, the first `max_jobs` jobs that started running
+    (chronologically) after it -- the jobs whose dispatch the drain was
+    holding back, tagged with their size-class group.
+
+    This is the direct replacement for the old precomputed
+    table_*_drain_run_sequence_details.csv, built straight from events.csv
+    Run events instead of a missing intermediate table. Returns
+    (episode_jobs, total_episodes) where episode_jobs is a list of
+    {"jobs": [(jid, group), ...]} for episodes with >=1 recognized job.
+    """
+    _, episodes = compute_drain_episodes(results_dir, tag)
+    if not episodes:
+        return [], 0
+    run_events = _ordered_run_events(results_dir, tag)
+    if not run_events:
+        return [], len(episodes)
+
+    episode_times = [e["sim_time"] for e in episodes]
+    assignments = [[] for _ in episodes]
+    for run_time, jid in run_events:
+        idx = bisect.bisect_right(episode_times, run_time - 1e-9) - 1
+        if idx < 0 or len(assignments[idx]) >= max_jobs:
+            continue
+        g = assign_group(procs_map.get(jid, -1), system)
+        if g is None:
+            continue
+        assignments[idx].append((jid, g))
+
+    out = [{"jobs": jobs} for jobs in assignments if jobs]
+    return out, len(episodes)
+
+def load_mars_drain_4grp(results_dir, tag, procs_map, system):
+    """Return {('drain'|'nondrain', grp): [wait_hours]}.
+
+    A job counts as 'drain' if it was one of the (up to 3) jobs dispatched at
+    the cycle a DRAIN episode resolved (see load_drain_run_sequences).
+    """
     submit, start, _ = parse_events(os.path.join(results_dir, tag, "events.csv"))
-    drain_ids = set()
-    slug = tag_slug(tag)
-    det  = os.path.join(drain_dir, f"table_{slug}_drain_run_sequence_details.csv")
-    if os.path.exists(det):
-        with open(det) as f:
-            for row in csv.DictReader(f):
-                for pos in ("First", "Second", "Third"):
-                    s = row.get(f"{pos}_Run_Job", "").strip()
-                    if s:
-                        try:
-                            drain_ids.add(int(s))
-                        except ValueError:
-                            pass
+    sequences, _ = load_drain_run_sequences(results_dir, tag, procs_map, system)
+    drain_ids = {jid for seq in sequences for jid, _ in seq["jobs"]}
     data = {(k, g): [] for k in ("drain", "nondrain") for g in GROUPS}
     for jid in set(submit) & set(start):
         w = start[jid] - submit[jid]
@@ -514,72 +645,31 @@ def load_mars_drain_4grp(results_dir, drain_dir, tag, procs_map, system):
         data[(kind, g)].append(w / 3600.0)
     return data
 
-def load_drain_pct(results_dir, tag):
-    perf_p = os.path.join(results_dir, tag, "performance.csv")
-    dec_p  = os.path.join(results_dir, tag, "descisions.csv")
-    if not os.path.exists(perf_p) or not os.path.exists(dec_p):
-        return 0, 0, 0.0
-    perf = {}
-    with open(perf_p) as f:
-        for row in csv.DictReader(f):
-            try:
-                c        = int(row["cycle"])
-                jobs_run = int(float(row.get("jobs_run", 0) or 0))
-            except (KeyError, ValueError, TypeError):
-                continue
-            perf[c] = jobs_run
-    rows = []
-    with open(dec_p) as f:
-        for row in csv.DictReader(f):
-            try:
-                c   = int(row["cycle"])
-                rbf = int(float(row["root_branching_factor"]))
-                pol = row["selected_policy"].strip().upper()
-            except (KeyError, ValueError, TypeError):
-                continue
-            if rbf < 2 or c not in perf:
-                continue
-            rows.append({"pol": pol, "jobs_run": perf[c]})
-    total = len(rows)
-    drain_ep = 0
-    in_drain = False
-    for r in rows:
-        is_d = r["pol"] == "DRAIN"
-        if is_d:
-            if not in_drain:
-                drain_ep += 1
-                in_drain = True
-            if r["jobs_run"] > 0:
-                in_drain = False
-        else:
-            in_drain = False
-    pct = 100.0 * drain_ep / total if total else 0.0
-    return drain_ep, total, pct
+def load_drain_combo_stats(results_dir, tag, procs_map, system):
+    """Sequence-combo stats built directly from resolved drain episodes.
 
-def load_drain_combo_stats(drain_dir, tag, results_dir):
-    slug = tag_slug(tag)
-    cp   = os.path.join(drain_dir, f"table_{slug}_drain_sequence_combos.csv")
-    dp   = os.path.join(drain_dir, f"table_{slug}_drain_run_sequence_details.csv")
-    if not os.path.exists(cp) or not os.path.exists(dp):
+    Only episodes where >=3 jobs were dispatched at the resolving cycle
+    contribute a full "G1-G2-G3" combo (fewer than 3 can't form a triple);
+    `total_drain_episodes` still counts every episode that resolved with at
+    least one identified job, matching the old table's semantics.
+    """
+    sequences, _ = load_drain_run_sequences(results_dir, tag, procs_map, system)
+    if not sequences:
         return None, None
     seq_counts = {}
-    with open(cp) as f:
-        for row in csv.DictReader(f):
-            try:
-                seq_counts[row["Sequence"]] = int(row["Count"])
-            except (KeyError, ValueError):
-                pass
-    total = 0
-    with open(dp) as f:
-        for row in csv.DictReader(f):
-            if row.get("First_Run_Group", "").strip():
-                total += 1
-    if not seq_counts or total == 0:
+    total = len(sequences)
+    for seq in sequences:
+        jobs = seq["jobs"]
+        if len(jobs) < 3:
+            continue
+        label = "-".join(g for _, g in jobs)
+        seq_counts[label] = seq_counts.get(label, 0) + 1
+    if not seq_counts:
         return None, None
-    stats = {"tag": tag, "slug": slug, "seq_counts": seq_counts, "total_drain_episodes": total}
+    stats = {"tag": tag, "seq_counts": seq_counts, "total_drain_episodes": total}
     return stats, load_drain_pct(results_dir, tag)
 
-def load_drain_overview(results_dir, drain_dir, drain_tags, procs_map, system):
+def load_drain_overview(results_dir, drain_tags, procs_map, system):
     drain_pct, total_grp = {}, {}
     for tag in drain_tags:
         drain_pct[tag] = load_drain_pct(results_dir, tag)
@@ -594,28 +684,16 @@ def load_drain_overview(results_dir, drain_dir, drain_tags, procs_map, system):
         total_grp[tag] = tg
     postdrain = {tag: {g: 0 for g in GROUPS} for tag in drain_tags}
     for tag in drain_tags:
-        slug = tag_slug(tag)
-        cp   = os.path.join(drain_dir, f"table_{slug}_drain_run_sequence_details.csv")
-        if not os.path.exists(cp):
-            continue
+        sequences, _ = load_drain_run_sequences(results_dir, tag, procs_map, system)
         seen = set()
-        with open(cp) as f:
-            for row in csv.DictReader(f):
-                for pos in ("First", "Second", "Third"):
-                    js  = row.get(f"{pos}_Run_Job", "").strip()
-                    grp = row.get(f"{pos}_Run_Group", "").strip()
-                    if not js or grp not in GROUPS:
-                        continue
-                    try:
-                        jid = int(js)
-                    except ValueError:
-                        continue
-                    if (jid, grp) not in seen:
-                        seen.add((jid, grp))
-                        postdrain[tag][grp] += 1
+        for seq in sequences:
+            for jid, grp in seq["jobs"]:
+                if (jid, grp) not in seen:
+                    seen.add((jid, grp))
+                    postdrain[tag][grp] += 1
     return drain_pct, postdrain, total_grp
 
-def load_mixed_backfill_drain_overview(results_dir, drain_dir, tags, procs_map, system):
+def load_mixed_backfill_drain_overview(results_dir, tags, procs_map, system):
     """Return overview data mixing backfill metrics and MARS drain metrics by tag."""
     tags = list(tags)
     drain_tags = [t for t in tags if display_tag(t).upper().startswith("MARS-C")]
@@ -635,7 +713,7 @@ def load_mixed_backfill_drain_overview(results_dir, drain_dir, tags, procs_map, 
 
     if drain_tags:
         drain_pct, postdrain, total_grp = load_drain_overview(
-            results_dir, drain_dir, drain_tags, procs_map, system)
+            results_dir, drain_tags, procs_map, system)
         for tag in drain_tags:
             rate_by_tag[tag] = drain_pct.get(tag, (0, 0, 0.0))
             affected_by_tag[tag] = postdrain.get(tag, {g: 0 for g in GROUPS})
@@ -1316,7 +1394,7 @@ def plot_drain_queue_boxplot(theta_data, polaris_data, theta_tags, polaris_tags,
     save_fig(fig, out_path)
 
 # ─── drain/ figures ───────────────────────────────────────────────────────────
-def _build_backfill_drain_grid_panel(results_dir, drain_dir, procs_map, system, label):
+def _build_backfill_drain_grid_panel(results_dir, procs_map, system, label):
     GREY = "#cccccc"
     RED  = "#e74c3c"
     BLUE = "#26edff"
@@ -1340,7 +1418,7 @@ def _build_backfill_drain_grid_panel(results_dir, drain_dir, procs_map, system, 
         if kind == "backfill":
             all_data[tag] = load_backfill_4grp(results_dir, tag, procs_map, system)
         else:
-            all_data[tag] = load_mars_drain_4grp(results_dir, drain_dir, tag, procs_map, system)
+            all_data[tag] = load_mars_drain_4grp(results_dir, tag, procs_map, system)
 
     return {
         "label": label,
@@ -1521,17 +1599,17 @@ def _plot_backfill_drain_grid_panels(panels, out_path,
 
     save_fig(fig, out_path)
 
-def plot_backfill_drain_grid(results_dir, drain_dir, procs_map, system, label, out_path):
-    panel = _build_backfill_drain_grid_panel(results_dir, drain_dir, procs_map, system, label)
+def plot_backfill_drain_grid(results_dir, procs_map, system, label, out_path):
+    panel = _build_backfill_drain_grid_panel(results_dir, procs_map, system, label)
     _plot_backfill_drain_grid_panels([panel], out_path)
 
-def plot_backfill_drain_grid_combined(theta_results_dir, theta_drain_dir, theta_procs, theta_system,
-                                      polaris_results_dir, polaris_drain_dir, polaris_procs, polaris_system,
+def plot_backfill_drain_grid_combined(theta_results_dir, theta_procs, theta_system,
+                                      polaris_results_dir, polaris_procs, polaris_system,
                                       out_path):
     theta_panel = _build_backfill_drain_grid_panel(
-        theta_results_dir, theta_drain_dir, theta_procs, theta_system, "Theta 2021")
+        theta_results_dir, theta_procs, theta_system, "Theta 2021")
     polaris_panel = _build_backfill_drain_grid_panel(
-        polaris_results_dir, polaris_drain_dir, polaris_procs, polaris_system, "Polaris 2024")
+        polaris_results_dir, polaris_procs, polaris_system, "Polaris 2024")
     _plot_backfill_drain_grid_panels(
         [theta_panel, polaris_panel], out_path,
         fig_width=12.2, fig_height=12.3,
@@ -1949,10 +2027,6 @@ def main():
     parser.add_argument("exp2a_json", help="Path to exp2a.json (Theta)")
     parser.add_argument("exp2b_json", help="Path to exp2b.json (Polaris)")
     parser.add_argument("--output_dir", default="plots_cluster26")
-    parser.add_argument("--exp2a_plots",
-                        help="Pre-computed exp2a drain dir (default: results/exp2a_plots/drain)")
-    parser.add_argument("--exp2b_plots",
-                        help="Pre-computed exp2b drain dir (default: results/exp2b_plots/drain)")
     args = parser.parse_args()
 
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -1969,8 +2043,6 @@ def main():
 
     res_a  = abs_path(cfg_a.get("output_dir", "results/exp2a"))
     res_b  = abs_path(cfg_b.get("output_dir", "results/exp2b"))
-    drain_a = args.exp2a_plots or os.path.join(base_dir, "results", "exp2a_plots", "drain")
-    drain_b = args.exp2b_plots or os.path.join(base_dir, "results", "exp2b_plots", "drain")
 
     print("Parsing SWF files...")
     swf_a = abs_path(cfg_a.get("swf_path", ""))
@@ -2199,13 +2271,13 @@ def main():
 
     # ── drain/ ───────────────────────────────────────────────────────────────
     print("\nGenerating drain/ figures...")
-    plot_backfill_drain_grid(res_a, drain_a, procs_a, sys_a, label_a,
+    plot_backfill_drain_grid(res_a, procs_a, sys_a, label_a,
                              os.path.join(out_dir, "drain", "backfill_drain_grid_theta.png"))
-    plot_backfill_drain_grid(res_b, drain_b, procs_b, sys_b, label_b,
+    plot_backfill_drain_grid(res_b, procs_b, sys_b, label_b,
                              os.path.join(out_dir, "drain", "backfill_drain_grid_polaris.png"))
     plot_backfill_drain_grid_combined(
-        res_a, drain_a, procs_a, sys_a,
-        res_b, drain_b, procs_b, sys_b,
+        res_a, procs_a, sys_a,
+        res_b, procs_b, sys_b,
         os.path.join(out_dir, "drain", "backfill_drain_grid_combined.png"),
     )
 
@@ -2239,8 +2311,8 @@ def main():
 
     # Drain overview
     drain_tags = ["MARS-CW", "MARS-CU"]
-    pct_a, post_a, tot_a = load_drain_overview(res_a, drain_a, drain_tags, procs_a, sys_a)
-    pct_b, post_b, tot_b = load_drain_overview(res_b, drain_b, drain_tags, procs_b, sys_b)
+    pct_a, post_a, tot_a = load_drain_overview(res_a, drain_tags, procs_a, sys_a)
+    pct_b, post_b, tot_b = load_drain_overview(res_b, drain_tags, procs_b, sys_b)
     plot_drain_overview(
         [(label_a, drain_tags, pct_a, post_a, tot_a),
          (label_b, drain_tags, pct_b, post_b, tot_b)],
@@ -2310,9 +2382,9 @@ def main():
             key=lambda t: all_strategy_order.get(display_tag(t).upper(), 999),
         )
         mix_pct_a, mix_aff_a, mix_tot_a = load_mixed_backfill_drain_overview(
-            res_a, drain_a, all_strategy_tags_a, procs_a, sys_a)
+            res_a, all_strategy_tags_a, procs_a, sys_a)
         mix_pct_b, mix_aff_b, mix_tot_b = load_mixed_backfill_drain_overview(
-            res_b, drain_b, all_strategy_tags_b, procs_b, sys_b)
+            res_b, all_strategy_tags_b, procs_b, sys_b)
         plot_rate_share_overview(
             [(label_a, all_strategy_tags_a, mix_pct_a, mix_aff_a, mix_tot_a),
              (label_b, all_strategy_tags_b, mix_pct_b, mix_aff_b, mix_tot_b)],
@@ -2328,9 +2400,10 @@ def main():
 
     # Drain sequence combos
     combo_rows = []
-    for label, res_dir, dr_dir in [(label_a, res_a, drain_a), (label_b, res_b, drain_b)]:
-        cw_stats, cw_pct = load_drain_combo_stats(dr_dir, "MARS-CW", res_dir)
-        cu_stats, cu_pct = load_drain_combo_stats(dr_dir, "MARS-CU", res_dir)
+    for label, res_dir, procs, system in [
+            (label_a, res_a, procs_a, sys_a), (label_b, res_b, procs_b, sys_b)]:
+        cw_stats, cw_pct = load_drain_combo_stats(res_dir, "MARS-CW", procs, system)
+        cu_stats, cu_pct = load_drain_combo_stats(res_dir, "MARS-CU", procs, system)
         combo_rows.append((label, cw_stats, cu_stats, cw_pct, cu_pct))
     plot_drain_sequence_combos(combo_rows,
                                os.path.join(out_dir, "drain", "drain_sequence_combos.png"))
