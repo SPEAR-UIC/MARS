@@ -6,9 +6,17 @@
 #
 # ── Node assignment strategy ───────────────────────────────────────────────────
 #   Drivers are assigned by core capacity across the available nodes.
-#   By default the node list comes from the repo-root "nodefile" (one hostname
-#   per line, duplicates allowed and automatically collapsed; include "local"
-#   there to represent this machine).
+#   By default the node list comes from the repo-root "node-ip-list" file:
+#     <alias> <ip>     one per line, e.g.:
+#       node1 10.52.3.20
+#       node2 10.52.0.222
+#   The alias is used as the node's display name/key everywhere (sessions,
+#   manifests, plan output); the IP is what's actually used for ssh/rsync, so
+#   no ~/.ssh/config entry is required for the alias. A line with no second
+#   column falls back to the old behaviour: the alias itself is used as the
+#   ssh target (must be resolvable, e.g. via ~/.ssh/config).
+#   Duplicates (by alias) are collapsed; include "local" as an alias with no
+#   IP to represent this machine.
 #   Each node is treated as having DIST_NODE_CORES cores (default: 256).
 #   Driver core reservations are inferred from each experiment JSON's
 #   ".drivers[].num_cores" when present.
@@ -17,7 +25,7 @@
 #
 # Override nodes via environment variables:
 #   DIST_NODES="ccred2 ccred3 ccred4"    space-separated explicit node list
-#   DIST_NODEFILE="/path/to/nodefile"    alternate nodefile path
+#   DIST_NODEFILE="/path/to/node-ip-list" alternate node-ip-list path
 #   DIST_INCLUDE_LOCAL=1                 prepend "local" to the node list
 #   DIST_REMOTE_DIR="~/MyProject"        remote path (default: ~/CQSimPrivate)
 #   DIST_HEAVY_TYPES="mcts adaptive_mcts custom_heavy"  space-separated types
@@ -40,7 +48,9 @@
 # prefix, both resolved to experiments/<exp>.json, or a path to a
 # JSON file.
 #
-# Requirements: jq, tmux, SSH aliases for remote nodes in ~/.ssh/config
+# Requirements: jq, tmux, SSH access to the IPs listed in node-ip-list
+# (password-less/key-based auth, since nodes are addressed by IP, not by
+# a ~/.ssh/config alias)
 
 set -euo pipefail
 
@@ -67,9 +77,10 @@ REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 # Nodes. Priority:
 #   1. DIST_NODES environment override
-#   2. repo-root nodefile (may include "local")
+#   2. repo-root node-ip-list (may include "local")
 #   3. fallback to local-only
-NODEFILE_PATH="${DIST_NODEFILE:-${REPO_DIR}/nodefile}"
+NODEFILE_PATH="${DIST_NODEFILE:-${REPO_DIR}/node-ip-list}"
+declare -gA NODE_IP=()
 if [[ -n "${DIST_NODES:-}" ]]; then
     read -ra NODES <<< "$DIST_NODES"
     NODES_SOURCE="DIST_NODES"
@@ -78,10 +89,21 @@ elif [[ -f "$NODEFILE_PATH" ]]; then
         awk 'NF && $1 !~ /^#/ { print $1 }' "$NODEFILE_PATH" | awk '!seen[$0]++'
     )
     NODES_SOURCE="$NODEFILE_PATH"
+    while read -r _alias _ip _rest; do
+        [[ -n "$_alias" && "$_alias" != \#* ]] || continue
+        [[ -n "$_ip" ]] && NODE_IP["$_alias"]="$_ip"
+    done < <(cat "$NODEFILE_PATH"; printf '\n')
 else
     NODES=("local")
     NODES_SOURCE="fallback(local)"
 fi
+
+# ssh/rsync target for a node: its IP if node-ip-list gave one, else the
+# alias itself (must then be resolvable, e.g. via ~/.ssh/config).
+node_addr() {
+    local n="$1"
+    echo "${NODE_IP[$n]:-$n}"
+}
 
 if [[ "${DIST_INCLUDE_LOCAL:-0}" == "1" ]]; then
     _has_local=0
@@ -142,14 +164,14 @@ header()  { echo -e "\n${BOLD}$*${NC}"; }
 run_on() {
     local node="$1"; shift
     if [ "$node" = "local" ]; then bash -c "$*"
-    else ssh -o ConnectTimeout=10 -q "$node" "$@"
+    else ssh -o ConnectTimeout=10 -q "$(node_addr "$node")" "$@"
     fi
 }
 
 run_on_quiet() {
     local node="$1"; shift
     if [ "$node" = "local" ]; then bash -c "$*" 2>/dev/null
-    else ssh -o ConnectTimeout=10 -q "$node" "$@" 2>/dev/null
+    else ssh -o ConnectTimeout=10 -q "$(node_addr "$node")" "$@" 2>/dev/null
     fi
 }
 
@@ -617,7 +639,7 @@ _launch_one() {
         if [ "$node" = "local" ]; then
             cp "$tmp_json" "${REPO_DIR}/experiments/${cfg_name}"
         else
-            rsync -az "$tmp_json" "${node}:${REMOTE_DIR}/experiments/${cfg_name}"
+            rsync -az "$tmp_json" "$(node_addr "$node"):${REMOTE_DIR}/experiments/${cfg_name}"
         fi
 
         run_on_quiet "$node" "tmux kill-session -t ${session} 2>/dev/null" || true
@@ -705,7 +727,7 @@ EOF
         if [ "$node" = "local" ]; then
             printf "    %-32s  tmux attach -t %s    # cores %s\n" "$tag" "$session" "$range"
         else
-            printf "    %-32s  ssh %s -t 'tmux attach -t %s'    # cores %s\n" "$tag" "$node" "$session" "$range"
+            printf "    %-32s  ssh %s -t 'tmux attach -t %s'    # cores %s\n" "$tag" "$(node_addr "$node")" "$session" "$range"
         fi
     done
     echo ""
@@ -813,7 +835,7 @@ _fetch_one() {
             info "← $node  pulling ${joutdir}/"
             mkdir -p "${REPO_DIR}/${joutdir}"
             rsync -az --progress \
-                "${node}:${REMOTE_DIR}/${joutdir}/" \
+                "$(node_addr "$node"):${REMOTE_DIR}/${joutdir}/" \
                 "${REPO_DIR}/${joutdir}/" \
                 || warn "$node: fetch of $joutdir failed (node may be offline)"
             success "$node: ${joutdir} synced"
@@ -961,7 +983,7 @@ _build_and_sync() {
         rsync -az --progress \
             --exclude='.git/' --exclude='build/' --exclude='.venv/' \
             --exclude='results/' --exclude='*.pyc' --exclude='__pycache__/' \
-            "$REPO_DIR/" "${node}:${REMOTE_DIR}/"
+            "$REPO_DIR/" "$(node_addr "$node"):${REMOTE_DIR}/"
         run_on_quiet "$node" "mkdir -p ${REMOTE_DIR}/results"
         success "$node: sync complete"
     done
@@ -1076,16 +1098,17 @@ ${BOLD}Node assignment:${NC}
   Drivers are packed by core capacity across the available nodes.
   Multiple experiments are planned together in one pass, so resources are
   balanced across experiments instead of filling one experiment at a time.
-  Default node source: repo-root nodefile (or DIST_NODES if set).
+  Default node source: repo-root node-ip-list (or DIST_NODES if set).
   Default capacity: 256 cores per node.
   Driver cores are taken from each JSON driver when specified.
   Default heavy-driver fallback: 64 cores per driver.
 
 ${BOLD}Configuration via environment variables:${NC}
-  DIST_NODES="ccred2 ccred3 ccred4"          override node list
-  DIST_NODEFILE="/path/to/nodefile"          alternate nodefile path (env var)
+  DIST_NODES="ccred2 ccred3 ccred4"          override node list (ssh aliases, no IPs)
+  DIST_NODEFILE="/path/to/node-ip-list"      alternate node-ip-list path (env var)
   --nodefile <path>                          same as DIST_NODEFILE (CLI flag)
-                                              (may include "local")
+                                              (format: "<alias> <ip>" per line,
+                                              may include "local" with no IP)
   DIST_INCLUDE_LOCAL=1                       prepend local host to node list
   DIST_REMOTE_DIR="~/CQSimPrivate"           remote working directory
   DIST_HEAVY_TYPES="mcts adaptive_mcts"      space-separated heavy driver types

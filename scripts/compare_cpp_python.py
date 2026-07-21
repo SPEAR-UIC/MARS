@@ -1,24 +1,23 @@
 #!/usr/bin/env python3
 """compare_cpp_python.py — Verify the C++ cqsim reimplementation against the
-reference Python cqsim (cqsim-python) by comparing per-job and aggregate
-scheduling metrics on the same input trace.
+reference Python cqsim (cqsim-python) by comparing per-job event timestamps
+on the same input trace, using each side's events.csv.
 
 Data sources
 ------------
-Python side  : cqsim-python/data/Results/<trace>.rst
-               Semicolon-separated per finished job, in *completion* order:
-               id;reqProc;reqProc;reqTime;run;wait;submit;start;end
-               (see cqsim-python/src/IOModule/Output_log.py:print_result)
-
-C++ side     : results/<exp>/<driver_tag>/events.csv
-               sim_time,event,id  with event in {Submit, Run, Backfill, End, ...}
+Both sides   : sim_time,event,id  with event in {Submit, Run, Backfill, End, ...}
                A job's start time is marked by either "Run" (started in its
                primary scheduling slot) or "Backfill" (started via backfilling);
                "End" marks its finish time.
 
-Ground truth : the shared .swf trace (e.g. data/theta21cln.swf) gives
-               reqProc/reqTime/original run time per job id, used only as a
-               sanity cross-check that both sides refer to the same job.
+               Python side : cqsim-python/data/Results/<trace>_events.csv
+                              (see cqsim-python/src/IOModule/Output_log.py print_event)
+               C++ side    : results/<exp>/<driver_tag>/events_cqsimpython.csv
+                              (events.csv converted via scripts/convert_events_cqsimpython.py
+                              to drop "SchedulingCycle" rows and rename "Backfill" to "Run")
+
+Ground truth : the shared .swf trace (e.g. data/theta21cln.swf) gives the
+               total job count in the trace, used only as a coverage reference.
 
 Job ids are the raw SWF first-column ids and line up 1:1 between the two
 simulators, EXCEPT that some jobs finish in one output but not the other
@@ -26,16 +25,14 @@ simulators, EXCEPT that some jobs finish in one output but not the other
 diagnostics and excluded from the deviation statistics, which are computed
 only on the intersection of completed job ids.
 
-For each matched job we compare, using each simulator's own numbers:
-    wait  = start - submit
-    run   = end   - start
-    bsld  = max(1, (wait + run) / max(run, 10))     # bounded slowdown, tau=10s
+For each matched job we directly compare the three raw event timestamps
+each simulator recorded: submit, start (Run/Backfill), and end (End).
 
 Usage
 -----
     python3 scripts/compare_cpp_python.py \\
-        --cpp-dir results/cqsimpy-test1 --cpp-tag FCFS \\
-        --py-rst cqsim-python/data/Results/theta21cln_regulate.rst \\
+        --cpp-events results/cqsimpy-test1/FCFS/events_cqsimpython.csv \\
+        --py-events cqsim-python/data/Results/theta21_events.csv \\
         --swf data/theta21cln.swf \\
         --label theta21cln --output-dir results/cpp_vs_py/theta21cln
 
@@ -55,7 +52,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 DPI = 150
-BSLD_TAU = 10.0
 
 
 # ─── Parsing ──────────────────────────────────────────────────────────────────
@@ -85,38 +81,15 @@ def parse_swf(path):
     return out
 
 
-def parse_rst(path):
-    """Return {id: {'reqProc', 'reqTime', 'run', 'wait', 'submit', 'start', 'end'}}."""
-    out = {}
-    with open(path) as f:
-        for line in f:
-            line = line.strip()
-            if not line:
-                continue
-            fields = line.split(";")
-            if len(fields) < 9:
-                continue
-            jid = int(fields[0])
-            out[jid] = {
-                "reqProc": int(float(fields[1])),
-                "reqTime": float(fields[3]),
-                "run": float(fields[4]),
-                "wait": float(fields[5]),
-                "submit": float(fields[6]),
-                "start": float(fields[7]),
-                "end": float(fields[8]),
-            }
-    return out
-
-
-def parse_cpp_events(path):
-    """Return {id: {'submit', 'start', 'end'}} built from events.csv."""
+def parse_events(path):
+    """Return {id: {'submit', 'start', 'end'}} built from an events.csv
+    (sim_time,event,id), for either the python or cpp side."""
     submit_t, start_t, end_t = {}, {}, {}
     with open(path) as f:
         reader = csv.DictReader(f)
         for row in reader:
             jid = int(row["id"])
-            t = int(row["sim_time"])
+            t = float(row["sim_time"])
             ev = row["event"]
             if ev == "Submit":
                 submit_t.setdefault(jid, t)
@@ -136,25 +109,6 @@ def parse_cpp_events(path):
 
 # ─── Metrics ──────────────────────────────────────────────────────────────────
 
-def bsld(wait, run):
-    return max(1.0, (wait + run) / max(run, BSLD_TAU))
-
-
-def build_job_metrics(rec):
-    """rec has 'submit','start','end' (cpp) or additionally 'wait','run' (py).
-    Always recompute wait/run/turnaround/bsld from submit/start/end so both
-    sides are derived identically."""
-    wait = rec["start"] - rec["submit"]
-    run = rec["end"] - rec["start"]
-    turnaround = rec["end"] - rec["submit"]
-    return {
-        "wait": wait,
-        "run": run,
-        "turnaround": turnaround,
-        "bsld": bsld(wait, run),
-    }
-
-
 def summarize(values):
     a = np.asarray(values, dtype=float)
     if a.size == 0:
@@ -171,12 +125,12 @@ def summarize(values):
 
 # ─── Core comparison ──────────────────────────────────────────────────────────
 
-def compare(label, swf_path, rst_path, events_path, output_dir):
+def compare(label, swf_path, py_events_path, cpp_events_path, output_dir):
     os.makedirs(output_dir, exist_ok=True)
 
     ground_truth = parse_swf(swf_path)
-    py = parse_rst(rst_path)
-    cpp = parse_cpp_events(events_path)
+    py = parse_events(py_events_path)
+    cpp = parse_events(cpp_events_path)
 
     ids_py = set(py)
     ids_cpp = set(cpp)
@@ -200,25 +154,14 @@ def compare(label, swf_path, rst_path, events_path, output_dir):
     out(f"only in cpp          : {len(only_cpp)}"
         + (f"  e.g. {only_cpp[:5]}" if only_cpp else ""))
 
-    # Sanity cross-check: reqProc from python rst vs ground-truth swf,
-    # on the matched set, to make sure job ids really line up.
-    mismatches = 0
-    for jid in matched:
-        if jid in ground_truth and py[jid]["reqProc"] != ground_truth[jid]["reqProc"]:
-            mismatches += 1
-    out(f"reqProc mismatches (py vs swf, sanity check): {mismatches}/{len(matched)}")
-
     if not matched:
         out("No overlapping completed jobs -- cannot compute deviation stats.")
         return None
 
-    py_metrics = {jid: build_job_metrics(py[jid]) for jid in matched}
-    cpp_metrics = {jid: build_job_metrics(cpp[jid]) for jid in matched}
-
-    fields = ["wait", "run", "turnaround", "bsld"]
-    diffs = {f: np.array([cpp_metrics[j][f] - py_metrics[j][f] for j in matched]) for f in fields}
-    py_arr = {f: np.array([py_metrics[j][f] for j in matched]) for f in fields}
-    cpp_arr = {f: np.array([cpp_metrics[j][f] for j in matched]) for f in fields}
+    fields = ["submit", "start", "end"]
+    diffs = {f: np.array([cpp[j][f] - py[j][f] for j in matched]) for f in fields}
+    py_arr = {f: np.array([py[j][f] for j in matched]) for f in fields}
+    cpp_arr = {f: np.array([cpp[j][f] for j in matched]) for f in fields}
 
     out("\n--- per-job deviation (cpp - python), over matched jobs ---")
     for f in fields:
@@ -237,6 +180,39 @@ def compare(label, swf_path, rst_path, events_path, output_dir):
         rel = 100.0 * (c_mean - p_mean) / p_mean if p_mean != 0 else float("nan")
         out(f"{f:12s} {p_mean:14.3f} {c_mean:14.3f} {abs(c_mean - p_mean):12.3f} {rel:10.2f}")
 
+    # ─── First point of divergence ─────────────────────────────────────────
+    # Walk matched jobs in chronological (python submit) order and report the
+    # first one whose start or end time disagrees between the two sides --
+    # everything before it lines up exactly, so this is where the two
+    # simulators' scheduling decisions first split.
+    TOL = 1e-6
+    chrono = sorted(matched, key=lambda j: (py[j]["submit"], j))
+    first_idx = None
+    for i, jid in enumerate(chrono):
+        if abs(cpp[jid]["start"] - py[jid]["start"]) > TOL or abs(cpp[jid]["end"] - py[jid]["end"]) > TOL:
+            first_idx = i
+            break
+
+    out("\n--- first point of divergence (jobs in python-submit-time order) ---")
+    if first_idx is None:
+        out("No divergence found -- all matched jobs agree on submit/start/end within tolerance.")
+    else:
+        jid = chrono[first_idx]
+        out(f"first mismatch at position {first_idx + 1}/{len(chrono)} in submit order: job id {jid}")
+        out(f"  python : submit={py[jid]['submit']:.3f}  start={py[jid]['start']:.3f}  end={py[jid]['end']:.3f}")
+        out(f"  cpp    : submit={cpp[jid]['submit']:.3f}  start={cpp[jid]['start']:.3f}  end={cpp[jid]['end']:.3f}")
+        out(f"  diff   : start={cpp[jid]['start'] - py[jid]['start']:+.3f}  end={cpp[jid]['end'] - py[jid]['end']:+.3f}")
+
+        out("\n  context (jobs immediately before/after, submit order):")
+        out(f"  {'#':>6s} {'id':>8s} {'py_submit':>14s} {'py_start':>14s} {'cpp_start':>14s} {'start_diff':>12s}")
+        lo = max(0, first_idx - 3)
+        hi = min(len(chrono), first_idx + 6)
+        for i in range(lo, hi):
+            j = chrono[i]
+            marker = " <-- " if i == first_idx else "     "
+            out(f"  {i + 1:>6d} {j:>8d} {py[j]['submit']:>14.3f} {py[j]['start']:>14.3f} "
+                f"{cpp[j]['start']:>14.3f} {cpp[j]['start'] - py[j]['start']:>+12.3f}{marker}")
+
     # ─── Plots ────────────────────────────────────────────────────────────
     fig, axes = plt.subplots(2, 2, figsize=(11, 9))
     fig.suptitle(f"cqsim C++ vs Python -- {label} (n={len(matched)} matched jobs)")
@@ -252,16 +228,16 @@ def compare(label, swf_path, rst_path, events_path, output_dir):
         ax.set_title(f.capitalize())
         ax.legend(fontsize=8)
 
-    scatter_ax(axes[0, 0], "wait", "(s)")
-    scatter_ax(axes[0, 1], "run", "(s)")
-    scatter_ax(axes[1, 0], "bsld")
+    scatter_ax(axes[0, 0], "submit", "(s)")
+    scatter_ax(axes[0, 1], "start", "(s)")
+    scatter_ax(axes[1, 0], "end", "(s)")
 
     ax = axes[1, 1]
-    ax.hist(diffs["wait"], bins=60, color="#2ca02c", alpha=0.8)
+    ax.hist(diffs["start"], bins=60, color="#2ca02c", alpha=0.8)
     ax.axvline(0, color="#d62728", lw=1, ls="--")
-    ax.set_xlabel("wait_cpp - wait_py (s)")
+    ax.set_xlabel("start_cpp - start_py (s)")
     ax.set_ylabel("job count")
-    ax.set_title("Wait-time deviation")
+    ax.set_title("Start-time deviation")
 
     fig.tight_layout(rect=[0, 0, 1, 0.96])
     fig_path = os.path.join(output_dir, f"{label}_deviation.png")
@@ -269,19 +245,18 @@ def compare(label, swf_path, rst_path, events_path, output_dir):
     plt.close(fig)
     out(f"\nwrote {fig_path}")
 
-    # CDF overlay of wait time
+    # CDF overlay of start time
     fig2, ax2 = plt.subplots(figsize=(6, 5))
-    for arr, name, color in [(py_arr["wait"], "python", "#1f77b4"), (cpp_arr["wait"], "cpp", "#ff7f0e")]:
+    for arr, name, color in [(py_arr["start"], "python", "#1f77b4"), (cpp_arr["start"], "cpp", "#ff7f0e")]:
         xs = np.sort(arr)
         ys = np.arange(1, len(xs) + 1) / len(xs)
         ax2.plot(xs, ys, label=name, color=color)
-    ax2.set_xscale("symlog")
-    ax2.set_xlabel("wait time (s)")
+    ax2.set_xlabel("start time (s)")
     ax2.set_ylabel("CDF")
-    ax2.set_title(f"Wait-time CDF -- {label}")
+    ax2.set_title(f"Start-time CDF -- {label}")
     ax2.legend()
     fig2.tight_layout()
-    fig2_path = os.path.join(output_dir, f"{label}_wait_cdf.png")
+    fig2_path = os.path.join(output_dir, f"{label}_start_cdf.png")
     fig2.savefig(fig2_path, dpi=DPI)
     plt.close(fig2)
     out(f"wrote {fig2_path}")
@@ -304,14 +279,14 @@ PRESETS = [
     dict(
         label="theta21cln",
         swf_path="data/theta21cln.swf",
-        rst_path="cqsim-python/data/Results/theta21cln_regulate.rst",
-        events_path="results/cqsimpy-test1/FCFS/events.csv",
+        py_events_path="cqsim-python/data/Results/theta21_events.csv",
+        cpp_events_path="results/cqsimpy-test1/FCFS/events_cqsimpython.csv",
     ),
     dict(
         label="polaris24cln",
         swf_path="data/polaris24cln.swf",
-        rst_path="cqsim-python/data/Results/polaris24cln_regulate.rst",
-        events_path="results/cqsimpt-test2/FCFS/events.csv",
+        py_events_path="cqsim-python/data/Results/polaris24_events.csv",
+        cpp_events_path="results/cqsimpt-test2/FCFS/events_cqsimpython.csv",
     ),
 ]
 
@@ -320,9 +295,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--preset", action="store_true",
                      help="run both built-in experiments (cqsimpy-test1 / cqsimpy-test2) shipped in this repo")
-    ap.add_argument("--cpp-dir", help="cpp experiment output_dir, e.g. results/cqsimpy-test1")
-    ap.add_argument("--cpp-tag", help="driver tag subfolder under --cpp-dir, e.g. FCFS")
-    ap.add_argument("--py-rst", help="path to the python .rst result file")
+    ap.add_argument("--cpp-events", help="path to the cpp events_cqsimpython.csv, e.g. results/cqsimpy-test1/FCFS/events_cqsimpython.csv")
+    ap.add_argument("--py-events", help="path to the python events.csv, e.g. cqsim-python/data/Results/theta21_events.csv")
     ap.add_argument("--swf", help="path to the shared .swf input trace")
     ap.add_argument("--label", default="comparison", help="name used for output files/titles")
     ap.add_argument("--output-dir", default="results/cpp_vs_py", help="where to write plots/report")
@@ -332,28 +306,28 @@ def main():
     os.chdir(repo_root)
 
     jobs = []
-    if args.preset or not (args.cpp_dir and args.py_rst and args.swf):
+    if args.preset or not (args.cpp_events and args.py_events and args.swf):
         if not args.preset:
-            print("Missing --cpp-dir/--py-rst/--swf; falling back to --preset experiments.\n")
+            print("Missing --cpp-events/--py-events/--swf; falling back to --preset experiments.\n")
         for p in PRESETS:
             jobs.append(dict(p, output_dir=os.path.join(args.output_dir, p["label"])))
     else:
         jobs.append(dict(
             label=args.label,
             swf_path=args.swf,
-            rst_path=args.py_rst,
-            events_path=os.path.join(args.cpp_dir, args.cpp_tag, "events.csv"),
+            py_events_path=args.py_events,
+            cpp_events_path=args.cpp_events,
             output_dir=os.path.join(args.output_dir, args.label),
         ))
 
     results = []
     for j in jobs:
-        for key in ("swf_path", "rst_path", "events_path"):
+        for key in ("swf_path", "py_events_path", "cpp_events_path"):
             if not os.path.exists(j[key]):
                 print(f"[skip {j['label']}] missing file: {j[key]}", file=sys.stderr)
                 break
         else:
-            r = compare(j["label"], j["swf_path"], j["rst_path"], j["events_path"], j["output_dir"])
+            r = compare(j["label"], j["swf_path"], j["py_events_path"], j["cpp_events_path"], j["output_dir"])
             if r:
                 results.append(r)
             print()
@@ -361,11 +335,12 @@ def main():
     if len(results) > 1:
         print("=== Overall summary ===")
         for r in results:
-            wait_mae = float(np.mean(np.abs(r["diffs"]["wait"])))
-            bsld_mae = float(np.mean(np.abs(r["diffs"]["bsld"])))
+            submit_mae = float(np.mean(np.abs(r["diffs"]["submit"])))
+            start_mae = float(np.mean(np.abs(r["diffs"]["start"])))
+            end_mae = float(np.mean(np.abs(r["diffs"]["end"])))
             print(f"{r['label']:15s} matched={r['matched']:6d}  "
                   f"only_py={r['only_py']:5d}  only_cpp={r['only_cpp']:5d}  "
-                  f"wait_MAE={wait_mae:10.2f}s  bsld_MAE={bsld_mae:8.4f}")
+                  f"submit_MAE={submit_mae:10.2f}s  start_MAE={start_mae:10.2f}s  end_MAE={end_mae:10.2f}s")
 
 
 if __name__ == "__main__":
