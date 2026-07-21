@@ -19,6 +19,7 @@ CLEAN=false
 
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BUILD_DIR="${PROJECT_DIR}/build"
+BINARY_NAME="cqsimcpp"
 
 # ==============================================================================
 # Argument parsing
@@ -55,6 +56,11 @@ if $CLEAN; then
     rm -rf "${BUILD_DIR}"
 fi
 
+if [[ -f "${PROJECT_DIR}/${BINARY_NAME}" ]]; then
+    echo "Removing existing ${BINARY_NAME} at repo root..."
+    rm -f "${PROJECT_DIR}/${BINARY_NAME}"
+fi
+
 mkdir -p "${BUILD_DIR}"
 
 echo "Configuring (type=${BUILD_TYPE}, ASAN=${USE_ASAN}, TSAN=${USE_TSAN})..."
@@ -66,4 +72,8 @@ cmake -S "${PROJECT_DIR}" -B "${BUILD_DIR}" \
 echo "Compiling..."
 cmake --build "${BUILD_DIR}" -- -j"$(nproc)"
 
+echo "Copying ${BINARY_NAME} to repo root..."
+cp "${BUILD_DIR}/${BINARY_NAME}" "${PROJECT_DIR}/${BINARY_NAME}"
+
 echo "Build complete: ${BUILD_DIR}"
+echo "Binary available at: ${PROJECT_DIR}/${BINARY_NAME}"
