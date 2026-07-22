@@ -64,4 +64,5 @@ This data is used by the script `scripts/plot_cluster26.py` which can be execute
 ```
 source .venv/bin/activate
 python3 scripts/plot_cluster26.py experiments/exp2a.json experiments/exp2b.json
+python3 scripts/plot_window_sensitivity.py experiments/exp1a.json experiments/exp1b.json --output_dir plots_cluster26
 ```

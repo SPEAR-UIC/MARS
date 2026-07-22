@@ -9,9 +9,9 @@
   "size_bins": [],
   "walltime_bins": [],
   "drivers": [
-    {"type": "lrf", "tag": "LRF", "window_size": 1024, "backfilling": true},
-    {"type": "ljf", "tag": "LJF", "window_size": 1024, "backfilling": true},
-    {"type": "random", "tag": "Random", "window_size": 1024, "backfilling": true, "seed": 17},
+    {"type": "lrf", "tag": "LRF", "window_size": 256, "backfilling": true},
+    {"type": "ljf", "tag": "LJF", "window_size": 256, "backfilling": true},
+    {"type": "random", "tag": "Random", "window_size": 256, "backfilling": true, "seed": 17},
     {"type": "rlscheduler", "tag": "RLScheduler", "csv_path": "data/polaris24cln_rlscheduler.csv"},
     {"type": "fcfs",  "tag": "FCFS",     "backfilling": true},
     {"type": "sjf",   "tag": "SJF","window_size": 1024, "backfilling": true},
