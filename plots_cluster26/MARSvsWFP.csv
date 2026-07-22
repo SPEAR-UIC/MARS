@@ -1,0 +1,5 @@
+System,Metric,Baseline_Tag,Driver,Raw_Tag,Direction,Count,P25,P50,P75,Mean,P25_Change_vs_Baseline_Pct,P50_Change_vs_Baseline_Pct,P75_Change_vs_Baseline_Pct,Mean_Change_vs_Baseline_Pct
+Polaris 2024,Wait_Time_hours,WFP,MARS-CW,MARS-CW,lower_is_better,32869,0.3367,1.4950,6.0211,14.0635,70.05,62.56,55.15,-2.65
+Polaris 2024,Wait_Time_hours,WFP,MARS-CU,MARS-CU,lower_is_better,35684,0.6297,2.5679,7.5467,10.2643,43.97,35.70,43.78,25.08
+Theta 2021,Wait_Time_hours,WFP,MARS-CW,MARS-CW,lower_is_better,23051,0.1890,0.9361,4.8956,55.0464,94.94,91.35,81.11,-111.15
+Theta 2021,Wait_Time_hours,WFP,MARS-CU,MARS-CU,lower_is_better,26647,0.6114,2.6669,9.5753,18.3110,83.62,75.35,63.06,29.76

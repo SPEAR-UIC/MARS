@@ -26,11 +26,9 @@ All dependencies can be installed using `setup.sh`, which also builds the binary
 
 ## Unit Testing and Simulator verification
 
-To validate and test our simulator we include a comprehensive test suite under `tests` using google tests. These tests can be run using the `gtests.sh` script.
+Reviews had requested more details on the verification of CQSIM's reimplementation in C++. We provide a detailed analysis in [/validation/README.md](/validation/README.md)
 
-TODO: Add tests for simulator verification against python version.
-
-## Running Simulated Experiments
+## Running Simulated Experiments 
 
 The `setup.sh` script outputs a binary called `cqsimcpp` at the root of the project. This binary is used to run the experiments reported in our submission. It takes input a experiment configuration files that lists the various polices and the log file that needs to be used for experiments. We have provided two simple samples: `sample-1.json` and `sample-2.json` under the `experiments` directory.
 

@@ -845,6 +845,75 @@ def compute_relative_improvement_pct(baseline_value, value, lower_is_better):
         return (baseline_value - value) / abs(baseline_value) * 100.0
     return (value - baseline_value) / abs(baseline_value) * 100.0
 
+_WAIT_STAT_HEADERS = ["Min", "P25", "P50", "P75", "P85", "P95", "P99", "Max",
+                      "Mean", "StdDev", "GeometricMean"]
+
+def _wait_stats_row(values_minutes):
+    arr = np.array(values_minutes)
+    pos = arr[arr > 0]
+    gmean = float(np.exp(np.mean(np.log(pos)))) if pos.size > 0 else 0.0
+    return [
+        arr.min(), np.percentile(arr, 25), np.percentile(arr, 50),
+        np.percentile(arr, 75), np.percentile(arr, 85), np.percentile(arr, 95),
+        np.percentile(arr, 99), arr.max(), arr.mean(), arr.std(), gmean,
+    ]
+
+def write_wait_stat_table(out_path, rows):
+    """Wait-time distribution table (values in minutes), one row per
+    (system, driver). `rows` is a list of (system_label, tag, wait_hours_list).
+    Matches the original CLUSTER'26 table_wait.csv / table_wait_{group}.csv
+    format from the (now-deleted) exp2_plot.py."""
+    d = os.path.dirname(out_path)
+    os.makedirs(d if d else ".", exist_ok=True)
+    with open(out_path, "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["System", "Driver"] + _WAIT_STAT_HEADERS)
+        for system_label, tag, wait_hours in rows:
+            if not wait_hours:
+                writer.writerow([system_label, tag] + ["N/A"] * len(_WAIT_STAT_HEADERS))
+                continue
+            values_minutes = [w * 60.0 for w in wait_hours]
+            writer.writerow(
+                [system_label, tag] +
+                [f"{v:.4f}" for v in _wait_stats_row(values_minutes)]
+            )
+    print(f"  Saved: {out_path}")
+
+def write_wait_pct_change_table(out_path, rows, baseline_tag, compare_tag):
+    """% change in each wait-time stat for `compare_tag` vs `baseline_tag`,
+    one row per (system, job class). `rows` is a list of
+    (system_label, job_class, baseline_wait_hours, compare_wait_hours).
+
+    Positive = compare_tag is faster (lower wait) than baseline_tag, matching
+    compute_relative_improvement_pct's convention for a lower_is_better metric.
+    """
+    d = os.path.dirname(out_path)
+    os.makedirs(d if d else ".", exist_ok=True)
+    header = (["System", "Job_Class", f"N_{baseline_tag}", f"N_{compare_tag}"] +
+              [f"{h}_Change_vs_{baseline_tag}_Pct" for h in _WAIT_STAT_HEADERS])
+    with open(out_path, "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(header)
+        for system_label, job_class, baseline_hours, compare_hours in rows:
+            n_base, n_cmp = len(baseline_hours), len(compare_hours)
+            if not baseline_hours or not compare_hours:
+                writer.writerow(
+                    [system_label, job_class, n_base, n_cmp] +
+                    ["N/A"] * len(_WAIT_STAT_HEADERS)
+                )
+                continue
+            base_stats = _wait_stats_row([w * 60.0 for w in baseline_hours])
+            cmp_stats  = _wait_stats_row([w * 60.0 for w in compare_hours])
+            pct = [
+                compute_relative_improvement_pct(b, c, lower_is_better=True)
+                for b, c in zip(base_stats, cmp_stats)
+            ]
+            writer.writerow(
+                [system_label, job_class, n_base, n_cmp] +
+                [f"{v:.2f}" if v is not None else "N/A" for v in pct]
+            )
+    print(f"  Saved: {out_path}")
+
 def write_overall_metrics_quartiles_table(out_path, metric_rows):
     """Write quartiles and % change vs WFP/WFP3 baseline for overall metrics."""
     headers = [
@@ -1456,7 +1525,7 @@ def _plot_backfill_drain_grid_panels(panels, out_path,
 
     fig_w = fig_width if fig_width is not None else (13.6 if not is_combined else 14.6)
     fig_h = fig_height if fig_height is not None else (n_rows * 2.45 + (0.70 if is_combined else 0.35))
-    left_margin = 0.085 if not is_combined else 0.10
+    left_margin = 0.085 if not is_combined else 0.115
     bottom_margin = 0.10 if is_combined else 0.095
     ann_fs = 9.5 * font_scale
     group_fs = 17.0 * font_scale
@@ -1590,7 +1659,7 @@ def _plot_backfill_drain_grid_panels(panels, out_path,
         for row_start, row_end, label in panel_ranges:
             y_top = hist_axes[row_start][0].get_position().y1
             y_bot = box_axes[row_end][0].get_position().y0
-            fig.text(0.028, 0.5 * (y_top + y_bot), label,
+            fig.text(0.018, 0.5 * (y_top + y_bot), label,
                      ha="center", va="center", rotation=90,
                      fontsize=system_fs, fontweight="bold")
     else:
@@ -2117,6 +2186,44 @@ def main():
         os.path.join(out_dir, "wait", "wait_quartiles_by_group_vs_wfp_baseline.csv"),
         wait_group_rows,
     )
+
+    # Overall + per-size-class wait time distribution tables (minutes),
+    # matching the original CLUSTER'26 table_wait.csv / table_wait_{group}.csv.
+    write_wait_stat_table(
+        os.path.join(out_dir, "wait", "table_wait.csv"),
+        [(label_a, tag, wait_a.get(tag, [])) for tag in tags_a] +
+        [(label_b, tag, wait_b.get(tag, [])) for tag in tags_b],
+    )
+    for grp in GROUPS:
+        write_wait_stat_table(
+            os.path.join(out_dir, "wait", f"table_wait_{grp}.csv"),
+            [(label_a, tag, wait_a_grp.get(tag, {}).get(grp, [])) for tag in tags_a] +
+            [(label_b, tag, wait_b_grp.get(tag, {}).get(grp, [])) for tag in tags_b],
+        )
+
+    # MARS-CW vs WFP wait-time % change, one row per (system, job class).
+    wfp_tag_a_wait = find_wfp_baseline_tag(tags_a)
+    wfp_tag_b_wait = find_wfp_baseline_tag(tags_b)
+    pct_change_rows = []
+    for system_label, wfp_tag, wait_all, wait_grp in (
+            (label_a, wfp_tag_a_wait, wait_a, wait_a_grp),
+            (label_b, wfp_tag_b_wait, wait_b, wait_b_grp),
+    ):
+        if not wfp_tag or "MARS-CW" not in wait_all:
+            continue
+        pct_change_rows.append(
+            (system_label, "All", wait_all.get(wfp_tag, []), wait_all.get("MARS-CW", [])))
+        for grp in GROUPS:
+            pct_change_rows.append((
+                system_label, grp,
+                wait_grp.get(wfp_tag, {}).get(grp, []),
+                wait_grp.get("MARS-CW", {}).get(grp, []),
+            ))
+    if pct_change_rows:
+        write_wait_pct_change_table(
+            os.path.join(out_dir, "wait", "table_wait_pct_change_mars_cw_vs_wfp.csv"),
+            pct_change_rows, baseline_tag="WFP", compare_tag="MARS-CW",
+        )
 
     # ── bsld/ ────────────────────────────────────────────────────────────────
     print("\nGenerating bsld/ figures...")
