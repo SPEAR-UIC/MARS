@@ -1,3 +1,11 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/MARS-Card.png" />
+  <source media="(prefers-color-scheme: light)" srcset="docs/images/MARS-Card.png" />
+  <img src="docs/images/MARS-Card.png" alt="MARS Card" />
+</picture>
+
+---
+
 # MARS: A Monte Carlo Tree Search-based Adaptive and Responsive Scheduler
 
 Modern High Performance Computing (HPC) systems depend on static
