@@ -21,8 +21,6 @@ optimization goal is configurable through a reward function rather than
 baked into a learned model. MARS uses a lightweight discrete-event
 simulator to explore the future consequences of scheduling decisions
 within a strict time budget, adapting to the configured reward at each
-scheduling cycle.
-
-If you use MARS in your work, please cite the following papers:
+scheduling cycle. If you use MARS in your work, please cite the following papers:
 
 Yash Kurkure, Yihe Zhang, Zhiling Lan, Mike Papka, “MARS: Monte Carlo Tree Search based Adaptive and Responsive Scheduling”, Proc. of IEEE Cluster, 2026.
