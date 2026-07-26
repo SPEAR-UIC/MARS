@@ -91,9 +91,15 @@ public:
     long            job_duration_for(int job_id) const;
 
     // ── Backfill helpers ─────────────────────────────────────────────────────
-    long earliest_start_time(int procs_needed)   const;
+    // `reserved_procs` lets a caller in the middle of building up a batch of
+    // decisions (e.g. schedule_with_backfill_reservation) account for procs
+    // it has already provisionally committed this cycle but that aren't yet
+    // reflected in running_jobs_/end_times_ (those only update once the
+    // batch is applied). Defaults to 0 for callers that just want the true
+    // committed state.
+    long earliest_start_time(int procs_needed, int reserved_procs = 0) const;
     long get_job_end_time(int job_id)             const;
-    int  calculate_free_procs_at(long time)       const;
+    int  calculate_free_procs_at(long time, int reserved_procs = 0) const;
 
     // ── Stats ────────────────────────────────────────────────────────────────
     const std::vector<int>& completed_jobs() const;

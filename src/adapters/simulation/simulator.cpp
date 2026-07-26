@@ -249,8 +249,9 @@ long Simulator::get_job_end_time(int job_id) const {
     return (it != end_times_.end()) ? it->second : -1;
 }
 
-long Simulator::earliest_start_time(int procs_needed) const {
-    if (procs_needed <= available_procs()) return current_time_;
+long Simulator::earliest_start_time(int procs_needed, int reserved_procs) const {
+    int free_now = available_procs() - reserved_procs;
+    if (procs_needed <= free_now) return current_time_;
 
     std::vector<std::pair<long, int>> timeline;
     for (int jid : running_jobs_) {
@@ -260,7 +261,7 @@ long Simulator::earliest_start_time(int procs_needed) const {
     }
     std::sort(timeline.begin(), timeline.end());
 
-    int free = available_procs();
+    int free = free_now;
     for (const auto& [time, procs] : timeline) {
         free += procs;
         if (free >= procs_needed) return time;
@@ -268,13 +269,13 @@ long Simulator::earliest_start_time(int procs_needed) const {
     return std::numeric_limits<long>::max();
 }
 
-int Simulator::calculate_free_procs_at(long time) const {
+int Simulator::calculate_free_procs_at(long time, int reserved_procs) const {
     int used = 0;
     for (int jid : running_jobs_) {
         if (get_job_end_time(jid) > time)
             used += jobs_->at(jid).requested.procs;
     }
-    return total_procs() - used;
+    return total_procs() - used - reserved_procs;
 }
 
 // ── Event handlers ────────────────────────────────────────────────────────────

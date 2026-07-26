@@ -62,10 +62,15 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
-from matplotlib.ticker import LogFormatterMathtext
 import numpy as np
 
 DPI = 150
+
+# ── EDIT ME ─────────────────────────────────────────────────────────────────
+# How many hours of simulation time (since each trace's first submit) to
+# show in the combined Polaris-vs-Theta error/cumulative-submissions plot
+# (see plot_error_and_submissions_comparison). Change this to zoom in/out.
+ERROR_VS_TIME_WINDOW_HOURS = 720
 
 # The C++ simulator logs a couple of event kinds the python side doesn't;
 # normalize both sides to the same {Submit, Run, End} vocabulary on read.
@@ -140,8 +145,8 @@ def load_events(path):
     return jobs, first_submit
 
 
-# Known trace file locations, used by build_polaris_theta_violin() to build
-# the combined comparison figure once both traces' C++ runs exist.
+# Known trace file locations, used by the combined Polaris-vs-Theta figure
+# builders to build their figures once both traces' C++ runs exist.
 TRACE_FILES = {
     "polaris24cln": dict(
         cpp_events="results/cqsimpt-test2/FCFS/events.csv",
@@ -164,26 +169,68 @@ def compute_start_diff_hours(py_events_path, cpp_events_path):
     return np.array([abs(cpp[j]["start"] - py[j]["start"]) for j in matched]) / 3600.0
 
 
+def compute_deviation_timeseries_hours(py_events_path, cpp_events_path):
+    """Per matched job: (hours since this trace's first submit, |CQSim
+    C++ start - CQSim Python start| in hours) -- the two series plotted by
+    plot_error_and_submissions_comparison."""
+    py, py_first_submit = load_events(py_events_path)
+    cpp, _ = load_events(cpp_events_path)
+    matched = sorted(set(py) & set(cpp))
+    if not matched:
+        return np.array([]), np.array([])
+    sim_hours = np.array([(py[j]["submit"] - py_first_submit) / 3600.0 for j in matched])
+    dev_hours = np.array([abs(cpp[j]["start"] - py[j]["start"]) / 3600.0 for j in matched])
+    return sim_hours, dev_hours
+
+
 # ─── Metrics ──────────────────────────────────────────────────────────────────
-
-def summarize(values):
-    a = np.asarray(values, dtype=float)
-    if a.size == 0:
-        return {}
-    return {
-        "mean": float(np.mean(a)),
-        "median": float(np.median(a)),
-        "std": float(np.std(a)),
-        "min": float(np.min(a)),
-        "max": float(np.max(a)),
-        "p95": float(np.percentile(a, 95)),
-    }
-
 
 def pearson_r(x, y):
     if np.std(x) > 0 and np.std(y) > 0:
         return float(np.corrcoef(x, y)[0, 1])
     return float("nan")
+
+
+def loess_smooth(x, y, frac=0.08, n_eval=300):
+    """Locally weighted linear regression (LOESS/LOWESS, degree 1, tricube
+    kernel), evaluated at `n_eval` evenly spaced points across x's range.
+
+    No statsmodels dependency -- for each evaluation point, takes the
+    nearest `frac`-fraction of points (by x-distance), weights them with
+    the tricube kernel, and fits a weighted least-squares line locally.
+    Caller should pass already-transformed y (e.g. log10) for heavy-tailed
+    data, since this is not a robust/iterative LOESS.
+    """
+    x = np.asarray(x, dtype=float)
+    y = np.asarray(y, dtype=float)
+    order = np.argsort(x)
+    xs, ys = x[order], y[order]
+    n = len(xs)
+    r = max(int(np.ceil(frac * n)), 2)
+
+    x_eval = np.linspace(xs[0], xs[-1], n_eval)
+    y_eval = np.empty(n_eval)
+    for i, x0 in enumerate(x_eval):
+        idx = np.searchsorted(xs, x0)
+        lo = max(0, min(idx - r // 2, n - r))
+        hi = lo + r
+        xw, yw = xs[lo:hi], ys[lo:hi]
+
+        d = np.abs(xw - x0)
+        dmax = d.max()
+        w = (1 - (d / dmax) ** 3) ** 3 if dmax > 0 else np.ones_like(d)
+        w = np.clip(w, 0, None)
+
+        sw, sx, sy = w.sum(), (w * xw).sum(), (w * yw).sum()
+        sxx, sxy = (w * xw * xw).sum(), (w * xw * yw).sum()
+        denom = sw * sxx - sx * sx
+        if abs(denom) < 1e-12 or sw <= 0:
+            y_eval[i] = sy / sw if sw > 0 else np.nan
+        else:
+            b = (sw * sxy - sx * sy) / denom
+            a = (sy - b * sx) / sw
+            y_eval[i] = a + b * x0
+    return x_eval, y_eval
 
 
 # ─── Plot theming (borrowed from scripts/plot_cluster26.py) ───────────────────
@@ -203,203 +250,215 @@ def save_fig(fig, path):
     plt.close(fig)
 
 
-def plot_start_relative(py_rel, cpp_rel, r, n, label, output_dir, log_scale=False):
-    """Scatter of start time relative to each side's own first submit time,
-    with a y = x reference line and the correlation stats in the corner."""
-    fig, ax = plt.subplots(figsize=(6.5, 6.5))
-    ax.scatter(py_rel, cpp_rel, s=4, alpha=0.25, color="#1f77b4", linewidths=0, zorder=2)
-
-    if log_scale:
-        pos = np.concatenate([py_rel, cpp_rel])
-        pos = pos[pos > 0]
-        lo = float(pos.min()) if pos.size else 1e-3
-        hi = float(max(py_rel.max(), cpp_rel.max()))
-        ax.set_xscale("log")
-        ax.set_yscale("log")
-        ax.xaxis.set_major_formatter(LogFormatterMathtext())
-        ax.yaxis.set_major_formatter(LogFormatterMathtext())
-    else:
-        lo = min(py_rel.min(), cpp_rel.min())
-        hi = max(py_rel.max(), cpp_rel.max())
-
-    ax.plot([lo, hi], [lo, hi], color="#d62728", lw=1.4, ls="--", label="y = x", zorder=3)
-    ax.set_xlabel("Start Time in CQSim-Python", fontsize=12, fontweight="bold", labelpad=4)
-    ax.set_ylabel("Start Time in CQSim-C++", fontsize=12, fontweight="bold", labelpad=4)
-    ax.legend(loc="upper left", fontsize=9)
-    ax.text(
-        0.98, 0.03, f"r = {r:.4f}\nr² = {r ** 2:.4f}\nn = {n}",
-        transform=ax.transAxes, fontsize=10, ha="right", va="bottom", fontweight="bold",
-        bbox=dict(boxstyle="round", facecolor="white", edgecolor="black", linewidth=0.8, alpha=0.9),
-    )
-    _bold_ax(ax)
-    fig.tight_layout()
-
-    suffix = "_start_relative_log" if log_scale else "_start_relative"
-    fig_path = os.path.join(output_dir, f"{label}{suffix}.png")
-    save_fig(fig, fig_path)
-    return fig_path
-
-
 _TRACE_DISPLAY_NAMES = {
     "theta21cln": "Theta 2021",
     "polaris24cln": "Polaris 2024",
 }
 
+_TRACE_ORDER = ["polaris24cln", "theta21cln"]
+_TRACE_FACE_COLORS = {"polaris24cln": "#2ca02c", "theta21cln": "#1f77b4"}
 
-def plot_start_diff_violin(diff, label, output_dir):
-    """Violin plot of a per-job start-time difference metric (e.g. the
-    magnitude |CQSim C++ - CQSim Python|); `diff` is whatever values/units
-    the caller wants plotted."""
-    fig, ax = plt.subplots(figsize=(5, 6.5))
-    parts = ax.violinplot([diff], showmeans=True, showmedians=True, showextrema=True)
 
+def _style_violin_bodies(parts, color):
     for body in parts["bodies"]:
-        body.set_facecolor("#1f77b4")
+        body.set_facecolor(color)
         body.set_edgecolor("black")
-        body.set_linewidth(1.2)
+        body.set_linewidth(1.0)
         body.set_alpha(0.75)
     parts["cmedians"].set_color("black")
-    parts["cmedians"].set_linewidth(2.4)
+    parts["cmedians"].set_linewidth(1.8)
     parts["cmeans"].set_color("red")
-    parts["cmeans"].set_linewidth(2.0)
+    parts["cmeans"].set_linewidth(1.5)
     parts["cmeans"].set_linestyle(":")
     for key in ("cbars", "cmins", "cmaxes"):
         parts[key].set_color("black")
-        parts[key].set_linewidth(1.2)
-
-    ax.axhline(0, color="#d62728", lw=1.2, ls="--", zorder=1)
-    ax.set_xticks([1])
-    ax.set_xticklabels([_TRACE_DISPLAY_NAMES.get(label, label)])
-    ax.set_ylabel("|Δ Start Time| (hours)",
-                   fontsize=12, fontweight="bold", labelpad=4)
-
-    # Percentile + median reference lines, spanning the full width of the
-    # axes. Labels alternate left/right (in value order) so close-together
-    # values don't overlap each other's text.
-    median_v = float(np.median(diff))
-    pct_colors = {75: "#ff7f0e", 99: "#8c564b"}
-    pct_values = {p: float(np.percentile(diff, p)) for p in pct_colors}
-    labeled_lines = [("median", median_v, "black")] + \
-        [(f"P{p}", pct_values[p], pct_colors[p]) for p in pct_colors]
-
-    y_trans = ax.get_yaxis_transform()  # x in axes coords, y in data coords
-    for i, (name, v, color) in enumerate(sorted(labeled_lines, key=lambda t: t[1])):
-        if name != "median":
-            ax.axhline(v, color=color, lw=1.3, ls="-.", zorder=1.5)
-        side_x, ha = (0.02, "left") if i % 2 == 0 else (0.98, "right")
-        ax.text(side_x, v, f"{name}={v:.2f}", transform=y_trans, fontsize=8.5,
-                fontweight="bold", color=color, ha=ha, va="bottom",
-                bbox=dict(boxstyle="round,pad=0.15", facecolor="white",
-                          edgecolor="none", alpha=0.75))
-
-    # Crop the view to P99 -- the extreme tail beyond it otherwise dwarfs the
-    # bulk of the distribution. A little headroom keeps the P99 line/label
-    # from sitting flush against the top spine.
-    ax.set_ylim(0, pct_values[99] * 1.06)
-
-    legend_handles = [
-        Line2D([0], [0], color="black", lw=2.4, label="median"),
-        Line2D([0], [0], color="red", lw=2.0, ls=":", label="mean"),
-    ] + [
-        Line2D([0], [0], color=c, lw=1.3, ls="-.", label=f"P{p}")
-        for p, c in pct_colors.items()
-    ]
-    # Legend sits above the axes entirely so it never collides with the
-    # in-plot P75/P99 labels, wherever their values happen to land.
-    ax.legend(handles=legend_handles, loc="lower center", bbox_to_anchor=(0.5, 1.01),
-              ncol=4, fontsize=12, frameon=True, columnspacing=1.2, handlelength=1.8)
-
-    _bold_ax(ax)
-    ax.tick_params(labelsize=13)
-    fig.tight_layout()
-
-    fig_path = os.path.join(output_dir, f"{label}_start_diff_violin.png")
-    save_fig(fig, fig_path)
-    return fig_path
+        parts[key].set_linewidth(0.9)
 
 
-def plot_polaris_theta_violin(diff_by_label, output_dir):
-    """Compact two-panel |Δ start time| violin: Polaris 2024 on the left,
-    Theta 2021 on the right, sized to sit at roughly a quarter of a row's
-    width in a two-column LaTeX paper figure (e.g. next to 3 similar plots).
 
-    Skinnier than plot_start_diff_violin's single-trace version and with
-    lighter per-panel annotation (median + P99 only) to stay legible once
-    shrunk down on the page.
+
+def plot_polaris_theta_violin_separate_scales(start_diff_by_label, output_dir):
+    """|Δ start time| for Polaris and Theta as two side-by-side violins,
+    each in its OWN subplot with its OWN y-axis scale -- unlike a single
+    shared-scale violin, this keeps Theta's much smaller distribution
+    visible instead of being
+    flattened to a sliver by Polaris's much larger range. Compact, sized
+    to sit at roughly a quarter of a row's width in a two-column LaTeX
+    paper figure. One shared legend for both panels (median/mean/P99 mean
+    the same thing in both, so a single legend avoids duplicating it).
     """
-    order = ["polaris24cln", "theta21cln"]
-    positions = {lbl: i + 1 for i, lbl in enumerate(order)}
-    face_colors = {"polaris24cln": "#2ca02c", "theta21cln": "#1f77b4"}
     violin_width = 0.5
+    half = violin_width / 2 + 0.05
 
-    fig, ax = plt.subplots(figsize=(3.3, 3.2))
+    fig, axes = plt.subplots(1, 2, figsize=(3, 3))
 
-    for lbl in order:
-        diff = diff_by_label[lbl]
-        pos = positions[lbl]
-        parts = ax.violinplot([diff], positions=[pos], widths=violin_width,
+    for ax, lbl in zip(axes, _TRACE_ORDER):
+        diff = start_diff_by_label[lbl]
+        color = _TRACE_FACE_COLORS[lbl]
+        parts = ax.violinplot([diff], positions=[1], widths=violin_width,
                                showmeans=True, showmedians=True, showextrema=True)
-        for body in parts["bodies"]:
-            body.set_facecolor(face_colors[lbl])
-            body.set_edgecolor("black")
-            body.set_linewidth(1.0)
-            body.set_alpha(0.75)
-        parts["cmedians"].set_color("black")
-        parts["cmedians"].set_linewidth(1.8)
-        parts["cmeans"].set_color("red")
-        parts["cmeans"].set_linewidth(1.5)
-        parts["cmeans"].set_linestyle(":")
-        for key in ("cbars", "cmins", "cmaxes"):
-            parts[key].set_color("black")
-            parts[key].set_linewidth(0.9)
+        _style_violin_bodies(parts, color)
 
         median_v = float(np.median(diff))
         p99_v = float(np.percentile(diff, 99))
-        half = violin_width / 2 + 0.05
-        ax.hlines(p99_v, pos - half, pos + half, color="#8c564b", lw=1.1, ls="-.", zorder=1.5)
-        ax.text(pos, p99_v, f"P99={p99_v:.1f}", fontsize=6.3, fontweight="bold",
+        ax.hlines(p99_v, 1 - half, 1 + half, color="#8c564b", lw=1.1, ls="-.", zorder=1.5)
+        ax.text(1, p99_v, f"P99={p99_v:.1f}", fontsize=7, fontweight="bold",
                 color="#8c564b", ha="center", va="bottom")
-        ax.text(pos, median_v, f"med={median_v:.1f}", fontsize=6.3, fontweight="bold",
+        ax.text(1, median_v, f"med={median_v:.1f}", fontsize=7, fontweight="bold",
                 color="black", ha="center", va="bottom")
 
-    ax.axhline(0, color="#d62728", lw=1.0, ls="--", zorder=1)
-    ax.set_xticks([positions[l] for l in order])
-    ax.set_xticklabels([_TRACE_DISPLAY_NAMES.get(l, l) for l in order])
-    ax.set_xlim(0.5, 2.5)
-    top = max(float(np.percentile(diff_by_label[l], 99)) for l in order) * 1.15
-    ax.set_ylim(0, top)
-    ax.set_ylabel("|Δ Start Time| (hours)", fontsize=9, fontweight="bold", labelpad=3)
+        ax.axhline(0, color="#d62728", lw=1.0, ls="--", zorder=1)
+        ax.set_xticks([1])
+        ax.set_xticklabels([_TRACE_DISPLAY_NAMES.get(lbl, lbl)])
+        ax.set_xlim(0.5, 1.5)
+        # Each panel gets its own scale, sized to its own data --
+        # the whole point of splitting these into separate subplots.
+        ax.set_ylim(0, p99_v * 1.15)
+        _bold_ax(ax)
+        ax.tick_params(labelsize=8.5)
+
+    axes[0].set_ylabel("|Δ Start Time| (hours)", fontsize=9.5, fontweight="bold", labelpad=3)
 
     legend_handles = [
         Line2D([0], [0], color="black", lw=1.8, label="median"),
         Line2D([0], [0], color="red", lw=1.5, ls=":", label="mean"),
         Line2D([0], [0], color="#8c564b", lw=1.1, ls="-.", label="P99"),
     ]
-    ax.legend(handles=legend_handles, loc="lower center", bbox_to_anchor=(0.5, 1.02),
-              ncol=3, fontsize=6.5, frameon=True, columnspacing=0.8, handlelength=1.4)
+    fig.legend(handles=legend_handles, loc="lower center", bbox_to_anchor=(0.6, 0.94),
+               ncol=3, fontsize=8, frameon=True, columnspacing=1.0, handlelength=1.6)
 
-    _bold_ax(ax)
-    ax.tick_params(labelsize=8)
     fig.tight_layout()
-
     fig_path = os.path.join(output_dir, "polaris_theta_start_diff_violin.png")
     save_fig(fig, fig_path)
     return fig_path
 
 
-def build_polaris_theta_violin(output_dir):
-    """Emit the combined Polaris-vs-Theta violin once both traces' raw C++
-    events.csv exist. Skips (with a note, not an error) while either side is
-    still missing -- e.g. the Polaris C++ run hasn't finished yet."""
-    diff_by_label = {}
+def build_polaris_theta_violin_separate_scales(output_dir):
+    """Emit the separate-scales Polaris/Theta violin figure once both
+    traces' raw C++ events.csv exist. Skips (with a note, not an error)
+    while either side is still missing."""
+    start_diff_by_label = {}
     for lbl, paths in TRACE_FILES.items():
-        missing = [p for p in paths.values() if not os.path.exists(p)]
+        missing = [paths[k] for k in ("cpp_events", "py_events") if not os.path.exists(paths[k])]
         if missing:
-            print(f"[skip combined polaris/theta violin] {lbl}: missing {missing[0]}")
+            print(f"[skip separate-scales violin] {lbl}: missing {missing[0]}")
             return None
-        diff_by_label[lbl] = compute_start_diff_hours(paths["py_events"], paths["cpp_events"])
+        start_diff_by_label[lbl] = compute_start_diff_hours(paths["py_events"], paths["cpp_events"])
 
-    fig_path = plot_polaris_theta_violin(diff_by_label, output_dir)
+    fig_path = plot_polaris_theta_violin_separate_scales(start_diff_by_label, output_dir)
+    print(f"wrote {fig_path}")
+    return fig_path
+
+
+def _plot_loess_curve(ax, x, y, color, label, x_log, y_log):
+    """Fit+plot a LOESS trend of y(x) onto ax, in whichever space (log10 or
+    raw) each axis is displaying. Shared by the error panel and the
+    rate_loess top-panel variant so both smooth identically."""
+    fit_mask = (y > 0) if y_log else np.ones_like(y, dtype=bool)
+    if x_log:
+        fit_mask &= x > 0
+    if fit_mask.sum() < 10:
+        return
+    x_fit = np.log10(x[fit_mask]) if x_log else x[fit_mask]
+    y_fit = np.log10(y[fit_mask]) if y_log else y[fit_mask]
+    x_eval, y_smooth = loess_smooth(x_fit, y_fit)
+    x_plot = 10 ** x_eval if x_log else x_eval
+    y_plot = 10 ** y_smooth if y_log else np.clip(y_smooth, 0, None)
+    ax.plot(x_plot, y_plot, color=color, lw=2.4, label=label, zorder=2)
+
+
+def plot_error_and_submissions_comparison(series_by_label, output_dir, window_hours):
+    """Two side-by-side panels sharing a linear simulation-time (days)
+    x-axis, Polaris and Theta overlaid in their trace colors:
+        left  -- |Δ start time|, LOESS trend only (no raw scatter)
+        right -- cumulative jobs submitted so far (step function)
+    `window_hours` caps how much of the run is shown -- see the
+    ERROR_VS_TIME_WINDOW_HOURS constant near the top of this file (still
+    expressed/tunable in hours; only the displayed axis is in days).
+    A shared dotted-red vertical line marks Polaris's busiest *sustained*
+    (12h rolling-sum) submission window on both panels, since that's what
+    lines up with its deviation spike -- not the single tallest 1h bin,
+    which turns out to be an isolated early outlier with no downstream
+    deviation response.
+    """
+    window_days = window_hours / 24.0
+    fig, (ax_l, ax_r) = plt.subplots(1, 2, figsize=(7.6, 3.6), sharex=True)
+    bins = np.arange(0, window_hours + 1.0, 1.0)
+    bin_centers = (bins[:-1] + bins[1:]) / 2
+
+    for lbl in _TRACE_ORDER:
+        sim_hours, dev_hours = series_by_label.get(lbl, (np.array([]), np.array([])))
+        if sim_hours.size == 0:
+            continue
+        mask = (sim_hours > 0) & (sim_hours <= window_hours)
+        x, y = sim_hours[mask] / 24.0, dev_hours[mask]
+        color = _TRACE_FACE_COLORS[lbl]
+        name = _TRACE_DISPLAY_NAMES.get(lbl, lbl)
+
+        _plot_loess_curve(ax_l, x, y, color, name, x_log=False, y_log=False)
+
+        x_sorted = np.sort(x)
+        cum_counts = np.arange(1, len(x_sorted) + 1)
+        ax_r.step(x_sorted, cum_counts, where="post", color=color, lw=3.2, label=name, zorder=2)
+
+    # LOESS curve on the left panel defaults to lw=2.4; thicken to match
+    # the rest of the figure's heavier line weight.
+    for line in ax_l.get_lines():
+        line.set_linewidth(3.2)
+
+    # Vertical marker at Polaris's busiest sustained submission window
+    # (not in the legend -- keep it to just the two trace names). Detected
+    # in hours (finer 12h rolling sum) then converted to days for display.
+    polaris_hours, _ = series_by_label.get("polaris24cln", (np.array([]), np.array([])))
+    if polaris_hours.size:
+        p_mask = (polaris_hours > 0) & (polaris_hours <= window_hours)
+        p_counts, _ = np.histogram(polaris_hours[p_mask], bins=bins)
+        p_rolling = np.convolve(p_counts, np.ones(12), mode="same")
+        if p_rolling.max() > 0:
+            spike_x = float(bin_centers[np.argmax(p_rolling)]) / 24.0
+            for ax_ in (ax_l, ax_r):
+                ax_.axvline(spike_x, color="#d62728", linestyle=":", linewidth=2.4, zorder=5)
+
+    ax_l.set_xlim(0, window_days)
+    ax_l.set_ylabel("|Δ Start Time| (hours)\n[LOESS trend]", fontsize=13, fontweight="bold", labelpad=4)
+    ax_l.set_xlabel(f"Simulation Time\n({window_days:.0f} days)", fontsize=12, fontweight="bold", labelpad=4)
+    _bold_ax(ax_l)
+    ax_l.tick_params(labelsize=12)
+
+    ax_r.set_xlim(0, window_days)
+    ax_r.set_ylabel("Cumulative Jobs\nSubmitted", fontsize=13, fontweight="bold", labelpad=4)
+    ax_r.set_xlabel(f"Simulation Time\n({window_days:.0f} days)", fontsize=12, fontweight="bold", labelpad=4)
+    _bold_ax(ax_r)
+    ax_r.tick_params(labelsize=12)
+
+    # One shared legend for the whole figure instead of one per panel --
+    # just the two trace names, not the spike marker.
+    handles, labels = ax_l.get_legend_handles_labels()
+    fig.legend(handles, labels, loc="lower center", bbox_to_anchor=(0.54, 1.0),
+               ncol=2, fontsize=12, frameon=True, columnspacing=1.2)
+
+    fig.tight_layout()
+    fig_path = os.path.join(output_dir, f"polaris_theta_error_and_submissions_first{int(window_hours)}h_xlinear_ylinear.png")
+    save_fig(fig, fig_path)
+    return fig_path
+
+
+def build_error_and_submissions_comparison(output_dir, window_hours=None):
+    """Emit the combined Polaris-vs-Theta error/submissions figure once
+    both traces' raw C++ events.csv exist. Skips (with a note, not an
+    error) while either side is still missing."""
+    if window_hours is None:
+        window_hours = ERROR_VS_TIME_WINDOW_HOURS
+
+    series_by_label = {}
+    for lbl, paths in TRACE_FILES.items():
+        missing = [paths[k] for k in ("cpp_events", "py_events") if not os.path.exists(paths[k])]
+        if missing:
+            print(f"[skip error/submissions comparison] {lbl}: missing {missing[0]}")
+            return None
+        series_by_label[lbl] = compute_deviation_timeseries_hours(paths["py_events"], paths["cpp_events"])
+
+    fig_path = plot_error_and_submissions_comparison(series_by_label, output_dir, window_hours)
     print(f"wrote {fig_path}")
     return fig_path
 
@@ -410,8 +469,8 @@ def compare(label, swf_path, py_events_path, cpp_events_path, output_dir):
     os.makedirs(output_dir, exist_ok=True)
 
     ground_truth = parse_swf(swf_path)
-    py, py_first_submit = load_events(py_events_path)
-    cpp, cpp_first_submit = load_events(cpp_events_path)
+    py, _ = load_events(py_events_path)
+    cpp, _ = load_events(cpp_events_path)
 
     ids_py = set(py)
     ids_cpp = set(cpp)
@@ -494,67 +553,6 @@ def compare(label, swf_path, py_events_path, cpp_events_path, output_dir):
             out(f"  {i + 1:>6d} {j:>8d} {py[j]['submit']:>14.3f} {py[j]['start']:>14.3f} "
                 f"{cpp[j]['start']:>14.3f} {cpp[j]['start'] - py[j]['start']:>+12.3f}{marker}")
 
-    # ─── Plots ────────────────────────────────────────────────────────────
-    fig, axes = plt.subplots(2, 2, figsize=(11, 9))
-
-    def scatter_ax(ax, f, unit=""):
-        x, y = py_arr[f], cpp_arr[f]
-        ax.scatter(x, y, s=4, alpha=0.25, color="#1f77b4", linewidths=0, zorder=2)
-        lo = min(x.min(), y.min())
-        hi = max(x.max(), y.max())
-        ax.plot([lo, hi], [lo, hi], color="#d62728", lw=1.4, ls="--", label="y = x", zorder=3)
-        ax.set_xlabel(f"python {f} {unit}", fontweight="bold")
-        ax.set_ylabel(f"cpp {f} {unit}", fontweight="bold")
-        ax.legend(fontsize=8)
-        _bold_ax(ax)
-
-    scatter_ax(axes[0, 0], "submit", "(s)")
-    scatter_ax(axes[0, 1], "start", "(s)")
-    scatter_ax(axes[1, 0], "end", "(s)")
-
-    ax = axes[1, 1]
-    ax.hist(diffs["start"], bins=60, color="#2ca02c", alpha=0.8, edgecolor="black", linewidth=0.4, zorder=2)
-    ax.axvline(0, color="#d62728", lw=1.4, ls="--")
-    ax.set_xlabel("start_cpp - start_py (s)", fontweight="bold")
-    ax.set_ylabel("job count", fontweight="bold")
-    _bold_ax(ax)
-
-    fig.tight_layout()
-    fig_path = os.path.join(output_dir, f"{label}_deviation.png")
-    save_fig(fig, fig_path)
-    out(f"\nwrote {fig_path}")
-
-    # Relative start time: each side's start time measured from that side's
-    # own first submit time, so the two runs line up even if their absolute
-    # sim-time epochs differ. Linear and log-log versions -- the log view
-    # spreads out the dense cluster of early, short-wait jobs.
-    py_rel = py_arr["start"] - py_first_submit
-    cpp_rel = cpp_arr["start"] - cpp_first_submit
-    r = pearson_r(py_rel, cpp_rel)
-
-    for log_scale in (False, True):
-        rel_path = plot_start_relative(py_rel, cpp_rel, r, len(matched), label, output_dir, log_scale=log_scale)
-        out(f"wrote {rel_path}")
-
-    # Per-job start-time difference magnitude (|CQSim C++ - CQSim Python|), as a violin.
-    violin_path = plot_start_diff_violin(np.abs(diffs["start"]) / 3600.0, label, output_dir)
-    out(f"wrote {violin_path}")
-
-    # CDF overlay of start time
-    fig2, ax2 = plt.subplots(figsize=(6, 5))
-    for arr, name, color in [(py_arr["start"], "python", "#1f77b4"), (cpp_arr["start"], "cpp", "#ff7f0e")]:
-        xs = np.sort(arr)
-        ys = np.arange(1, len(xs) + 1) / len(xs)
-        ax2.plot(xs, ys, label=name, color=color, lw=1.8)
-    ax2.set_xlabel("start time (s)", fontweight="bold")
-    ax2.set_ylabel("CDF", fontweight="bold")
-    ax2.legend()
-    _bold_ax(ax2)
-    fig2.tight_layout()
-    fig2_path = os.path.join(output_dir, f"{label}_start_cdf.png")
-    save_fig(fig2, fig2_path)
-    out(f"wrote {fig2_path}")
-
     report_path = os.path.join(output_dir, f"{label}_report.txt")
     with open(report_path, "w") as f:
         f.write("\n".join(report_lines) + "\n")
@@ -592,9 +590,10 @@ def main():
     compare(args.label, args.swf, args.py_events, args.cpp_events,
             os.path.join(args.output_dir, args.label))
 
-    # Combined Polaris-vs-Theta figure -- only emitted once both traces'
+    # Combined Polaris-vs-Theta figures -- only emitted once both traces'
     # raw C++ events.csv exist (see TRACE_FILES); a no-op until then.
-    build_polaris_theta_violin(args.output_dir)
+    build_error_and_submissions_comparison(args.output_dir)
+    build_polaris_theta_violin_separate_scales(args.output_dir)
 
 
 if __name__ == "__main__":
