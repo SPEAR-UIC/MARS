@@ -1,0 +1,2068 @@
+# ── driver 0: FCFS ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: FCFS (type=fcfs)
+[drivers]	registered driver: FCFS
+[drivers]	registered 1 drivers
+[run]	running driver: FCFS
+[run]	driver FCFS finished in 0.367004s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d1/summary.csv
+[output]	experiment complete
+# ── driver 1: SJF-w1024 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: SJF-w1024 (type=sjf)
+[drivers]	registered driver: SJF-w1024
+[drivers]	registered 1 drivers
+[run]	running driver: SJF-w1024
+[run]	driver SJF-w1024 finished in 0.396747s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d2/summary.csv
+[output]	experiment complete
+# ── driver 2: F1-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: F1-w256 (type=f1)
+[drivers]	registered driver: F1-w256
+[drivers]	registered 1 drivers
+[run]	running driver: F1-w256
+[run]	driver F1-w256 finished in 1.151648s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d3/summary.csv
+[output]	experiment complete
+# ── driver 3: WFP3-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: WFP3-w256 (type=wfp3)
+[drivers]	registered driver: WFP3-w256
+[drivers]	registered 1 drivers
+[run]	running driver: WFP3-w256
+[run]	driver WFP3-w256 finished in 0.469464s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d4/summary.csv
+[output]	experiment complete
+# ── driver 4: MARS-CW ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CW (type=mcts)
+[drivers]	registered driver: MARS-CW
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CW
+# ── driver 5: MARS-CB ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CB (type=mcts)
+[drivers]	registered driver: MARS-CB
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CB
+# ── driver 6: MARS-CU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CU (type=mcts)
+[drivers]	registered driver: MARS-CU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CU
+# ── driver 7: MARS-IU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-IU (type=mcts)
+[drivers]	registered driver: MARS-IU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-IU
+# ── driver 0: FCFS ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: FCFS (type=fcfs)
+[drivers]	registered driver: FCFS
+[drivers]	registered 1 drivers
+[run]	running driver: FCFS
+[run]	driver FCFS finished in 0.367004s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d1/summary.csv
+[output]	experiment complete
+# ── driver 1: SJF-w1024 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: SJF-w1024 (type=sjf)
+[drivers]	registered driver: SJF-w1024
+[drivers]	registered 1 drivers
+[run]	running driver: SJF-w1024
+[run]	driver SJF-w1024 finished in 0.396747s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d2/summary.csv
+[output]	experiment complete
+# ── driver 2: F1-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: F1-w256 (type=f1)
+[drivers]	registered driver: F1-w256
+[drivers]	registered 1 drivers
+[run]	running driver: F1-w256
+[run]	driver F1-w256 finished in 1.151648s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d3/summary.csv
+[output]	experiment complete
+# ── driver 3: WFP3-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: WFP3-w256 (type=wfp3)
+[drivers]	registered driver: WFP3-w256
+[drivers]	registered 1 drivers
+[run]	running driver: WFP3-w256
+[run]	driver WFP3-w256 finished in 0.469464s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d4/summary.csv
+[output]	experiment complete
+# ── driver 4: MARS-CW ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CW (type=mcts)
+[drivers]	registered driver: MARS-CW
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CW
+# ── driver 5: MARS-CB ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CB (type=mcts)
+[drivers]	registered driver: MARS-CB
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CB
+# ── driver 6: MARS-CU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CU (type=mcts)
+[drivers]	registered driver: MARS-CU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CU
+# ── driver 7: MARS-IU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-IU (type=mcts)
+[drivers]	registered driver: MARS-IU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-IU
+# ── driver 0: FCFS ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: FCFS (type=fcfs)
+[drivers]	registered driver: FCFS
+[drivers]	registered 1 drivers
+[run]	running driver: FCFS
+[run]	driver FCFS finished in 0.367004s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d1/summary.csv
+[output]	experiment complete
+# ── driver 1: SJF-w1024 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: SJF-w1024 (type=sjf)
+[drivers]	registered driver: SJF-w1024
+[drivers]	registered 1 drivers
+[run]	running driver: SJF-w1024
+[run]	driver SJF-w1024 finished in 0.396747s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d2/summary.csv
+[output]	experiment complete
+# ── driver 2: F1-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: F1-w256 (type=f1)
+[drivers]	registered driver: F1-w256
+[drivers]	registered 1 drivers
+[run]	running driver: F1-w256
+[run]	driver F1-w256 finished in 1.151648s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d3/summary.csv
+[output]	experiment complete
+# ── driver 3: WFP3-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: WFP3-w256 (type=wfp3)
+[drivers]	registered driver: WFP3-w256
+[drivers]	registered 1 drivers
+[run]	running driver: WFP3-w256
+[run]	driver WFP3-w256 finished in 0.469464s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d4/summary.csv
+[output]	experiment complete
+# ── driver 4: MARS-CW ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CW (type=mcts)
+[drivers]	registered driver: MARS-CW
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CW
+# ── driver 5: MARS-CB ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CB (type=mcts)
+[drivers]	registered driver: MARS-CB
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CB
+# ── driver 6: MARS-CU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CU (type=mcts)
+[drivers]	registered driver: MARS-CU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CU
+# ── driver 7: MARS-IU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-IU (type=mcts)
+[drivers]	registered driver: MARS-IU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-IU
+# ── driver 0: FCFS ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: FCFS (type=fcfs)
+[drivers]	registered driver: FCFS
+[drivers]	registered 1 drivers
+[run]	running driver: FCFS
+[run]	driver FCFS finished in 0.367004s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d1/summary.csv
+[output]	experiment complete
+# ── driver 1: SJF-w1024 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: SJF-w1024 (type=sjf)
+[drivers]	registered driver: SJF-w1024
+[drivers]	registered 1 drivers
+[run]	running driver: SJF-w1024
+[run]	driver SJF-w1024 finished in 0.396747s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d2/summary.csv
+[output]	experiment complete
+# ── driver 2: F1-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: F1-w256 (type=f1)
+[drivers]	registered driver: F1-w256
+[drivers]	registered 1 drivers
+[run]	running driver: F1-w256
+[run]	driver F1-w256 finished in 1.151648s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d3/summary.csv
+[output]	experiment complete
+# ── driver 3: WFP3-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: WFP3-w256 (type=wfp3)
+[drivers]	registered driver: WFP3-w256
+[drivers]	registered 1 drivers
+[run]	running driver: WFP3-w256
+[run]	driver WFP3-w256 finished in 0.469464s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d4/summary.csv
+[output]	experiment complete
+# ── driver 4: MARS-CW ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CW (type=mcts)
+[drivers]	registered driver: MARS-CW
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CW
+# ── driver 5: MARS-CB ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CB (type=mcts)
+[drivers]	registered driver: MARS-CB
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CB
+# ── driver 6: MARS-CU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CU (type=mcts)
+[drivers]	registered driver: MARS-CU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CU
+# ── driver 7: MARS-IU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-IU (type=mcts)
+[drivers]	registered driver: MARS-IU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-IU
+# ── driver 0: FCFS ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: FCFS (type=fcfs)
+[drivers]	registered driver: FCFS
+[drivers]	registered 1 drivers
+[run]	running driver: FCFS
+[run]	driver FCFS finished in 0.367004s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d1/summary.csv
+[output]	experiment complete
+# ── driver 1: SJF-w1024 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: SJF-w1024 (type=sjf)
+[drivers]	registered driver: SJF-w1024
+[drivers]	registered 1 drivers
+[run]	running driver: SJF-w1024
+[run]	driver SJF-w1024 finished in 0.396747s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d2/summary.csv
+[output]	experiment complete
+# ── driver 2: F1-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: F1-w256 (type=f1)
+[drivers]	registered driver: F1-w256
+[drivers]	registered 1 drivers
+[run]	running driver: F1-w256
+[run]	driver F1-w256 finished in 1.151648s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d3/summary.csv
+[output]	experiment complete
+# ── driver 3: WFP3-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: WFP3-w256 (type=wfp3)
+[drivers]	registered driver: WFP3-w256
+[drivers]	registered 1 drivers
+[run]	running driver: WFP3-w256
+[run]	driver WFP3-w256 finished in 0.469464s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d4/summary.csv
+[output]	experiment complete
+# ── driver 4: MARS-CW ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CW (type=mcts)
+[drivers]	registered driver: MARS-CW
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CW
+# ── driver 5: MARS-CB ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CB (type=mcts)
+[drivers]	registered driver: MARS-CB
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CB
+# ── driver 6: MARS-CU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CU (type=mcts)
+[drivers]	registered driver: MARS-CU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CU
+# ── driver 7: MARS-IU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-IU (type=mcts)
+[drivers]	registered driver: MARS-IU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-IU
+# ── driver 0: FCFS ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: FCFS (type=fcfs)
+[drivers]	registered driver: FCFS
+[drivers]	registered 1 drivers
+[run]	running driver: FCFS
+[run]	driver FCFS finished in 0.367004s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d1/summary.csv
+[output]	experiment complete
+# ── driver 1: SJF-w1024 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: SJF-w1024 (type=sjf)
+[drivers]	registered driver: SJF-w1024
+[drivers]	registered 1 drivers
+[run]	running driver: SJF-w1024
+[run]	driver SJF-w1024 finished in 0.396747s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d2/summary.csv
+[output]	experiment complete
+# ── driver 2: F1-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: F1-w256 (type=f1)
+[drivers]	registered driver: F1-w256
+[drivers]	registered 1 drivers
+[run]	running driver: F1-w256
+[run]	driver F1-w256 finished in 1.151648s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d3/summary.csv
+[output]	experiment complete
+# ── driver 3: WFP3-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: WFP3-w256 (type=wfp3)
+[drivers]	registered driver: WFP3-w256
+[drivers]	registered 1 drivers
+[run]	running driver: WFP3-w256
+[run]	driver WFP3-w256 finished in 0.469464s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d4/summary.csv
+[output]	experiment complete
+# ── driver 4: MARS-CW ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CW (type=mcts)
+[drivers]	registered driver: MARS-CW
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CW
+# ── driver 5: MARS-CB ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CB (type=mcts)
+[drivers]	registered driver: MARS-CB
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CB
+# ── driver 6: MARS-CU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CU (type=mcts)
+[drivers]	registered driver: MARS-CU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CU
+# ── driver 7: MARS-IU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-IU (type=mcts)
+[drivers]	registered driver: MARS-IU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-IU
+# ── driver 0: FCFS ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: FCFS (type=fcfs)
+[drivers]	registered driver: FCFS
+[drivers]	registered 1 drivers
+[run]	running driver: FCFS
+[run]	driver FCFS finished in 0.367004s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d1/summary.csv
+[output]	experiment complete
+# ── driver 1: SJF-w1024 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: SJF-w1024 (type=sjf)
+[drivers]	registered driver: SJF-w1024
+[drivers]	registered 1 drivers
+[run]	running driver: SJF-w1024
+[run]	driver SJF-w1024 finished in 0.396747s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d2/summary.csv
+[output]	experiment complete
+# ── driver 2: F1-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: F1-w256 (type=f1)
+[drivers]	registered driver: F1-w256
+[drivers]	registered 1 drivers
+[run]	running driver: F1-w256
+[run]	driver F1-w256 finished in 1.151648s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d3/summary.csv
+[output]	experiment complete
+# ── driver 3: WFP3-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: WFP3-w256 (type=wfp3)
+[drivers]	registered driver: WFP3-w256
+[drivers]	registered 1 drivers
+[run]	running driver: WFP3-w256
+[run]	driver WFP3-w256 finished in 0.469464s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d4/summary.csv
+[output]	experiment complete
+# ── driver 4: MARS-CW ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CW (type=mcts)
+[drivers]	registered driver: MARS-CW
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CW
+# ── driver 5: MARS-CB ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CB (type=mcts)
+[drivers]	registered driver: MARS-CB
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CB
+# ── driver 6: MARS-CU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CU (type=mcts)
+[drivers]	registered driver: MARS-CU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CU
+# ── driver 7: MARS-IU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-IU (type=mcts)
+[drivers]	registered driver: MARS-IU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-IU
+# ── driver 0: FCFS ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: FCFS (type=fcfs)
+[drivers]	registered driver: FCFS
+[drivers]	registered 1 drivers
+[run]	running driver: FCFS
+[run]	driver FCFS finished in 0.367004s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d1/summary.csv
+[output]	experiment complete
+# ── driver 1: SJF-w1024 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: SJF-w1024 (type=sjf)
+[drivers]	registered driver: SJF-w1024
+[drivers]	registered 1 drivers
+[run]	running driver: SJF-w1024
+[run]	driver SJF-w1024 finished in 0.396747s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d2/summary.csv
+[output]	experiment complete
+# ── driver 2: F1-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: F1-w256 (type=f1)
+[drivers]	registered driver: F1-w256
+[drivers]	registered 1 drivers
+[run]	running driver: F1-w256
+[run]	driver F1-w256 finished in 1.151648s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d3/summary.csv
+[output]	experiment complete
+# ── driver 3: WFP3-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: WFP3-w256 (type=wfp3)
+[drivers]	registered driver: WFP3-w256
+[drivers]	registered 1 drivers
+[run]	running driver: WFP3-w256
+[run]	driver WFP3-w256 finished in 0.469464s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d4/summary.csv
+[output]	experiment complete
+# ── driver 4: MARS-CW ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CW (type=mcts)
+[drivers]	registered driver: MARS-CW
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CW
+# ── driver 5: MARS-CB ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CB (type=mcts)
+[drivers]	registered driver: MARS-CB
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CB
+# ── driver 6: MARS-CU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CU (type=mcts)
+[drivers]	registered driver: MARS-CU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CU
+# ── driver 7: MARS-IU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-IU (type=mcts)
+[drivers]	registered driver: MARS-IU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-IU
+# ── driver 0: FCFS ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: FCFS (type=fcfs)
+[drivers]	registered driver: FCFS
+[drivers]	registered 1 drivers
+[run]	running driver: FCFS
+[run]	driver FCFS finished in 0.367004s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d1/summary.csv
+[output]	experiment complete
+# ── driver 1: SJF-w1024 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: SJF-w1024 (type=sjf)
+[drivers]	registered driver: SJF-w1024
+[drivers]	registered 1 drivers
+[run]	running driver: SJF-w1024
+[run]	driver SJF-w1024 finished in 0.396747s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d2/summary.csv
+[output]	experiment complete
+# ── driver 2: F1-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: F1-w256 (type=f1)
+[drivers]	registered driver: F1-w256
+[drivers]	registered 1 drivers
+[run]	running driver: F1-w256
+[run]	driver F1-w256 finished in 1.151648s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d3/summary.csv
+[output]	experiment complete
+# ── driver 3: WFP3-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: WFP3-w256 (type=wfp3)
+[drivers]	registered driver: WFP3-w256
+[drivers]	registered 1 drivers
+[run]	running driver: WFP3-w256
+[run]	driver WFP3-w256 finished in 0.469464s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d4/summary.csv
+[output]	experiment complete
+# ── driver 4: MARS-CW ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CW (type=mcts)
+[drivers]	registered driver: MARS-CW
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CW
+# ── driver 5: MARS-CB ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CB (type=mcts)
+[drivers]	registered driver: MARS-CB
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CB
+# ── driver 6: MARS-CU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CU (type=mcts)
+[drivers]	registered driver: MARS-CU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CU
+# ── driver 7: MARS-IU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-IU (type=mcts)
+[drivers]	registered driver: MARS-IU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-IU
+# ── driver 0: FCFS ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: FCFS (type=fcfs)
+[drivers]	registered driver: FCFS
+[drivers]	registered 1 drivers
+[run]	running driver: FCFS
+[run]	driver FCFS finished in 0.367004s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d1/summary.csv
+[output]	experiment complete
+# ── driver 1: SJF-w1024 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: SJF-w1024 (type=sjf)
+[drivers]	registered driver: SJF-w1024
+[drivers]	registered 1 drivers
+[run]	running driver: SJF-w1024
+[run]	driver SJF-w1024 finished in 0.396747s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d2/summary.csv
+[output]	experiment complete
+# ── driver 2: F1-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: F1-w256 (type=f1)
+[drivers]	registered driver: F1-w256
+[drivers]	registered 1 drivers
+[run]	running driver: F1-w256
+[run]	driver F1-w256 finished in 1.151648s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d3/summary.csv
+[output]	experiment complete
+# ── driver 3: WFP3-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: WFP3-w256 (type=wfp3)
+[drivers]	registered driver: WFP3-w256
+[drivers]	registered 1 drivers
+[run]	running driver: WFP3-w256
+[run]	driver WFP3-w256 finished in 0.469464s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d4/summary.csv
+[output]	experiment complete
+# ── driver 4: MARS-CW ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CW (type=mcts)
+[drivers]	registered driver: MARS-CW
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CW
+# ── driver 5: MARS-CB ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CB (type=mcts)
+[drivers]	registered driver: MARS-CB
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CB
+# ── driver 6: MARS-CU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CU (type=mcts)
+[drivers]	registered driver: MARS-CU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CU
+# ── driver 7: MARS-IU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-IU (type=mcts)
+[drivers]	registered driver: MARS-IU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-IU
+# ── driver 0: FCFS ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: FCFS (type=fcfs)
+[drivers]	registered driver: FCFS
+[drivers]	registered 1 drivers
+[run]	running driver: FCFS
+[run]	driver FCFS finished in 0.367004s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d1/summary.csv
+[output]	experiment complete
+# ── driver 1: SJF-w1024 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: SJF-w1024 (type=sjf)
+[drivers]	registered driver: SJF-w1024
+[drivers]	registered 1 drivers
+[run]	running driver: SJF-w1024
+[run]	driver SJF-w1024 finished in 0.396747s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d2/summary.csv
+[output]	experiment complete
+# ── driver 2: F1-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: F1-w256 (type=f1)
+[drivers]	registered driver: F1-w256
+[drivers]	registered 1 drivers
+[run]	running driver: F1-w256
+[run]	driver F1-w256 finished in 1.151648s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d3/summary.csv
+[output]	experiment complete
+# ── driver 3: WFP3-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: WFP3-w256 (type=wfp3)
+[drivers]	registered driver: WFP3-w256
+[drivers]	registered 1 drivers
+[run]	running driver: WFP3-w256
+[run]	driver WFP3-w256 finished in 0.469464s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d4/summary.csv
+[output]	experiment complete
+# ── driver 4: MARS-CW ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CW (type=mcts)
+[drivers]	registered driver: MARS-CW
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CW
+# ── driver 5: MARS-CB ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CB (type=mcts)
+[drivers]	registered driver: MARS-CB
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CB
+# ── driver 6: MARS-CU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CU (type=mcts)
+[drivers]	registered driver: MARS-CU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CU
+# ── driver 7: MARS-IU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-IU (type=mcts)
+[drivers]	registered driver: MARS-IU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-IU
+# ── driver 0: FCFS ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: FCFS (type=fcfs)
+[drivers]	registered driver: FCFS
+[drivers]	registered 1 drivers
+[run]	running driver: FCFS
+[run]	driver FCFS finished in 0.367004s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d1/summary.csv
+[output]	experiment complete
+# ── driver 1: SJF-w1024 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: SJF-w1024 (type=sjf)
+[drivers]	registered driver: SJF-w1024
+[drivers]	registered 1 drivers
+[run]	running driver: SJF-w1024
+[run]	driver SJF-w1024 finished in 0.396747s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d2/summary.csv
+[output]	experiment complete
+# ── driver 2: F1-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: F1-w256 (type=f1)
+[drivers]	registered driver: F1-w256
+[drivers]	registered 1 drivers
+[run]	running driver: F1-w256
+[run]	driver F1-w256 finished in 1.151648s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d3/summary.csv
+[output]	experiment complete
+# ── driver 3: WFP3-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: WFP3-w256 (type=wfp3)
+[drivers]	registered driver: WFP3-w256
+[drivers]	registered 1 drivers
+[run]	running driver: WFP3-w256
+[run]	driver WFP3-w256 finished in 0.469464s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d4/summary.csv
+[output]	experiment complete
+# ── driver 4: MARS-CW ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CW (type=mcts)
+[drivers]	registered driver: MARS-CW
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CW
+# ── driver 5: MARS-CB ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CB (type=mcts)
+[drivers]	registered driver: MARS-CB
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CB
+# ── driver 6: MARS-CU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CU (type=mcts)
+[drivers]	registered driver: MARS-CU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CU
+# ── driver 7: MARS-IU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-IU (type=mcts)
+[drivers]	registered driver: MARS-IU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-IU
+# ── driver 0: FCFS ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: FCFS (type=fcfs)
+[drivers]	registered driver: FCFS
+[drivers]	registered 1 drivers
+[run]	running driver: FCFS
+[run]	driver FCFS finished in 0.367004s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d1/summary.csv
+[output]	experiment complete
+# ── driver 1: SJF-w1024 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: SJF-w1024 (type=sjf)
+[drivers]	registered driver: SJF-w1024
+[drivers]	registered 1 drivers
+[run]	running driver: SJF-w1024
+[run]	driver SJF-w1024 finished in 0.396747s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d2/summary.csv
+[output]	experiment complete
+# ── driver 2: F1-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: F1-w256 (type=f1)
+[drivers]	registered driver: F1-w256
+[drivers]	registered 1 drivers
+[run]	running driver: F1-w256
+[run]	driver F1-w256 finished in 1.151648s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d3/summary.csv
+[output]	experiment complete
+# ── driver 3: WFP3-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: WFP3-w256 (type=wfp3)
+[drivers]	registered driver: WFP3-w256
+[drivers]	registered 1 drivers
+[run]	running driver: WFP3-w256
+[run]	driver WFP3-w256 finished in 0.469464s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d4/summary.csv
+[output]	experiment complete
+# ── driver 4: MARS-CW ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CW (type=mcts)
+[drivers]	registered driver: MARS-CW
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CW
+# ── driver 5: MARS-CB ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CB (type=mcts)
+[drivers]	registered driver: MARS-CB
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CB
+# ── driver 6: MARS-CU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CU (type=mcts)
+[drivers]	registered driver: MARS-CU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CU
+# ── driver 7: MARS-IU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-IU (type=mcts)
+[drivers]	registered driver: MARS-IU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-IU
+# ── driver 0: FCFS ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: FCFS (type=fcfs)
+[drivers]	registered driver: FCFS
+[drivers]	registered 1 drivers
+[run]	running driver: FCFS
+[run]	driver FCFS finished in 0.367004s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d1/summary.csv
+[output]	experiment complete
+# ── driver 1: SJF-w1024 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: SJF-w1024 (type=sjf)
+[drivers]	registered driver: SJF-w1024
+[drivers]	registered 1 drivers
+[run]	running driver: SJF-w1024
+[run]	driver SJF-w1024 finished in 0.396747s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d2/summary.csv
+[output]	experiment complete
+# ── driver 2: F1-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: F1-w256 (type=f1)
+[drivers]	registered driver: F1-w256
+[drivers]	registered 1 drivers
+[run]	running driver: F1-w256
+[run]	driver F1-w256 finished in 1.151648s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d3/summary.csv
+[output]	experiment complete
+# ── driver 3: WFP3-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: WFP3-w256 (type=wfp3)
+[drivers]	registered driver: WFP3-w256
+[drivers]	registered 1 drivers
+[run]	running driver: WFP3-w256
+[run]	driver WFP3-w256 finished in 0.469464s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d4/summary.csv
+[output]	experiment complete
+# ── driver 4: MARS-CW ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CW (type=mcts)
+[drivers]	registered driver: MARS-CW
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CW
+# ── driver 5: MARS-CB ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CB (type=mcts)
+[drivers]	registered driver: MARS-CB
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CB
+# ── driver 6: MARS-CU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CU (type=mcts)
+[drivers]	registered driver: MARS-CU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CU
+# ── driver 7: MARS-IU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-IU (type=mcts)
+[drivers]	registered driver: MARS-IU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-IU
+# ── driver 0: FCFS ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: FCFS (type=fcfs)
+[drivers]	registered driver: FCFS
+[drivers]	registered 1 drivers
+[run]	running driver: FCFS
+[run]	driver FCFS finished in 0.367004s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d1/summary.csv
+[output]	experiment complete
+# ── driver 1: SJF-w1024 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: SJF-w1024 (type=sjf)
+[drivers]	registered driver: SJF-w1024
+[drivers]	registered 1 drivers
+[run]	running driver: SJF-w1024
+[run]	driver SJF-w1024 finished in 0.396747s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d2/summary.csv
+[output]	experiment complete
+# ── driver 2: F1-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: F1-w256 (type=f1)
+[drivers]	registered driver: F1-w256
+[drivers]	registered 1 drivers
+[run]	running driver: F1-w256
+[run]	driver F1-w256 finished in 1.151648s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d3/summary.csv
+[output]	experiment complete
+# ── driver 3: WFP3-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: WFP3-w256 (type=wfp3)
+[drivers]	registered driver: WFP3-w256
+[drivers]	registered 1 drivers
+[run]	running driver: WFP3-w256
+[run]	driver WFP3-w256 finished in 0.469464s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d4/summary.csv
+[output]	experiment complete
+# ── driver 4: MARS-CW ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CW (type=mcts)
+[drivers]	registered driver: MARS-CW
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CW
+# ── driver 5: MARS-CB ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CB (type=mcts)
+[drivers]	registered driver: MARS-CB
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CB
+# ── driver 6: MARS-CU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CU (type=mcts)
+[drivers]	registered driver: MARS-CU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CU
+# ── driver 7: MARS-IU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-IU (type=mcts)
+[drivers]	registered driver: MARS-IU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-IU
+# ── driver 0: FCFS ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: FCFS (type=fcfs)
+[drivers]	registered driver: FCFS
+[drivers]	registered 1 drivers
+[run]	running driver: FCFS
+[run]	driver FCFS finished in 0.367004s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d1/summary.csv
+[output]	experiment complete
+# ── driver 1: SJF-w1024 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: SJF-w1024 (type=sjf)
+[drivers]	registered driver: SJF-w1024
+[drivers]	registered 1 drivers
+[run]	running driver: SJF-w1024
+[run]	driver SJF-w1024 finished in 0.396747s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d2/summary.csv
+[output]	experiment complete
+# ── driver 2: F1-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: F1-w256 (type=f1)
+[drivers]	registered driver: F1-w256
+[drivers]	registered 1 drivers
+[run]	running driver: F1-w256
+[run]	driver F1-w256 finished in 1.151648s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d3/summary.csv
+[output]	experiment complete
+# ── driver 3: WFP3-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: WFP3-w256 (type=wfp3)
+[drivers]	registered driver: WFP3-w256
+[drivers]	registered 1 drivers
+[run]	running driver: WFP3-w256
+[run]	driver WFP3-w256 finished in 0.469464s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d4/summary.csv
+[output]	experiment complete
+# ── driver 4: MARS-CW ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CW (type=mcts)
+[drivers]	registered driver: MARS-CW
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CW
+# ── driver 5: MARS-CB ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CB (type=mcts)
+[drivers]	registered driver: MARS-CB
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CB
+# ── driver 6: MARS-CU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CU (type=mcts)
+[drivers]	registered driver: MARS-CU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CU
+# ── driver 7: MARS-IU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-IU (type=mcts)
+[drivers]	registered driver: MARS-IU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-IU
+# ── driver 0: FCFS ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: FCFS (type=fcfs)
+[drivers]	registered driver: FCFS
+[drivers]	registered 1 drivers
+[run]	running driver: FCFS
+[run]	driver FCFS finished in 0.367004s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d1/summary.csv
+[output]	experiment complete
+# ── driver 1: SJF-w1024 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: SJF-w1024 (type=sjf)
+[drivers]	registered driver: SJF-w1024
+[drivers]	registered 1 drivers
+[run]	running driver: SJF-w1024
+[run]	driver SJF-w1024 finished in 0.396747s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d2/summary.csv
+[output]	experiment complete
+# ── driver 2: F1-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: F1-w256 (type=f1)
+[drivers]	registered driver: F1-w256
+[drivers]	registered 1 drivers
+[run]	running driver: F1-w256
+[run]	driver F1-w256 finished in 1.151648s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d3/summary.csv
+[output]	experiment complete
+# ── driver 3: WFP3-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: WFP3-w256 (type=wfp3)
+[drivers]	registered driver: WFP3-w256
+[drivers]	registered 1 drivers
+[run]	running driver: WFP3-w256
+[run]	driver WFP3-w256 finished in 0.469464s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d4/summary.csv
+[output]	experiment complete
+# ── driver 4: MARS-CW ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CW (type=mcts)
+[drivers]	registered driver: MARS-CW
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CW
+# ── driver 5: MARS-CB ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CB (type=mcts)
+[drivers]	registered driver: MARS-CB
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CB
+# ── driver 6: MARS-CU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CU (type=mcts)
+[drivers]	registered driver: MARS-CU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CU
+# ── driver 7: MARS-IU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-IU (type=mcts)
+[drivers]	registered driver: MARS-IU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-IU
+# ── driver 0: FCFS ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: FCFS (type=fcfs)
+[drivers]	registered driver: FCFS
+[drivers]	registered 1 drivers
+[run]	running driver: FCFS
+[run]	driver FCFS finished in 0.367004s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d1/summary.csv
+[output]	experiment complete
+# ── driver 1: SJF-w1024 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: SJF-w1024 (type=sjf)
+[drivers]	registered driver: SJF-w1024
+[drivers]	registered 1 drivers
+[run]	running driver: SJF-w1024
+[run]	driver SJF-w1024 finished in 0.396747s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d2/summary.csv
+[output]	experiment complete
+# ── driver 2: F1-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: F1-w256 (type=f1)
+[drivers]	registered driver: F1-w256
+[drivers]	registered 1 drivers
+[run]	running driver: F1-w256
+[run]	driver F1-w256 finished in 1.151648s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d3/summary.csv
+[output]	experiment complete
+# ── driver 3: WFP3-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: WFP3-w256 (type=wfp3)
+[drivers]	registered driver: WFP3-w256
+[drivers]	registered 1 drivers
+[run]	running driver: WFP3-w256
+[run]	driver WFP3-w256 finished in 0.469464s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d4/summary.csv
+[output]	experiment complete
+# ── driver 4: MARS-CW ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CW (type=mcts)
+[drivers]	registered driver: MARS-CW
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CW
+# ── driver 5: MARS-CB ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CB (type=mcts)
+[drivers]	registered driver: MARS-CB
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CB
+# ── driver 6: MARS-CU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CU (type=mcts)
+[drivers]	registered driver: MARS-CU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CU
+# ── driver 7: MARS-IU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-IU (type=mcts)
+[drivers]	registered driver: MARS-IU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-IU
+# ── driver 0: FCFS ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: FCFS (type=fcfs)
+[drivers]	registered driver: FCFS
+[drivers]	registered 1 drivers
+[run]	running driver: FCFS
+[run]	driver FCFS finished in 0.367004s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d1/summary.csv
+[output]	experiment complete
+# ── driver 1: SJF-w1024 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: SJF-w1024 (type=sjf)
+[drivers]	registered driver: SJF-w1024
+[drivers]	registered 1 drivers
+[run]	running driver: SJF-w1024
+[run]	driver SJF-w1024 finished in 0.396747s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d2/summary.csv
+[output]	experiment complete
+# ── driver 2: F1-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: F1-w256 (type=f1)
+[drivers]	registered driver: F1-w256
+[drivers]	registered 1 drivers
+[run]	running driver: F1-w256
+[run]	driver F1-w256 finished in 1.151648s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d3/summary.csv
+[output]	experiment complete
+# ── driver 3: WFP3-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: WFP3-w256 (type=wfp3)
+[drivers]	registered driver: WFP3-w256
+[drivers]	registered 1 drivers
+[run]	running driver: WFP3-w256
+[run]	driver WFP3-w256 finished in 0.469464s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d4/summary.csv
+[output]	experiment complete
+# ── driver 4: MARS-CW ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CW (type=mcts)
+[drivers]	registered driver: MARS-CW
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CW
+# ── driver 5: MARS-CB ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CB (type=mcts)
+[drivers]	registered driver: MARS-CB
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CB
+# ── driver 6: MARS-CU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CU (type=mcts)
+[drivers]	registered driver: MARS-CU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CU
+# ── driver 7: MARS-IU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-IU (type=mcts)
+[drivers]	registered driver: MARS-IU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-IU
+# ── driver 0: FCFS ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: FCFS (type=fcfs)
+[drivers]	registered driver: FCFS
+[drivers]	registered 1 drivers
+[run]	running driver: FCFS
+[run]	driver FCFS finished in 0.367004s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d1/summary.csv
+[output]	experiment complete
+# ── driver 1: SJF-w1024 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: SJF-w1024 (type=sjf)
+[drivers]	registered driver: SJF-w1024
+[drivers]	registered 1 drivers
+[run]	running driver: SJF-w1024
+[run]	driver SJF-w1024 finished in 0.396747s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d2/summary.csv
+[output]	experiment complete
+# ── driver 2: F1-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: F1-w256 (type=f1)
+[drivers]	registered driver: F1-w256
+[drivers]	registered 1 drivers
+[run]	running driver: F1-w256
+[run]	driver F1-w256 finished in 1.151648s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d3/summary.csv
+[output]	experiment complete
+# ── driver 3: WFP3-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: WFP3-w256 (type=wfp3)
+[drivers]	registered driver: WFP3-w256
+[drivers]	registered 1 drivers
+[run]	running driver: WFP3-w256
+[run]	driver WFP3-w256 finished in 0.469464s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d4/summary.csv
+[output]	experiment complete
+# ── driver 4: MARS-CW ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CW (type=mcts)
+[drivers]	registered driver: MARS-CW
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CW
+# ── driver 5: MARS-CB ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CB (type=mcts)
+[drivers]	registered driver: MARS-CB
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CB
+# ── driver 6: MARS-CU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CU (type=mcts)
+[drivers]	registered driver: MARS-CU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CU
+# ── driver 7: MARS-IU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-IU (type=mcts)
+[drivers]	registered driver: MARS-IU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-IU
+# ── driver 0: FCFS ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: FCFS (type=fcfs)
+[drivers]	registered driver: FCFS
+[drivers]	registered 1 drivers
+[run]	running driver: FCFS
+[run]	driver FCFS finished in 0.367004s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d1/summary.csv
+[output]	experiment complete
+# ── driver 1: SJF-w1024 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: SJF-w1024 (type=sjf)
+[drivers]	registered driver: SJF-w1024
+[drivers]	registered 1 drivers
+[run]	running driver: SJF-w1024
+[run]	driver SJF-w1024 finished in 0.396747s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d2/summary.csv
+[output]	experiment complete
+# ── driver 2: F1-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: F1-w256 (type=f1)
+[drivers]	registered driver: F1-w256
+[drivers]	registered 1 drivers
+[run]	running driver: F1-w256
+[run]	driver F1-w256 finished in 1.151648s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d3/summary.csv
+[output]	experiment complete
+# ── driver 3: WFP3-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: WFP3-w256 (type=wfp3)
+[drivers]	registered driver: WFP3-w256
+[drivers]	registered 1 drivers
+[run]	running driver: WFP3-w256
+[run]	driver WFP3-w256 finished in 0.469464s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d4/summary.csv
+[output]	experiment complete
+# ── driver 4: MARS-CW ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CW (type=mcts)
+[drivers]	registered driver: MARS-CW
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CW
+# ── driver 5: MARS-CB ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CB (type=mcts)
+[drivers]	registered driver: MARS-CB
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CB
+# ── driver 6: MARS-CU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CU (type=mcts)
+[drivers]	registered driver: MARS-CU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CU
+# ── driver 7: MARS-IU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-IU (type=mcts)
+[drivers]	registered driver: MARS-IU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-IU
+# ── driver 0: FCFS ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: FCFS (type=fcfs)
+[drivers]	registered driver: FCFS
+[drivers]	registered 1 drivers
+[run]	running driver: FCFS
+[run]	driver FCFS finished in 0.367004s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d1/summary.csv
+[output]	experiment complete
+# ── driver 1: SJF-w1024 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: SJF-w1024 (type=sjf)
+[drivers]	registered driver: SJF-w1024
+[drivers]	registered 1 drivers
+[run]	running driver: SJF-w1024
+[run]	driver SJF-w1024 finished in 0.396747s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d2/summary.csv
+[output]	experiment complete
+# ── driver 2: F1-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: F1-w256 (type=f1)
+[drivers]	registered driver: F1-w256
+[drivers]	registered 1 drivers
+[run]	running driver: F1-w256
+[run]	driver F1-w256 finished in 1.151648s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d3/summary.csv
+[output]	experiment complete
+# ── driver 3: WFP3-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: WFP3-w256 (type=wfp3)
+[drivers]	registered driver: WFP3-w256
+[drivers]	registered 1 drivers
+[run]	running driver: WFP3-w256
+[run]	driver WFP3-w256 finished in 0.469464s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d4/summary.csv
+[output]	experiment complete
+# ── driver 4: MARS-CW ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CW (type=mcts)
+[drivers]	registered driver: MARS-CW
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CW
+# ── driver 5: MARS-CB ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CB (type=mcts)
+[drivers]	registered driver: MARS-CB
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CB
+# ── driver 6: MARS-CU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CU (type=mcts)
+[drivers]	registered driver: MARS-CU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CU
+# ── driver 7: MARS-IU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-IU (type=mcts)
+[drivers]	registered driver: MARS-IU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-IU
+# ── driver 0: FCFS ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: FCFS (type=fcfs)
+[drivers]	registered driver: FCFS
+[drivers]	registered 1 drivers
+[run]	running driver: FCFS
+[run]	driver FCFS finished in 0.367004s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d1/summary.csv
+[output]	experiment complete
+# ── driver 1: SJF-w1024 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: SJF-w1024 (type=sjf)
+[drivers]	registered driver: SJF-w1024
+[drivers]	registered 1 drivers
+[run]	running driver: SJF-w1024
+[run]	driver SJF-w1024 finished in 0.396747s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d2/summary.csv
+[output]	experiment complete
+# ── driver 2: F1-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: F1-w256 (type=f1)
+[drivers]	registered driver: F1-w256
+[drivers]	registered 1 drivers
+[run]	running driver: F1-w256
+[run]	driver F1-w256 finished in 1.151648s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d3/summary.csv
+[output]	experiment complete
+# ── driver 3: WFP3-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: WFP3-w256 (type=wfp3)
+[drivers]	registered driver: WFP3-w256
+[drivers]	registered 1 drivers
+[run]	running driver: WFP3-w256
+[run]	driver WFP3-w256 finished in 0.469464s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d4/summary.csv
+[output]	experiment complete
+# ── driver 4: MARS-CW ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CW (type=mcts)
+[drivers]	registered driver: MARS-CW
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CW
+# ── driver 5: MARS-CB ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CB (type=mcts)
+[drivers]	registered driver: MARS-CB
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CB
+# ── driver 6: MARS-CU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CU (type=mcts)
+[drivers]	registered driver: MARS-CU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CU
+# ── driver 7: MARS-IU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-IU (type=mcts)
+[drivers]	registered driver: MARS-IU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-IU
+# ── driver 0: FCFS ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: FCFS (type=fcfs)
+[drivers]	registered driver: FCFS
+[drivers]	registered 1 drivers
+[run]	running driver: FCFS
+[run]	driver FCFS finished in 0.367004s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d1/summary.csv
+[output]	experiment complete
+# ── driver 1: SJF-w1024 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: SJF-w1024 (type=sjf)
+[drivers]	registered driver: SJF-w1024
+[drivers]	registered 1 drivers
+[run]	running driver: SJF-w1024
+[run]	driver SJF-w1024 finished in 0.396747s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d2/summary.csv
+[output]	experiment complete
+# ── driver 2: F1-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: F1-w256 (type=f1)
+[drivers]	registered driver: F1-w256
+[drivers]	registered 1 drivers
+[run]	running driver: F1-w256
+[run]	driver F1-w256 finished in 1.151648s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d3/summary.csv
+[output]	experiment complete
+# ── driver 3: WFP3-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: WFP3-w256 (type=wfp3)
+[drivers]	registered driver: WFP3-w256
+[drivers]	registered 1 drivers
+[run]	running driver: WFP3-w256
+[run]	driver WFP3-w256 finished in 0.469464s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d4/summary.csv
+[output]	experiment complete
+# ── driver 4: MARS-CW ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CW (type=mcts)
+[drivers]	registered driver: MARS-CW
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CW
+# ── driver 5: MARS-CB ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CB (type=mcts)
+[drivers]	registered driver: MARS-CB
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CB
+# ── driver 6: MARS-CU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CU (type=mcts)
+[drivers]	registered driver: MARS-CU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CU
+# ── driver 7: MARS-IU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-IU (type=mcts)
+[drivers]	registered driver: MARS-IU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-IU
+# ── driver 0: FCFS ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: FCFS (type=fcfs)
+[drivers]	registered driver: FCFS
+[drivers]	registered 1 drivers
+[run]	running driver: FCFS
+[run]	driver FCFS finished in 0.367004s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d1/summary.csv
+[output]	experiment complete
+# ── driver 1: SJF-w1024 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: SJF-w1024 (type=sjf)
+[drivers]	registered driver: SJF-w1024
+[drivers]	registered 1 drivers
+[run]	running driver: SJF-w1024
+[run]	driver SJF-w1024 finished in 0.396747s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d2/summary.csv
+[output]	experiment complete
+# ── driver 2: F1-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: F1-w256 (type=f1)
+[drivers]	registered driver: F1-w256
+[drivers]	registered 1 drivers
+[run]	running driver: F1-w256
+[run]	driver F1-w256 finished in 1.151648s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d3/summary.csv
+[output]	experiment complete
+# ── driver 3: WFP3-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: WFP3-w256 (type=wfp3)
+[drivers]	registered driver: WFP3-w256
+[drivers]	registered 1 drivers
+[run]	running driver: WFP3-w256
+[run]	driver WFP3-w256 finished in 0.469464s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d4/summary.csv
+[output]	experiment complete
+# ── driver 4: MARS-CW ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CW (type=mcts)
+[drivers]	registered driver: MARS-CW
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CW
+# ── driver 5: MARS-CB ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CB (type=mcts)
+[drivers]	registered driver: MARS-CB
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CB
+# ── driver 6: MARS-CU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CU (type=mcts)
+[drivers]	registered driver: MARS-CU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CU
+[run]	driver MARS-CU finished in 550080.436097s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d7/summary.csv
+[output]	experiment complete
+# ── driver 7: MARS-IU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-IU (type=mcts)
+[drivers]	registered driver: MARS-IU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-IU
+[run]	driver MARS-IU finished in 587763.194634s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d8/summary.csv
+[output]	experiment complete
+# ── driver 0: FCFS ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: FCFS (type=fcfs)
+[drivers]	registered driver: FCFS
+[drivers]	registered 1 drivers
+[run]	running driver: FCFS
+[run]	driver FCFS finished in 0.367004s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d1/summary.csv
+[output]	experiment complete
+# ── driver 1: SJF-w1024 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: SJF-w1024 (type=sjf)
+[drivers]	registered driver: SJF-w1024
+[drivers]	registered 1 drivers
+[run]	running driver: SJF-w1024
+[run]	driver SJF-w1024 finished in 0.396747s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d2/summary.csv
+[output]	experiment complete
+# ── driver 2: F1-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: F1-w256 (type=f1)
+[drivers]	registered driver: F1-w256
+[drivers]	registered 1 drivers
+[run]	running driver: F1-w256
+[run]	driver F1-w256 finished in 1.151648s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d3/summary.csv
+[output]	experiment complete
+# ── driver 3: WFP3-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: WFP3-w256 (type=wfp3)
+[drivers]	registered driver: WFP3-w256
+[drivers]	registered 1 drivers
+[run]	running driver: WFP3-w256
+[run]	driver WFP3-w256 finished in 0.469464s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d4/summary.csv
+[output]	experiment complete
+# ── driver 4: MARS-CW ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CW (type=mcts)
+[drivers]	registered driver: MARS-CW
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CW
+# ── driver 5: MARS-CB ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CB (type=mcts)
+[drivers]	registered driver: MARS-CB
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CB
+[run]	driver MARS-CB finished in 613484.984500s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d6/summary.csv
+[output]	experiment complete
+# ── driver 6: MARS-CU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CU (type=mcts)
+[drivers]	registered driver: MARS-CU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CU
+[run]	driver MARS-CU finished in 550080.436097s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d7/summary.csv
+[output]	experiment complete
+# ── driver 7: MARS-IU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-IU (type=mcts)
+[drivers]	registered driver: MARS-IU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-IU
+[run]	driver MARS-IU finished in 587763.194634s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d8/summary.csv
+[output]	experiment complete
+# ── driver 0: FCFS ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: FCFS (type=fcfs)
+[drivers]	registered driver: FCFS
+[drivers]	registered 1 drivers
+[run]	running driver: FCFS
+[run]	driver FCFS finished in 0.367004s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d1/summary.csv
+[output]	experiment complete
+# ── driver 1: SJF-w1024 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: SJF-w1024 (type=sjf)
+[drivers]	registered driver: SJF-w1024
+[drivers]	registered 1 drivers
+[run]	running driver: SJF-w1024
+[run]	driver SJF-w1024 finished in 0.396747s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d2/summary.csv
+[output]	experiment complete
+# ── driver 2: F1-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: F1-w256 (type=f1)
+[drivers]	registered driver: F1-w256
+[drivers]	registered 1 drivers
+[run]	running driver: F1-w256
+[run]	driver F1-w256 finished in 1.151648s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d3/summary.csv
+[output]	experiment complete
+# ── driver 3: WFP3-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: WFP3-w256 (type=wfp3)
+[drivers]	registered driver: WFP3-w256
+[drivers]	registered 1 drivers
+[run]	running driver: WFP3-w256
+[run]	driver WFP3-w256 finished in 0.469464s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d4/summary.csv
+[output]	experiment complete
+# ── driver 4: MARS-CW ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CW (type=mcts)
+[drivers]	registered driver: MARS-CW
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CW
+[run]	driver MARS-CW finished in 742360.201428s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d5/summary.csv
+[output]	experiment complete
+# ── driver 5: MARS-CB ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CB (type=mcts)
+[drivers]	registered driver: MARS-CB
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CB
+[run]	driver MARS-CB finished in 613484.984500s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d6/summary.csv
+[output]	experiment complete
+# ── driver 6: MARS-CU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CU (type=mcts)
+[drivers]	registered driver: MARS-CU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CU
+[run]	driver MARS-CU finished in 550080.436097s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d7/summary.csv
+[output]	experiment complete
+# ── driver 7: MARS-IU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-IU (type=mcts)
+[drivers]	registered driver: MARS-IU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-IU
+[run]	driver MARS-IU finished in 587763.194634s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d8/summary.csv
+[output]	experiment complete
+# ── driver 0: FCFS ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: FCFS (type=fcfs)
+[drivers]	registered driver: FCFS
+[drivers]	registered 1 drivers
+[run]	running driver: FCFS
+[run]	driver FCFS finished in 0.367004s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d1/summary.csv
+[output]	experiment complete
+# ── driver 1: SJF-w1024 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: SJF-w1024 (type=sjf)
+[drivers]	registered driver: SJF-w1024
+[drivers]	registered 1 drivers
+[run]	running driver: SJF-w1024
+[run]	driver SJF-w1024 finished in 0.396747s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d2/summary.csv
+[output]	experiment complete
+# ── driver 2: F1-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: F1-w256 (type=f1)
+[drivers]	registered driver: F1-w256
+[drivers]	registered 1 drivers
+[run]	running driver: F1-w256
+[run]	driver F1-w256 finished in 1.151648s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d3/summary.csv
+[output]	experiment complete
+# ── driver 3: WFP3-w256 ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: WFP3-w256 (type=wfp3)
+[drivers]	registered driver: WFP3-w256
+[drivers]	registered 1 drivers
+[run]	running driver: WFP3-w256
+[run]	driver WFP3-w256 finished in 0.469464s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d4/summary.csv
+[output]	experiment complete
+# ── driver 4: MARS-CW ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CW (type=mcts)
+[drivers]	registered driver: MARS-CW
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CW
+[run]	driver MARS-CW finished in 742360.201428s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d5/summary.csv
+[output]	experiment complete
+# ── driver 5: MARS-CB ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CB (type=mcts)
+[drivers]	registered driver: MARS-CB
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CB
+[run]	driver MARS-CB finished in 613484.984500s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d6/summary.csv
+[output]	experiment complete
+# ── driver 6: MARS-CU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-CU (type=mcts)
+[drivers]	registered driver: MARS-CU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-CU
+[run]	driver MARS-CU finished in 550080.436097s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d7/summary.csv
+[output]	experiment complete
+# ── driver 7: MARS-IU ──
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: MARS-IU (type=mcts)
+[drivers]	registered driver: MARS-IU
+[drivers]	registered 1 drivers
+[run]	running driver: MARS-IU
+[run]	driver MARS-IU finished in 587763.194634s
+[output]	output_analytics started
+[output]	wrote results/exp2b_d8/summary.csv
+[output]	experiment complete

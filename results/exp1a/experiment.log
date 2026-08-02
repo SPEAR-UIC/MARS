@@ -1,0 +1,650 @@
+[input]	input_initialization complete
+[drivers]	driver_initialization started
+[drivers]	created driver: FCFS (type=fcfs)
+[drivers]	registered driver: FCFS
+[drivers]	created driver: SJF-w2 (type=sjf)
+[drivers]	registered driver: SJF-w2
+[drivers]	created driver: SJF-w4 (type=sjf)
+[drivers]	registered driver: SJF-w4
+[drivers]	created driver: SJF-w8 (type=sjf)
+[drivers]	registered driver: SJF-w8
+[drivers]	created driver: SJF-w16 (type=sjf)
+[drivers]	registered driver: SJF-w16
+[drivers]	created driver: SJF-w32 (type=sjf)
+[drivers]	registered driver: SJF-w32
+[drivers]	created driver: SJF-w64 (type=sjf)
+[drivers]	registered driver: SJF-w64
+[drivers]	created driver: SJF-w128 (type=sjf)
+[drivers]	registered driver: SJF-w128
+[drivers]	created driver: SJF-w256 (type=sjf)
+[drivers]	registered driver: SJF-w256
+[drivers]	created driver: SJF-w512 (type=sjf)
+[drivers]	registered driver: SJF-w512
+[drivers]	created driver: SJF-w1024 (type=sjf)
+[drivers]	registered driver: SJF-w1024
+[drivers]	created driver: LJF-w2 (type=ljf)
+[drivers]	registered driver: LJF-w2
+[drivers]	created driver: LJF-w4 (type=ljf)
+[drivers]	registered driver: LJF-w4
+[drivers]	created driver: LJF-w8 (type=ljf)
+[drivers]	registered driver: LJF-w8
+[drivers]	created driver: LJF-w16 (type=ljf)
+[drivers]	registered driver: LJF-w16
+[drivers]	created driver: LJF-w32 (type=ljf)
+[drivers]	registered driver: LJF-w32
+[drivers]	created driver: LJF-w64 (type=ljf)
+[drivers]	registered driver: LJF-w64
+[drivers]	created driver: LJF-w128 (type=ljf)
+[drivers]	registered driver: LJF-w128
+[drivers]	created driver: LJF-w256 (type=ljf)
+[drivers]	registered driver: LJF-w256
+[drivers]	created driver: LJF-w512 (type=ljf)
+[drivers]	registered driver: LJF-w512
+[drivers]	created driver: LJF-w1024 (type=ljf)
+[drivers]	registered driver: LJF-w1024
+[drivers]	created driver: SRF-w2 (type=srf)
+[drivers]	registered driver: SRF-w2
+[drivers]	created driver: SRF-w4 (type=srf)
+[drivers]	registered driver: SRF-w4
+[drivers]	created driver: SRF-w8 (type=srf)
+[drivers]	registered driver: SRF-w8
+[drivers]	created driver: SRF-w16 (type=srf)
+[drivers]	registered driver: SRF-w16
+[drivers]	created driver: SRF-w32 (type=srf)
+[drivers]	registered driver: SRF-w32
+[drivers]	created driver: SRF-w64 (type=srf)
+[drivers]	registered driver: SRF-w64
+[drivers]	created driver: SRF-w128 (type=srf)
+[drivers]	registered driver: SRF-w128
+[drivers]	created driver: SRF-w256 (type=srf)
+[drivers]	registered driver: SRF-w256
+[drivers]	created driver: SRF-w512 (type=srf)
+[drivers]	registered driver: SRF-w512
+[drivers]	created driver: SRF-w1024 (type=srf)
+[drivers]	registered driver: SRF-w1024
+[drivers]	created driver: LRF-w2 (type=lrf)
+[drivers]	registered driver: LRF-w2
+[drivers]	created driver: LRF-w4 (type=lrf)
+[drivers]	registered driver: LRF-w4
+[drivers]	created driver: LRF-w8 (type=lrf)
+[drivers]	registered driver: LRF-w8
+[drivers]	created driver: LRF-w16 (type=lrf)
+[drivers]	registered driver: LRF-w16
+[drivers]	created driver: LRF-w32 (type=lrf)
+[drivers]	registered driver: LRF-w32
+[drivers]	created driver: LRF-w64 (type=lrf)
+[drivers]	registered driver: LRF-w64
+[drivers]	created driver: LRF-w128 (type=lrf)
+[drivers]	registered driver: LRF-w128
+[drivers]	created driver: LRF-w256 (type=lrf)
+[drivers]	registered driver: LRF-w256
+[drivers]	created driver: LRF-w512 (type=lrf)
+[drivers]	registered driver: LRF-w512
+[drivers]	created driver: LRF-w1024 (type=lrf)
+[drivers]	registered driver: LRF-w1024
+[drivers]	created driver: SCF-w2 (type=scf)
+[drivers]	registered driver: SCF-w2
+[drivers]	created driver: SCF-w4 (type=scf)
+[drivers]	registered driver: SCF-w4
+[drivers]	created driver: SCF-w8 (type=scf)
+[drivers]	registered driver: SCF-w8
+[drivers]	created driver: SCF-w16 (type=scf)
+[drivers]	registered driver: SCF-w16
+[drivers]	created driver: SCF-w32 (type=scf)
+[drivers]	registered driver: SCF-w32
+[drivers]	created driver: SCF-w64 (type=scf)
+[drivers]	registered driver: SCF-w64
+[drivers]	created driver: SCF-w128 (type=scf)
+[drivers]	registered driver: SCF-w128
+[drivers]	created driver: SCF-w256 (type=scf)
+[drivers]	registered driver: SCF-w256
+[drivers]	created driver: SCF-w512 (type=scf)
+[drivers]	registered driver: SCF-w512
+[drivers]	created driver: SCF-w1024 (type=scf)
+[drivers]	registered driver: SCF-w1024
+[drivers]	created driver: LCF-w2 (type=lcf)
+[drivers]	registered driver: LCF-w2
+[drivers]	created driver: LCF-w4 (type=lcf)
+[drivers]	registered driver: LCF-w4
+[drivers]	created driver: LCF-w8 (type=lcf)
+[drivers]	registered driver: LCF-w8
+[drivers]	created driver: LCF-w16 (type=lcf)
+[drivers]	registered driver: LCF-w16
+[drivers]	created driver: LCF-w32 (type=lcf)
+[drivers]	registered driver: LCF-w32
+[drivers]	created driver: LCF-w64 (type=lcf)
+[drivers]	registered driver: LCF-w64
+[drivers]	created driver: LCF-w128 (type=lcf)
+[drivers]	registered driver: LCF-w128
+[drivers]	created driver: LCF-w256 (type=lcf)
+[drivers]	registered driver: LCF-w256
+[drivers]	created driver: LCF-w512 (type=lcf)
+[drivers]	registered driver: LCF-w512
+[drivers]	created driver: LCF-w1024 (type=lcf)
+[drivers]	registered driver: LCF-w1024
+[drivers]	created driver: LCFS-w2 (type=lcfs)
+[drivers]	registered driver: LCFS-w2
+[drivers]	created driver: LCFS-w4 (type=lcfs)
+[drivers]	registered driver: LCFS-w4
+[drivers]	created driver: LCFS-w8 (type=lcfs)
+[drivers]	registered driver: LCFS-w8
+[drivers]	created driver: LCFS-w16 (type=lcfs)
+[drivers]	registered driver: LCFS-w16
+[drivers]	created driver: LCFS-w32 (type=lcfs)
+[drivers]	registered driver: LCFS-w32
+[drivers]	created driver: LCFS-w64 (type=lcfs)
+[drivers]	registered driver: LCFS-w64
+[drivers]	created driver: LCFS-w128 (type=lcfs)
+[drivers]	registered driver: LCFS-w128
+[drivers]	created driver: LCFS-w256 (type=lcfs)
+[drivers]	registered driver: LCFS-w256
+[drivers]	created driver: LCFS-w512 (type=lcfs)
+[drivers]	registered driver: LCFS-w512
+[drivers]	created driver: LCFS-w1024 (type=lcfs)
+[drivers]	registered driver: LCFS-w1024
+[drivers]	created driver: WFP3-w2 (type=wfp3)
+[drivers]	registered driver: WFP3-w2
+[drivers]	created driver: WFP3-w4 (type=wfp3)
+[drivers]	registered driver: WFP3-w4
+[drivers]	created driver: WFP3-w8 (type=wfp3)
+[drivers]	registered driver: WFP3-w8
+[drivers]	created driver: WFP3-w16 (type=wfp3)
+[drivers]	registered driver: WFP3-w16
+[drivers]	created driver: WFP3-w32 (type=wfp3)
+[drivers]	registered driver: WFP3-w32
+[drivers]	created driver: WFP3-w64 (type=wfp3)
+[drivers]	registered driver: WFP3-w64
+[drivers]	created driver: WFP3-w128 (type=wfp3)
+[drivers]	registered driver: WFP3-w128
+[drivers]	created driver: WFP3-w256 (type=wfp3)
+[drivers]	registered driver: WFP3-w256
+[drivers]	created driver: WFP3-w512 (type=wfp3)
+[drivers]	registered driver: WFP3-w512
+[drivers]	created driver: WFP3-w1024 (type=wfp3)
+[drivers]	registered driver: WFP3-w1024
+[drivers]	created driver: WFP1-w2 (type=wfp1)
+[drivers]	registered driver: WFP1-w2
+[drivers]	created driver: WFP1-w4 (type=wfp1)
+[drivers]	registered driver: WFP1-w4
+[drivers]	created driver: WFP1-w8 (type=wfp1)
+[drivers]	registered driver: WFP1-w8
+[drivers]	created driver: WFP1-w16 (type=wfp1)
+[drivers]	registered driver: WFP1-w16
+[drivers]	created driver: WFP1-w32 (type=wfp1)
+[drivers]	registered driver: WFP1-w32
+[drivers]	created driver: WFP1-w64 (type=wfp1)
+[drivers]	registered driver: WFP1-w64
+[drivers]	created driver: WFP1-w128 (type=wfp1)
+[drivers]	registered driver: WFP1-w128
+[drivers]	created driver: WFP1-w256 (type=wfp1)
+[drivers]	registered driver: WFP1-w256
+[drivers]	created driver: WFP1-w512 (type=wfp1)
+[drivers]	registered driver: WFP1-w512
+[drivers]	created driver: WFP1-w1024 (type=wfp1)
+[drivers]	registered driver: WFP1-w1024
+[drivers]	created driver: FCSJ-w2 (type=fcsj)
+[drivers]	registered driver: FCSJ-w2
+[drivers]	created driver: FCSJ-w4 (type=fcsj)
+[drivers]	registered driver: FCSJ-w4
+[drivers]	created driver: FCSJ-w8 (type=fcsj)
+[drivers]	registered driver: FCSJ-w8
+[drivers]	created driver: FCSJ-w16 (type=fcsj)
+[drivers]	registered driver: FCSJ-w16
+[drivers]	created driver: FCSJ-w32 (type=fcsj)
+[drivers]	registered driver: FCSJ-w32
+[drivers]	created driver: FCSJ-w64 (type=fcsj)
+[drivers]	registered driver: FCSJ-w64
+[drivers]	created driver: FCSJ-w128 (type=fcsj)
+[drivers]	registered driver: FCSJ-w128
+[drivers]	created driver: FCSJ-w256 (type=fcsj)
+[drivers]	registered driver: FCSJ-w256
+[drivers]	created driver: FCSJ-w512 (type=fcsj)
+[drivers]	registered driver: FCSJ-w512
+[drivers]	created driver: FCSJ-w1024 (type=fcsj)
+[drivers]	registered driver: FCSJ-w1024
+[drivers]	created driver: FAT-w2 (type=fat)
+[drivers]	registered driver: FAT-w2
+[drivers]	created driver: FAT-w4 (type=fat)
+[drivers]	registered driver: FAT-w4
+[drivers]	created driver: FAT-w8 (type=fat)
+[drivers]	registered driver: FAT-w8
+[drivers]	created driver: FAT-w16 (type=fat)
+[drivers]	registered driver: FAT-w16
+[drivers]	created driver: FAT-w32 (type=fat)
+[drivers]	registered driver: FAT-w32
+[drivers]	created driver: FAT-w64 (type=fat)
+[drivers]	registered driver: FAT-w64
+[drivers]	created driver: FAT-w128 (type=fat)
+[drivers]	registered driver: FAT-w128
+[drivers]	created driver: FAT-w256 (type=fat)
+[drivers]	registered driver: FAT-w256
+[drivers]	created driver: FAT-w512 (type=fat)
+[drivers]	registered driver: FAT-w512
+[drivers]	created driver: FAT-w1024 (type=fat)
+[drivers]	registered driver: FAT-w1024
+[drivers]	created driver: UNICEP-w2 (type=unicep)
+[drivers]	registered driver: UNICEP-w2
+[drivers]	created driver: UNICEP-w4 (type=unicep)
+[drivers]	registered driver: UNICEP-w4
+[drivers]	created driver: UNICEP-w8 (type=unicep)
+[drivers]	registered driver: UNICEP-w8
+[drivers]	created driver: UNICEP-w16 (type=unicep)
+[drivers]	registered driver: UNICEP-w16
+[drivers]	created driver: UNICEP-w32 (type=unicep)
+[drivers]	registered driver: UNICEP-w32
+[drivers]	created driver: UNICEP-w64 (type=unicep)
+[drivers]	registered driver: UNICEP-w64
+[drivers]	created driver: UNICEP-w128 (type=unicep)
+[drivers]	registered driver: UNICEP-w128
+[drivers]	created driver: UNICEP-w256 (type=unicep)
+[drivers]	registered driver: UNICEP-w256
+[drivers]	created driver: UNICEP-w512 (type=unicep)
+[drivers]	registered driver: UNICEP-w512
+[drivers]	created driver: UNICEP-w1024 (type=unicep)
+[drivers]	registered driver: UNICEP-w1024
+[drivers]	created driver: F1-w2 (type=f1)
+[drivers]	registered driver: F1-w2
+[drivers]	created driver: F1-w4 (type=f1)
+[drivers]	registered driver: F1-w4
+[drivers]	created driver: F1-w8 (type=f1)
+[drivers]	registered driver: F1-w8
+[drivers]	created driver: F1-w16 (type=f1)
+[drivers]	registered driver: F1-w16
+[drivers]	created driver: F1-w32 (type=f1)
+[drivers]	registered driver: F1-w32
+[drivers]	created driver: F1-w64 (type=f1)
+[drivers]	registered driver: F1-w64
+[drivers]	created driver: F1-w128 (type=f1)
+[drivers]	registered driver: F1-w128
+[drivers]	created driver: F1-w256 (type=f1)
+[drivers]	registered driver: F1-w256
+[drivers]	created driver: F1-w512 (type=f1)
+[drivers]	registered driver: F1-w512
+[drivers]	created driver: F1-w1024 (type=f1)
+[drivers]	registered driver: F1-w1024
+[drivers]	created driver: F2-w2 (type=f2)
+[drivers]	registered driver: F2-w2
+[drivers]	created driver: F2-w4 (type=f2)
+[drivers]	registered driver: F2-w4
+[drivers]	created driver: F2-w8 (type=f2)
+[drivers]	registered driver: F2-w8
+[drivers]	created driver: F2-w16 (type=f2)
+[drivers]	registered driver: F2-w16
+[drivers]	created driver: F2-w32 (type=f2)
+[drivers]	registered driver: F2-w32
+[drivers]	created driver: F2-w64 (type=f2)
+[drivers]	registered driver: F2-w64
+[drivers]	created driver: F2-w128 (type=f2)
+[drivers]	registered driver: F2-w128
+[drivers]	created driver: F2-w256 (type=f2)
+[drivers]	registered driver: F2-w256
+[drivers]	created driver: F2-w512 (type=f2)
+[drivers]	registered driver: F2-w512
+[drivers]	created driver: F2-w1024 (type=f2)
+[drivers]	registered driver: F2-w1024
+[drivers]	created driver: F3-w2 (type=f3)
+[drivers]	registered driver: F3-w2
+[drivers]	created driver: F3-w4 (type=f3)
+[drivers]	registered driver: F3-w4
+[drivers]	created driver: F3-w8 (type=f3)
+[drivers]	registered driver: F3-w8
+[drivers]	created driver: F3-w16 (type=f3)
+[drivers]	registered driver: F3-w16
+[drivers]	created driver: F3-w32 (type=f3)
+[drivers]	registered driver: F3-w32
+[drivers]	created driver: F3-w64 (type=f3)
+[drivers]	registered driver: F3-w64
+[drivers]	created driver: F3-w128 (type=f3)
+[drivers]	registered driver: F3-w128
+[drivers]	created driver: F3-w256 (type=f3)
+[drivers]	registered driver: F3-w256
+[drivers]	created driver: F3-w512 (type=f3)
+[drivers]	registered driver: F3-w512
+[drivers]	created driver: F3-w1024 (type=f3)
+[drivers]	registered driver: F3-w1024
+[drivers]	created driver: F4-w2 (type=f4)
+[drivers]	registered driver: F4-w2
+[drivers]	created driver: F4-w4 (type=f4)
+[drivers]	registered driver: F4-w4
+[drivers]	created driver: F4-w8 (type=f4)
+[drivers]	registered driver: F4-w8
+[drivers]	created driver: F4-w16 (type=f4)
+[drivers]	registered driver: F4-w16
+[drivers]	created driver: F4-w32 (type=f4)
+[drivers]	registered driver: F4-w32
+[drivers]	created driver: F4-w64 (type=f4)
+[drivers]	registered driver: F4-w64
+[drivers]	created driver: F4-w128 (type=f4)
+[drivers]	registered driver: F4-w128
+[drivers]	created driver: F4-w256 (type=f4)
+[drivers]	registered driver: F4-w256
+[drivers]	created driver: F4-w512 (type=f4)
+[drivers]	registered driver: F4-w512
+[drivers]	created driver: F4-w1024 (type=f4)
+[drivers]	registered driver: F4-w1024
+[drivers]	registered 161 drivers
+[run]	running driver: FCFS
+[run]	driver FCFS finished in 0.633173s
+[run]	running driver: SJF-w2
+[run]	driver SJF-w2 finished in 0.682043s
+[run]	running driver: SJF-w4
+[run]	driver SJF-w4 finished in 0.621970s
+[run]	running driver: SJF-w8
+[run]	driver SJF-w8 finished in 0.621581s
+[run]	running driver: SJF-w16
+[run]	driver SJF-w16 finished in 0.666281s
+[run]	running driver: SJF-w32
+[run]	driver SJF-w32 finished in 0.678379s
+[run]	running driver: SJF-w64
+[run]	driver SJF-w64 finished in 0.756772s
+[run]	running driver: SJF-w128
+[run]	driver SJF-w128 finished in 0.828736s
+[run]	running driver: SJF-w256
+[run]	driver SJF-w256 finished in 0.830961s
+[run]	running driver: SJF-w512
+[run]	driver SJF-w512 finished in 0.822762s
+[run]	running driver: SJF-w1024
+[run]	driver SJF-w1024 finished in 0.830906s
+[run]	running driver: LJF-w2
+[run]	driver LJF-w2 finished in 0.707675s
+[run]	running driver: LJF-w4
+[run]	driver LJF-w4 finished in 0.644538s
+[run]	running driver: LJF-w8
+[run]	driver LJF-w8 finished in 0.806280s
+[run]	running driver: LJF-w16
+[run]	driver LJF-w16 finished in 0.812316s
+[run]	running driver: LJF-w32
+[run]	driver LJF-w32 finished in 0.888887s
+[run]	running driver: LJF-w64
+[run]	driver LJF-w64 finished in 1.028527s
+[run]	running driver: LJF-w128
+[run]	driver LJF-w128 finished in 1.146994s
+[run]	running driver: LJF-w256
+[run]	driver LJF-w256 finished in 1.445435s
+[run]	running driver: LJF-w512
+[run]	driver LJF-w512 finished in 1.842389s
+[run]	running driver: LJF-w1024
+[run]	driver LJF-w1024 finished in 2.186440s
+[run]	running driver: SRF-w2
+[run]	driver SRF-w2 finished in 0.844356s
+[run]	running driver: SRF-w4
+[run]	driver SRF-w4 finished in 0.895193s
+[run]	running driver: SRF-w8
+[run]	driver SRF-w8 finished in 0.871357s
+[run]	running driver: SRF-w16
+[run]	driver SRF-w16 finished in 0.764281s
+[run]	running driver: SRF-w32
+[run]	driver SRF-w32 finished in 0.798570s
+[run]	running driver: SRF-w64
+[run]	driver SRF-w64 finished in 0.643530s
+[run]	running driver: SRF-w128
+[run]	driver SRF-w128 finished in 0.583847s
+[run]	running driver: SRF-w256
+[run]	driver SRF-w256 finished in 0.869676s
+[run]	running driver: SRF-w512
+[run]	driver SRF-w512 finished in 0.743639s
+[run]	running driver: SRF-w1024
+[run]	driver SRF-w1024 finished in 0.879303s
+[run]	running driver: LRF-w2
+[run]	driver LRF-w2 finished in 0.798921s
+[run]	running driver: LRF-w4
+[run]	driver LRF-w4 finished in 0.787422s
+[run]	running driver: LRF-w8
+[run]	driver LRF-w8 finished in 0.870097s
+[run]	running driver: LRF-w16
+[run]	driver LRF-w16 finished in 0.806902s
+[run]	running driver: LRF-w32
+[run]	driver LRF-w32 finished in 0.787520s
+[run]	running driver: LRF-w64
+[run]	driver LRF-w64 finished in 0.812789s
+[run]	running driver: LRF-w128
+[run]	driver LRF-w128 finished in 1.095049s
+[run]	running driver: LRF-w256
+[run]	driver LRF-w256 finished in 1.305733s
+[run]	running driver: LRF-w512
+[run]	driver LRF-w512 finished in 1.569602s
+[run]	running driver: LRF-w1024
+[run]	driver LRF-w1024 finished in 1.494568s
+[run]	running driver: SCF-w2
+[run]	driver SCF-w2 finished in 0.760671s
+[run]	running driver: SCF-w4
+[run]	driver SCF-w4 finished in 0.759539s
+[run]	running driver: SCF-w8
+[run]	driver SCF-w8 finished in 0.939070s
+[run]	running driver: SCF-w16
+[run]	driver SCF-w16 finished in 0.885411s
+[run]	running driver: SCF-w32
+[run]	driver SCF-w32 finished in 0.856419s
+[run]	running driver: SCF-w64
+[run]	driver SCF-w64 finished in 0.929388s
+[run]	running driver: SCF-w128
+[run]	driver SCF-w128 finished in 0.887141s
+[run]	running driver: SCF-w256
+[run]	driver SCF-w256 finished in 0.854163s
+[run]	running driver: SCF-w512
+[run]	driver SCF-w512 finished in 0.879862s
+[run]	running driver: SCF-w1024
+[run]	driver SCF-w1024 finished in 0.880852s
+[run]	running driver: LCF-w2
+[run]	driver LCF-w2 finished in 0.859239s
+[run]	running driver: LCF-w4
+[run]	driver LCF-w4 finished in 0.815188s
+[run]	running driver: LCF-w8
+[run]	driver LCF-w8 finished in 0.888683s
+[run]	running driver: LCF-w16
+[run]	driver LCF-w16 finished in 0.927002s
+[run]	running driver: LCF-w32
+[run]	driver LCF-w32 finished in 0.849482s
+[run]	running driver: LCF-w64
+[run]	driver LCF-w64 finished in 0.886311s
+[run]	running driver: LCF-w128
+[run]	driver LCF-w128 finished in 1.106431s
+[run]	running driver: LCF-w256
+[run]	driver LCF-w256 finished in 1.500450s
+[run]	running driver: LCF-w512
+[run]	driver LCF-w512 finished in 1.622482s
+[run]	running driver: LCF-w1024
+[run]	driver LCF-w1024 finished in 1.877785s
+[run]	running driver: LCFS-w2
+[run]	driver LCFS-w2 finished in 0.541549s
+[run]	running driver: LCFS-w4
+[run]	driver LCFS-w4 finished in 0.554824s
+[run]	running driver: LCFS-w8
+[run]	driver LCFS-w8 finished in 0.588478s
+[run]	running driver: LCFS-w16
+[run]	driver LCFS-w16 finished in 0.578210s
+[run]	running driver: LCFS-w32
+[run]	driver LCFS-w32 finished in 0.556254s
+[run]	running driver: LCFS-w64
+[run]	driver LCFS-w64 finished in 0.625744s
+[run]	running driver: LCFS-w128
+[run]	driver LCFS-w128 finished in 0.623273s
+[run]	running driver: LCFS-w256
+[run]	driver LCFS-w256 finished in 0.593952s
+[run]	running driver: LCFS-w512
+[run]	driver LCFS-w512 finished in 0.632500s
+[run]	running driver: LCFS-w1024
+[run]	driver LCFS-w1024 finished in 0.604116s
+[run]	running driver: WFP3-w2
+[run]	driver WFP3-w2 finished in 0.461229s
+[run]	running driver: WFP3-w4
+[run]	driver WFP3-w4 finished in 0.454438s
+[run]	running driver: WFP3-w8
+[run]	driver WFP3-w8 finished in 0.522570s
+[run]	running driver: WFP3-w16
+[run]	driver WFP3-w16 finished in 0.592581s
+[run]	running driver: WFP3-w32
+[run]	driver WFP3-w32 finished in 0.611523s
+[run]	running driver: WFP3-w64
+[run]	driver WFP3-w64 finished in 0.677022s
+[run]	running driver: WFP3-w128
+[run]	driver WFP3-w128 finished in 0.714844s
+[run]	running driver: WFP3-w256
+[run]	driver WFP3-w256 finished in 0.823524s
+[run]	running driver: WFP3-w512
+[run]	driver WFP3-w512 finished in 0.839483s
+[run]	running driver: WFP3-w1024
+[run]	driver WFP3-w1024 finished in 0.762084s
+[run]	running driver: WFP1-w2
+[run]	driver WFP1-w2 finished in 0.578467s
+[run]	running driver: WFP1-w4
+[run]	driver WFP1-w4 finished in 0.594202s
+[run]	running driver: WFP1-w8
+[run]	driver WFP1-w8 finished in 0.670024s
+[run]	running driver: WFP1-w16
+[run]	driver WFP1-w16 finished in 0.684391s
+[run]	running driver: WFP1-w32
+[run]	driver WFP1-w32 finished in 0.693617s
+[run]	running driver: WFP1-w64
+[run]	driver WFP1-w64 finished in 0.830621s
+[run]	running driver: WFP1-w128
+[run]	driver WFP1-w128 finished in 0.839699s
+[run]	running driver: WFP1-w256
+[run]	driver WFP1-w256 finished in 0.897027s
+[run]	running driver: WFP1-w512
+[run]	driver WFP1-w512 finished in 0.939030s
+[run]	running driver: WFP1-w1024
+[run]	driver WFP1-w1024 finished in 1.002608s
+[run]	running driver: FCSJ-w2
+[run]	driver FCSJ-w2 finished in 0.632844s
+[run]	running driver: FCSJ-w4
+[run]	driver FCSJ-w4 finished in 0.560942s
+[run]	running driver: FCSJ-w8
+[run]	driver FCSJ-w8 finished in 0.579077s
+[run]	running driver: FCSJ-w16
+[run]	driver FCSJ-w16 finished in 0.571615s
+[run]	running driver: FCSJ-w32
+[run]	driver FCSJ-w32 finished in 0.579830s
+[run]	running driver: FCSJ-w64
+[run]	driver FCSJ-w64 finished in 0.693918s
+[run]	running driver: FCSJ-w128
+[run]	driver FCSJ-w128 finished in 0.752562s
+[run]	running driver: FCSJ-w256
+[run]	driver FCSJ-w256 finished in 0.811806s
+[run]	running driver: FCSJ-w512
+[run]	driver FCSJ-w512 finished in 0.802217s
+[run]	running driver: FCSJ-w1024
+[run]	driver FCSJ-w1024 finished in 0.827770s
+[run]	running driver: FAT-w2
+[run]	driver FAT-w2 finished in 0.599646s
+[run]	running driver: FAT-w4
+[run]	driver FAT-w4 finished in 0.582562s
+[run]	running driver: FAT-w8
+[run]	driver FAT-w8 finished in 0.587327s
+[run]	running driver: FAT-w16
+[run]	driver FAT-w16 finished in 0.593291s
+[run]	running driver: FAT-w32
+[run]	driver FAT-w32 finished in 0.558852s
+[run]	running driver: FAT-w64
+[run]	driver FAT-w64 finished in 0.782549s
+[run]	running driver: FAT-w128
+[run]	driver FAT-w128 finished in 0.986077s
+[run]	running driver: FAT-w256
+[run]	driver FAT-w256 finished in 1.435749s
+[run]	running driver: FAT-w512
+[run]	driver FAT-w512 finished in 1.590723s
+[run]	running driver: FAT-w1024
+[run]	driver FAT-w1024 finished in 1.758693s
+[run]	running driver: UNICEP-w2
+[run]	driver UNICEP-w2 finished in 0.608763s
+[run]	running driver: UNICEP-w4
+[run]	driver UNICEP-w4 finished in 0.613436s
+[run]	running driver: UNICEP-w8
+[run]	driver UNICEP-w8 finished in 0.614168s
+[run]	running driver: UNICEP-w16
+[run]	driver UNICEP-w16 finished in 0.640729s
+[run]	running driver: UNICEP-w32
+[run]	driver UNICEP-w32 finished in 0.731477s
+[run]	running driver: UNICEP-w64
+[run]	driver UNICEP-w64 finished in 1.055366s
+[run]	running driver: UNICEP-w128
+[run]	driver UNICEP-w128 finished in 1.475122s
+[run]	running driver: UNICEP-w256
+[run]	driver UNICEP-w256 finished in 1.699169s
+[run]	running driver: UNICEP-w512
+[run]	driver UNICEP-w512 finished in 1.702204s
+[run]	running driver: UNICEP-w1024
+[run]	driver UNICEP-w1024 finished in 1.794132s
+[run]	running driver: F1-w2
+[run]	driver F1-w2 finished in 0.566067s
+[run]	running driver: F1-w4
+[run]	driver F1-w4 finished in 0.613199s
+[run]	running driver: F1-w8
+[run]	driver F1-w8 finished in 0.650561s
+[run]	running driver: F1-w16
+[run]	driver F1-w16 finished in 0.759292s
+[run]	running driver: F1-w32
+[run]	driver F1-w32 finished in 0.925897s
+[run]	running driver: F1-w64
+[run]	driver F1-w64 finished in 1.378627s
+[run]	running driver: F1-w128
+[run]	driver F1-w128 finished in 1.571129s
+[run]	running driver: F1-w256
+[run]	driver F1-w256 finished in 1.595788s
+[run]	running driver: F1-w512
+[run]	driver F1-w512 finished in 1.590756s
+[run]	running driver: F1-w1024
+[run]	driver F1-w1024 finished in 1.646767s
+[run]	running driver: F2-w2
+[run]	driver F2-w2 finished in 0.554837s
+[run]	running driver: F2-w4
+[run]	driver F2-w4 finished in 0.583718s
+[run]	running driver: F2-w8
+[run]	driver F2-w8 finished in 0.626986s
+[run]	running driver: F2-w16
+[run]	driver F2-w16 finished in 0.656358s
+[run]	running driver: F2-w32
+[run]	driver F2-w32 finished in 0.844894s
+[run]	running driver: F2-w64
+[run]	driver F2-w64 finished in 1.083697s
+[run]	running driver: F2-w128
+[run]	driver F2-w128 finished in 1.337046s
+[run]	running driver: F2-w256
+[run]	driver F2-w256 finished in 1.353076s
+[run]	running driver: F2-w512
+[run]	driver F2-w512 finished in 1.362031s
+[run]	running driver: F2-w1024
+[run]	driver F2-w1024 finished in 1.374588s
+[run]	running driver: F3-w2
+[run]	driver F3-w2 finished in 0.607304s
+[run]	running driver: F3-w4
+[run]	driver F3-w4 finished in 0.624581s
+[run]	running driver: F3-w8
+[run]	driver F3-w8 finished in 0.737576s
+[run]	running driver: F3-w16
+[run]	driver F3-w16 finished in 0.733353s
+[run]	running driver: F3-w32
+[run]	driver F3-w32 finished in 0.827205s
+[run]	running driver: F3-w64
+[run]	driver F3-w64 finished in 1.056199s
+[run]	running driver: F3-w128
+[run]	driver F3-w128 finished in 1.166837s
+[run]	running driver: F3-w256
+[run]	driver F3-w256 finished in 1.052650s
+[run]	running driver: F3-w512
+[run]	driver F3-w512 finished in 1.263786s
+[run]	running driver: F3-w1024
+[run]	driver F3-w1024 finished in 1.288521s
+[run]	running driver: F4-w2
+[run]	driver F4-w2 finished in 0.614680s
+[run]	running driver: F4-w4
+[run]	driver F4-w4 finished in 0.614974s
+[run]	running driver: F4-w8
+[run]	driver F4-w8 finished in 0.667369s
+[run]	running driver: F4-w16
+[run]	driver F4-w16 finished in 0.688226s
+[run]	running driver: F4-w32
+[run]	driver F4-w32 finished in 0.792459s
+[run]	running driver: F4-w64
+[run]	driver F4-w64 finished in 1.122233s
+[run]	running driver: F4-w128
+[run]	driver F4-w128 finished in 1.256490s
+[run]	running driver: F4-w256
+[run]	driver F4-w256 finished in 1.202638s
+[run]	running driver: F4-w512
+[run]	driver F4-w512 finished in 1.173466s
+[run]	running driver: F4-w1024
+[run]	driver F4-w1024 finished in 1.180288s
+[output]	output_analytics started
+[output]	wrote results/exp1a/summary.csv
+[output]	experiment complete

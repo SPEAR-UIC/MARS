@@ -1,0 +1,86 @@
+{
+  "exp": "exp2b",
+  "json_path": "/home/cc/CQSimPrivate/experiments/exp2b.json",
+  "drivers": [
+    {
+      "index": 1,
+      "tag": "FCFS",
+      "type": "fcfs",
+      "node": "ccred13",
+      "session": "cqsim-exp2b-d1",
+      "outdir": "results/exp2b_d1",
+      "cores": 0,
+      "core_range": "0"
+    },
+    {
+      "index": 2,
+      "tag": "SJF-w1024",
+      "type": "sjf",
+      "node": "ccred15",
+      "session": "cqsim-exp2b-d2",
+      "outdir": "results/exp2b_d2",
+      "cores": 0,
+      "core_range": "0"
+    },
+    {
+      "index": 3,
+      "tag": "F1-w256",
+      "type": "f1",
+      "node": "ccred13",
+      "session": "cqsim-exp2b-d3",
+      "outdir": "results/exp2b_d3",
+      "cores": 0,
+      "core_range": "0"
+    },
+    {
+      "index": 4,
+      "tag": "WFP3-w256",
+      "type": "wfp3",
+      "node": "ccred15",
+      "session": "cqsim-exp2b-d4",
+      "outdir": "results/exp2b_d4",
+      "cores": 0,
+      "core_range": "0"
+    },
+    {
+      "index": 5,
+      "tag": "MARS-CW",
+      "type": "mcts",
+      "node": "ccred2",
+      "session": "cqsim-exp2b-d5",
+      "outdir": "results/exp2b_d5",
+      "cores": 250,
+      "core_range": "0-249"
+    },
+    {
+      "index": 6,
+      "tag": "MARS-CB",
+      "type": "mcts",
+      "node": "ccred4",
+      "session": "cqsim-exp2b-d6",
+      "outdir": "results/exp2b_d6",
+      "cores": 250,
+      "core_range": "0-249"
+    },
+    {
+      "index": 7,
+      "tag": "MARS-CU",
+      "type": "mcts",
+      "node": "ccred6",
+      "session": "cqsim-exp2b-d7",
+      "outdir": "results/exp2b_d7",
+      "cores": 250,
+      "core_range": "0-249"
+    },
+    {
+      "index": 8,
+      "tag": "MARS-IU",
+      "type": "mcts",
+      "node": "ccred8",
+      "session": "cqsim-exp2b-d8",
+      "outdir": "results/exp2b_d8",
+      "cores": 250,
+      "core_range": "0-249"
+    }
+  ]
+}

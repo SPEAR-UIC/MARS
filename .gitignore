@@ -1,5 +1,4 @@
 build/
-results/
 *.o
 *.a
 *.so
@@ -14,8 +13,14 @@ compile_commands.json
 __pycache__/
 .venv
 cqsimcpp
-!results/exp2a
-!results/exp2b
 cqsim-python/data/Debug/
 cqsim-python/data/Results/
 cqsim-python/data/Fmt
+
+
+results/*
+!results/exp1a/
+!results/exp1b/
+!results/exp2a/
+!results/exp2b/
+

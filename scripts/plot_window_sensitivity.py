@@ -217,7 +217,7 @@ def parse_args():
                     "(Theta vs Polaris), computed directly from exp1a/exp1b events.csv.")
     parser.add_argument("exp1a_json", help="Path to exp1a.json (Theta window sweep)")
     parser.add_argument("exp1b_json", help="Path to exp1b.json (Polaris window sweep)")
-    parser.add_argument("--output_dir", default="plots_cluster26",
+    parser.add_argument("--output_dir", default="CLUSTER26",
                         help="Directory to write window_sensitivity.png into "
                              "(default: plots_cluster26)")
     parser.add_argument("--policies", default=",".join(DEFAULT_POLICIES),

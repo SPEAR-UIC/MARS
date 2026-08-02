@@ -2095,7 +2095,7 @@ def main():
     parser = argparse.ArgumentParser(description="Generate final paper plots.")
     parser.add_argument("exp2a_json", help="Path to exp2a.json (Theta)")
     parser.add_argument("exp2b_json", help="Path to exp2b.json (Polaris)")
-    parser.add_argument("--output_dir", default="plots_cluster26")
+    parser.add_argument("--output_dir", default="CLUSTER26")
     args = parser.parse_args()
 
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
