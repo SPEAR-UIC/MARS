@@ -13,6 +13,7 @@ import csv
 import json
 import os
 import re
+from collections import Counter
 from datetime import datetime, timezone, timedelta
 
 import matplotlib
@@ -20,6 +21,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import matplotlib.patches as mpatches
+import matplotlib.transforms as transforms
+from matplotlib.colors import PowerNorm
 from matplotlib.lines import Line2D
 from matplotlib.ticker import FuncFormatter, LogFormatterMathtext
 import numpy as np
@@ -34,6 +37,19 @@ GROUPS = ["S", "M", "L", "XL"]
 DPI = 150
 CST = timezone(timedelta(hours=-6))
 MCTS_NUM_CORES = 250
+
+# Requested-walltime buckets (seconds, cumulative upper edge) for the job
+# distribution heatmap.
+WT_EDGES  = [1800, 3600, 7200, 10800, 18000, 21600, 32400, 86400]
+WT_LABELS = ["≤0.5h", "≤1h", "≤2h", "≤3h",
+             "≤5h", "≤6h", "≤9h", "≤24h"]
+
+# Node-count ranges (inclusive) that back both assign_group() and the job
+# distribution heatmap's row groups, keyed by system.
+NODE_GROUP_RANGES = {
+    "theta":   [("S", 128, 128), ("M", 129, 256), ("L", 257, 1024), ("XL", 1025, 4096)],
+    "polaris": [("S", 10, 16),   ("M", 17, 32),   ("L", 33, 128),   ("XL", 129, 496)],
+}
 
 MARS_COLORS    = {"CW": "#f6de6a", "CB": "#b8860b", "CU": "#9467bd", "IU": "#c5b0d5"}
 HEURISTIC_COLORS = {
@@ -342,6 +358,73 @@ def load_bsld(submit, start, end, procs_map, system):
         if g:
             data[g].append(b)
     return data
+
+def _wt_bucket(req_wall_seconds):
+    for i, edge in enumerate(WT_EDGES):
+        if req_wall_seconds <= edge:
+            return i
+    return None
+
+# Only the M size class gets split into a dominant-value row -- matches the
+# reference job-distribution figure, where S/L/XL are always single rows
+# even when a single node count also dominates within them (e.g. Polaris'
+# S class is dominated by 10-node jobs but stays one "≤16" row).
+_SPLITTABLE_GROUPS = {"M"}
+
+def load_job_distribution(procs_map, submit_map, walltimes_map, system,
+                           year_start, year_end, dominant_frac=0.5):
+    """Bucket jobs submitted within [year_start, year_end) into node-count x
+    requested-walltime cells for the job-distribution heatmap.
+
+    Node-count rows follow NODE_GROUP_RANGES (the same S/M/L/XL boundaries as
+    assign_group). Within the M group (see _SPLITTABLE_GROUPS), a single
+    node-count value that accounts for more than `dominant_frac` of that
+    group's jobs is split into its own "=N" row, leaving the remaining jobs
+    in a "≤N" row -- this mirrors common HPC workloads where one popular job
+    size (e.g. a full-node allocation) dominates a size class.
+
+    Returns a dict with:
+      "rows": ordered list of {"label", "group", "counts" (len-8 list),
+              "total"} -- one entry per heatmap row, top (smallest) to
+              bottom (largest).
+      "total_jobs": total in-year job count (used for %-of-jobs coloring).
+    """
+    jids = [j for j in procs_map if year_start <= submit_map.get(j, -1) < year_end]
+    total_jobs = len(jids)
+
+    rows = []
+    for glabel, lo, hi in NODE_GROUP_RANGES[system]:
+        grp_jids = [j for j in jids if lo <= procs_map[j] <= hi]
+        if not grp_jids:
+            rows.append({"label": f"={lo}" if lo == hi else f"≤{hi}",
+                         "group": glabel, "anchor": hi, "counts": [0] * 8, "total": 0})
+            continue
+
+        sub_groups = [(lo, hi, grp_jids)]
+        if lo != hi and glabel in _SPLITTABLE_GROUPS:
+            counts_by_value = Counter(procs_map[j] for j in grp_jids)
+            dominant_value, dominant_count = counts_by_value.most_common(1)[0]
+            if dominant_count / len(grp_jids) > dominant_frac:
+                dominant_jids = [j for j in grp_jids if procs_map[j] == dominant_value]
+                rest_jids = [j for j in grp_jids if procs_map[j] != dominant_value]
+                rest_hi = dominant_value - 1 if dominant_value == hi else hi
+                sub_groups = sorted(
+                    [(dominant_value, dominant_value, dominant_jids),
+                     (lo, rest_hi, rest_jids)],
+                    key=lambda sg: sg[1],
+                )
+
+        for sub_lo, sub_hi, sub_jids in sub_groups:
+            counts = [0] * 8
+            for j in sub_jids:
+                b = _wt_bucket(walltimes_map[j])
+                if b is not None:
+                    counts[b] += 1
+            label = f"={sub_lo}" if sub_lo == sub_hi else f"≤{sub_hi}"
+            rows.append({"label": label, "group": glabel, "anchor": sub_hi,
+                        "counts": counts, "total": len(sub_jids)})
+
+    return {"rows": rows, "total_jobs": total_jobs}
 
 def load_uptime_util_per_period(results_dir, tag, procs_map, maint_windows,
                                  year_start, year_end, sys_size):
@@ -1180,7 +1263,7 @@ def _draw_boxplot_panel_h(ax, tags, data_by_tag, driver_colors,
     data      = [np.asarray(data_by_tag.get(t, [0.001]), dtype=float) for t in tags]
     positions = np.arange(1, len(tags) + 1)
     parts = ax.boxplot(
-        data, positions=positions, widths=0.58, vert=False,
+        data, positions=positions, widths=0.58, orientation="horizontal",
         whis=whis, showmeans=True, meanline=True, showfliers=True,
         flierprops=dict(marker="o", markersize=2.0, linestyle="none",
                         alpha=0.35, markeredgewidth=0.0),
@@ -1462,6 +1545,156 @@ def plot_drain_queue_boxplot(theta_data, polaris_data, theta_tags, polaris_tags,
     axes[0].set_ylabel("Queue Length (jobs)", fontsize=13, fontweight="bold", labelpad=2)
     save_fig(fig, out_path)
 
+# ─── workload/ figures ─────────────────────────────────────────────────────────
+def _cell_text_color(value, norm, cmap):
+    r, g, b, _ = cmap(norm(value))
+    luminance = 0.299 * r + 0.587 * g + 0.114 * b
+    return "white" if luminance < 0.5 else "black"
+
+# Job-distribution heatmap layout, all in inches -- axes are placed with
+# fig.add_axes() at exactly-computed rectangles so cells come out perfectly
+# square and the colorbar can be sized to match the heatmap width exactly,
+# instead of fighting matplotlib's automatic (and here, unpredictable)
+# gridspec/aspect layout.
+_JD_CELL          = 0.72   # square cell edge length
+_JD_ROWLABEL_W    = 1.60   # row label column ("<=1024\n(25.0%)")
+_JD_YLABEL_W      = 0.13   # rotated "Nodes Used" column
+_JD_RIGHTLABEL_W  = 0.68   # group letter + cumulative % column
+_JD_TITLE_H       = 0.32   # panel title
+_JD_XLABEL_H      = 0.40   # xtick labels + "Requested Walltime"
+_JD_CBAR_LABEL_H  = 0.26   # "% of total jobs" label above colorbar
+_JD_CBAR_H        = 0.20   # colorbar bar height
+_JD_CBAR_GAP      = 0.26   # gap between colorbar ticks and first panel title
+_JD_PANEL_GAP     = 0.10   # gap between one panel's xlabel and next panel's title
+_JD_PAD           = 0.04   # outer figure padding
+
+def _draw_job_distribution_panel(ax, job_dist, sys_size, title, norm, cmap):
+    rows = job_dist["rows"]
+    total_jobs = job_dist["total_jobs"]
+    n_rows = len(rows)
+    n_cols = len(WT_LABELS)
+    row_trans = transforms.blended_transform_factory(ax.transAxes, ax.transData)
+
+    pct = np.array(
+        [[100.0 * c / total_jobs if total_jobs else 0.0 for c in row["counts"]]
+         for row in rows]
+    )
+    ax.imshow(pct, cmap=cmap, norm=norm, extent=(0, n_cols, n_rows, 0), aspect="auto")
+
+    for r, row in enumerate(rows):
+        for c in range(n_cols):
+            color = _cell_text_color(pct[r, c], norm, cmap)
+            ax.text(c + 0.5, r + 0.38, f"{row['counts'][c]:,}",
+                    ha="center", va="center", fontsize=10,
+                    fontweight="bold", color=color)
+            ax.text(c + 0.5, r + 0.68, f"{pct[r, c]:.1f}%",
+                    ha="center", va="center", fontsize=10,
+                    fontweight="bold", color=color)
+
+    ax.set_xlim(0, n_cols)
+    ax.set_ylim(n_rows, 0)
+    ax.set_xticks(np.arange(n_cols) + 0.5)
+    ax.set_xticklabels(WT_LABELS, fontsize=11, fontweight="bold")
+    ax.set_yticks([])
+    for spine in ax.spines.values():
+        spine.set_visible(False)
+    ax.grid(False)
+    ax.set_title(title, fontsize=15, fontweight="bold", pad=6)
+
+    # Row labels (left): "<label>\n(anchor/sys_size %)" -- the anchor% is
+    # only meaningful for the row that actually defines a group boundary,
+    # but matches the reference figure showing it on every row.
+    for r, row in enumerate(rows):
+        pct_of_sys = 100.0 * row["anchor"] / sys_size
+        ax.text(-0.02, r + 0.5, f"{row['label']}\n({pct_of_sys:.1f}%)",
+                ha="right", va="center", fontsize=11, fontweight="bold",
+                transform=row_trans)
+
+    # Group dividers, right-hand S/M/L/XL labels, and cumulative %-of-jobs.
+    # Divider lines overshoot the heatmap on both sides for visual separation.
+    cum = 0
+    row_idx = 0
+    while row_idx < n_rows:
+        glabel = rows[row_idx]["group"]
+        span_start = row_idx
+        while row_idx < n_rows and rows[row_idx]["group"] == glabel:
+            cum += rows[row_idx]["total"]
+            row_idx += 1
+        span_end = row_idx
+        ax.text(1.07, (span_start + span_end) / 2.0, glabel,
+                ha="left", va="center", fontsize=17, fontweight="bold",
+                transform=row_trans)
+        if row_idx < n_rows:
+            ax.axhline(row_idx, color="black", linestyle="--", linewidth=2.0,
+                       xmin=-0.04, xmax=1.03, clip_on=False)
+            cum_pct = 100.0 * cum / total_jobs if total_jobs else 0.0
+            ax.text(1.07, row_idx, f"{cum_pct:.1f}%",
+                    ha="left", va="center", fontsize=11, fontweight="bold",
+                    transform=row_trans)
+
+def plot_job_distribution(panels, out_path):
+    """Node-count x requested-walltime job-distribution heatmap.
+
+    `panels` is an ordered list of {"label", "job_dist" (from
+    load_job_distribution), "sys_size"} -- one entry per system, drawn top
+    to bottom.
+    """
+    all_pct = [100.0 * c / p["job_dist"]["total_jobs"]
+               for p in panels for row in p["job_dist"]["rows"] for c in row["counts"]
+               if p["job_dist"]["total_jobs"]]
+    global_max = max(all_pct, default=1.0)
+    vmax = max(5.0, np.ceil(global_max / 5.0) * 5.0)
+    # Not a true log scale: PowerNorm(gamma<1) keeps 0 mapped to 0 (unlike
+    # LogNorm) while still stretching the low end of the range so small
+    # percentages remain visually distinguishable -- matches the reference
+    # figure's colorbar, which shows evenly-labeled 0/5/10/.../25 ticks but
+    # gives the 0-5 band disproportionately more color range than 5-10 etc.
+    norm = PowerNorm(gamma=0.4, vmin=0, vmax=vmax)
+    cmap = plt.get_cmap("viridis_r")
+    cbar_ticks = np.arange(0, vmax + 1, 5)
+
+    n_cols = len(WT_LABELS)
+    row_counts = [len(p["job_dist"]["rows"]) for p in panels]
+
+    heatmap_w = n_cols * _JD_CELL
+    fig_w = _JD_PAD + _JD_YLABEL_W + _JD_ROWLABEL_W + heatmap_w + _JD_RIGHTLABEL_W + _JD_PAD
+    panel_block_h = [_JD_TITLE_H + n_rows * _JD_CELL + _JD_XLABEL_H for n_rows in row_counts]
+    content_h = (_JD_CBAR_LABEL_H + _JD_CBAR_H + _JD_CBAR_GAP
+                 + sum(panel_block_h) + _JD_PANEL_GAP * (len(panels) - 1))
+    fig_h = _JD_PAD + content_h + _JD_PAD
+
+    fig = plt.figure(figsize=(fig_w, fig_h))
+
+    heatmap_x0 = _JD_PAD + _JD_YLABEL_W + _JD_ROWLABEL_W
+    y_cursor = fig_h - _JD_PAD  # top-down cursor, in inches
+
+    y_cursor -= _JD_CBAR_LABEL_H + _JD_CBAR_H
+    cax = fig.add_axes([heatmap_x0 / fig_w, y_cursor / fig_h,
+                        heatmap_w / fig_w, _JD_CBAR_H / fig_h])
+    sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
+    cbar = fig.colorbar(sm, cax=cax, orientation="horizontal", ticks=cbar_ticks)
+    cbar.ax.set_xticklabels([f"{t:g}" for t in cbar_ticks])
+    cbar.set_label("% of total jobs", fontsize=12, fontweight="bold", labelpad=4)
+    cbar.ax.xaxis.set_label_position("top")
+    cbar.ax.xaxis.set_ticks_position("bottom")
+    cax.tick_params(labelsize=10)
+    y_cursor -= _JD_CBAR_GAP
+
+    for i, panel in enumerate(panels):
+        n_rows = row_counts[i]
+        y_cursor -= _JD_TITLE_H + n_rows * _JD_CELL
+        ax = fig.add_axes([heatmap_x0 / fig_w, y_cursor / fig_h,
+                           heatmap_w / fig_w, (n_rows * _JD_CELL) / fig_h])
+        _draw_job_distribution_panel(
+            ax, panel["job_dist"], panel["sys_size"], panel["label"], norm, cmap)
+        ax.set_xlabel("Requested Walltime", fontsize=12, fontweight="bold", labelpad=4)
+        fig.text(_JD_PAD + _JD_YLABEL_W / 2, y_cursor / fig_h + (n_rows * _JD_CELL / fig_h) / 2,
+                 "Nodes Used", ha="center", va="center", fontsize=12,
+                 fontweight="bold", rotation=90)
+        y_cursor -= _JD_XLABEL_H + _JD_PANEL_GAP
+
+    save_fig(fig, out_path)
+
 # ─── drain/ figures ───────────────────────────────────────────────────────────
 def _build_backfill_drain_grid_panel(results_dir, procs_map, system, label):
     GREY = "#cccccc"
@@ -1622,7 +1855,7 @@ def _plot_backfill_drain_grid_panels(panels, out_path,
             all_vals = np.concatenate([pri, hi]) if len(pri) + len(hi) else np.array([])
             if len(all_vals) > 0:
                 ax_b.boxplot(
-                    all_vals, vert=False, widths=0.55,
+                    all_vals, orientation="horizontal", widths=0.55,
                     patch_artist=True, whis=(5, 95),
                     showfliers=False, showmeans=True, meanline=True,
                     boxprops=dict(facecolor="white", edgecolor="black", linewidth=0.8),
@@ -2116,8 +2349,8 @@ def main():
     print("Parsing SWF files...")
     swf_a = abs_path(cfg_a.get("swf_path", ""))
     swf_b = abs_path(cfg_b.get("swf_path", ""))
-    procs_a, _, _, _ = parse_swf(swf_a) if os.path.exists(swf_a) else ({}, {}, {}, {})
-    procs_b, _, _, _ = parse_swf(swf_b) if os.path.exists(swf_b) else ({}, {}, {}, {})
+    procs_a, walltimes_a, submit_a, _ = parse_swf(swf_a) if os.path.exists(swf_a) else ({}, {}, {}, {})
+    procs_b, walltimes_b, submit_b, _ = parse_swf(swf_b) if os.path.exists(swf_b) else ({}, {}, {}, {})
 
     # Maintenance windows from events.csv (has SMA/SMS/SME events)
     print("Loading maintenance windows...")
@@ -2133,6 +2366,20 @@ def main():
 
     label_a = f"Theta {year_a}"
     label_b = f"Polaris {year_b}"
+
+    # ── workload/ ────────────────────────────────────────────────────────────
+    print("\nGenerating workload/ figures...")
+    job_dist_a = load_job_distribution(procs_a, submit_a, walltimes_a, sys_a,
+                                       year_start_a, year_end_a)
+    job_dist_b = load_job_distribution(procs_b, submit_b, walltimes_b, sys_b,
+                                       year_start_b, year_end_b)
+    plot_job_distribution(
+        [
+            {"label": f"Polaris ({year_b})", "job_dist": job_dist_b, "sys_size": size_b},
+            {"label": f"Theta ({year_a})",   "job_dist": job_dist_a, "sys_size": size_a},
+        ],
+        os.path.join(out_dir, "workload", "job_distribution.png"),
+    )
 
     def _tags_for_plots(drivers, results_dir):
         """Ordered tags, skipping plot-excluded and those without data."""
