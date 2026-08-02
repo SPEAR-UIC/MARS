@@ -36,19 +36,5 @@ itself, so no separate conversion step is needed.
 `scripts/validation.py` compares a C++ `events.csv` against a python
 `events.csv` for the same trace: it matches jobs by id, reports coverage
 (jobs completed on only one side) and per-field deviation (submit/start/end),
-finds the first point of divergence in submit order, and writes plots plus a
-text report to `results/cpp_vs_py/<label>/`.
+finds the first point of divergence in submit order, and writes plots to `results/cpp_vs_py/<label>/`.
 
-Only the Theta 2021 trace has a finished C++ run right now, so the defaults
-point at it -- running with no arguments compares `theta21cln`:
-```
-python3 scripts/validation.py
-```
-Once the Polaris 2024 C++ run finishes, point the flags at it:
-```
-python3 scripts/validation.py \
-    --cpp-events results/cqsimpt-test2/FCFS/events.csv \
-    --py-events cqsim-python/data/Results/polaris24_events.csv \
-    --swf data/polaris24cln.swf \
-    --label polaris24cln
-```
