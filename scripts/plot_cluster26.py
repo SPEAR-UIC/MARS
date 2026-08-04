@@ -365,11 +365,9 @@ def _wt_bucket(req_wall_seconds):
             return i
     return None
 
-# Only the M size class gets split into a dominant-value row -- matches the
-# reference job-distribution figure, where S/L/XL are always single rows
-# even when a single node count also dominates within them (e.g. Polaris'
-# S class is dominated by 10-node jobs but stays one "≤16" row).
-_SPLITTABLE_GROUPS = {"M"}
+# No size class gets split into a dominant-value row -- every group (incl.
+# M) is a single combined row.
+_SPLITTABLE_GROUPS = set()
 
 def load_job_distribution(procs_map, submit_map, walltimes_map, system,
                            year_start, year_end, dominant_frac=0.5):
@@ -377,11 +375,9 @@ def load_job_distribution(procs_map, submit_map, walltimes_map, system,
     requested-walltime cells for the job-distribution heatmap.
 
     Node-count rows follow NODE_GROUP_RANGES (the same S/M/L/XL boundaries as
-    assign_group). Within the M group (see _SPLITTABLE_GROUPS), a single
-    node-count value that accounts for more than `dominant_frac` of that
-    group's jobs is split into its own "=N" row, leaving the remaining jobs
-    in a "≤N" row -- this mirrors common HPC workloads where one popular job
-    size (e.g. a full-node allocation) dominates a size class.
+    assign_group) -- each group is a single combined row (see
+    _SPLITTABLE_GROUPS to re-enable splitting a dominant node-count value
+    within a group out into its own "=N" row).
 
     Returns a dict with:
       "rows": ordered list of {"label", "group", "counts" (len-8 list),
@@ -1558,7 +1554,7 @@ def _cell_text_color(value, norm, cmap):
 # gridspec/aspect layout.
 _JD_CELL          = 0.95   # square cell edge length
 _JD_ROWLABEL_W    = 1.90   # row label column ("<=1024\n(25.0%)")
-_JD_YLABEL_W      = 0.1   # rotated "Nodes Used" column
+_JD_YLABEL_W      = 0.085   # rotated "Nodes Used" column
 _JD_RIGHTLABEL_W  = 0.85   # group letter + cumulative % column
 _JD_TITLE_H       = 0.40   # panel title
 _JD_XLABEL_H      = 0.48   # xtick labels + "Requested Walltime"
