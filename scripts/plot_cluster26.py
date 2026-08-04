@@ -1556,17 +1556,17 @@ def _cell_text_color(value, norm, cmap):
 # square and the colorbar can be sized to match the heatmap width exactly,
 # instead of fighting matplotlib's automatic (and here, unpredictable)
 # gridspec/aspect layout.
-_JD_CELL          = 0.72   # square cell edge length
-_JD_ROWLABEL_W    = 1.60   # row label column ("<=1024\n(25.0%)")
-_JD_YLABEL_W      = 0.13   # rotated "Nodes Used" column
-_JD_RIGHTLABEL_W  = 0.68   # group letter + cumulative % column
-_JD_TITLE_H       = 0.32   # panel title
-_JD_XLABEL_H      = 0.40   # xtick labels + "Requested Walltime"
-_JD_CBAR_LABEL_H  = 0.26   # "% of total jobs" label above colorbar
-_JD_CBAR_H        = 0.20   # colorbar bar height
-_JD_CBAR_GAP      = 0.26   # gap between colorbar ticks and first panel title
-_JD_PANEL_GAP     = 0.10   # gap between one panel's xlabel and next panel's title
-_JD_PAD           = 0.04   # outer figure padding
+_JD_CELL          = 0.95   # square cell edge length
+_JD_ROWLABEL_W    = 1.90   # row label column ("<=1024\n(25.0%)")
+_JD_YLABEL_W      = 0.1   # rotated "Nodes Used" column
+_JD_RIGHTLABEL_W  = 0.85   # group letter + cumulative % column
+_JD_TITLE_H       = 0.40   # panel title
+_JD_XLABEL_H      = 0.48   # xtick labels + "Requested Walltime"
+_JD_CBAR_LABEL_H  = 0.30   # "% of total jobs" label above colorbar
+_JD_CBAR_H        = 0.24   # colorbar bar height
+_JD_CBAR_GAP      = 0.30   # gap between colorbar ticks and first panel title
+_JD_PANEL_GAP     = 0.12   # gap between one panel's xlabel and next panel's title
+_JD_PAD           = 0.05   # outer figure padding
 
 def _draw_job_distribution_panel(ax, job_dist, sys_size, title, norm, cmap):
     rows = job_dist["rows"]
@@ -1585,21 +1585,21 @@ def _draw_job_distribution_panel(ax, job_dist, sys_size, title, norm, cmap):
         for c in range(n_cols):
             color = _cell_text_color(pct[r, c], norm, cmap)
             ax.text(c + 0.5, r + 0.38, f"{row['counts'][c]:,}",
-                    ha="center", va="center", fontsize=10,
+                    ha="center", va="center", fontsize=18,
                     fontweight="bold", color=color)
             ax.text(c + 0.5, r + 0.68, f"{pct[r, c]:.1f}%",
-                    ha="center", va="center", fontsize=10,
+                    ha="center", va="center", fontsize=18,
                     fontweight="bold", color=color)
 
     ax.set_xlim(0, n_cols)
     ax.set_ylim(n_rows, 0)
     ax.set_xticks(np.arange(n_cols) + 0.5)
-    ax.set_xticklabels(WT_LABELS, fontsize=11, fontweight="bold")
+    ax.set_xticklabels(WT_LABELS, fontsize=13, fontweight="bold")
     ax.set_yticks([])
     for spine in ax.spines.values():
         spine.set_visible(False)
     ax.grid(False)
-    ax.set_title(title, fontsize=15, fontweight="bold", pad=6)
+    ax.set_title(title, fontsize=17, fontweight="bold", pad=6)
 
     # Row labels (left): "<label>\n(anchor/sys_size %)" -- the anchor% is
     # only meaningful for the row that actually defines a group boundary,
@@ -1607,7 +1607,7 @@ def _draw_job_distribution_panel(ax, job_dist, sys_size, title, norm, cmap):
     for r, row in enumerate(rows):
         pct_of_sys = 100.0 * row["anchor"] / sys_size
         ax.text(-0.02, r + 0.5, f"{row['label']}\n({pct_of_sys:.1f}%)",
-                ha="right", va="center", fontsize=11, fontweight="bold",
+                ha="right", va="center", fontsize=13.5, fontweight="bold",
                 transform=row_trans)
 
     # Group dividers, right-hand S/M/L/XL labels, and cumulative %-of-jobs.
@@ -1622,14 +1622,14 @@ def _draw_job_distribution_panel(ax, job_dist, sys_size, title, norm, cmap):
             row_idx += 1
         span_end = row_idx
         ax.text(1.07, (span_start + span_end) / 2.0, glabel,
-                ha="left", va="center", fontsize=17, fontweight="bold",
+                ha="left", va="center", fontsize=19, fontweight="bold",
                 transform=row_trans)
         if row_idx < n_rows:
             ax.axhline(row_idx, color="black", linestyle="--", linewidth=2.0,
                        xmin=-0.04, xmax=1.03, clip_on=False)
             cum_pct = 100.0 * cum / total_jobs if total_jobs else 0.0
             ax.text(1.07, row_idx, f"{cum_pct:.1f}%",
-                    ha="left", va="center", fontsize=11, fontweight="bold",
+                    ha="left", va="center", fontsize=13, fontweight="bold",
                     transform=row_trans)
 
 def plot_job_distribution(panels, out_path):
@@ -1674,10 +1674,10 @@ def plot_job_distribution(panels, out_path):
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
     cbar = fig.colorbar(sm, cax=cax, orientation="horizontal", ticks=cbar_ticks)
     cbar.ax.set_xticklabels([f"{t:g}" for t in cbar_ticks])
-    cbar.set_label("% of total jobs", fontsize=12, fontweight="bold", labelpad=4)
+    cbar.set_label("% of total jobs", fontsize=14, fontweight="bold", labelpad=4)
     cbar.ax.xaxis.set_label_position("top")
     cbar.ax.xaxis.set_ticks_position("bottom")
-    cax.tick_params(labelsize=10)
+    cax.tick_params(labelsize=12)
     y_cursor -= _JD_CBAR_GAP
 
     for i, panel in enumerate(panels):
@@ -1687,13 +1687,38 @@ def plot_job_distribution(panels, out_path):
                            heatmap_w / fig_w, (n_rows * _JD_CELL) / fig_h])
         _draw_job_distribution_panel(
             ax, panel["job_dist"], panel["sys_size"], panel["label"], norm, cmap)
-        ax.set_xlabel("Requested Walltime", fontsize=12, fontweight="bold", labelpad=4)
+        ax.set_xlabel("Requested Walltime", fontsize=14, fontweight="bold", labelpad=4)
         fig.text(_JD_PAD + _JD_YLABEL_W / 2, y_cursor / fig_h + (n_rows * _JD_CELL / fig_h) / 2,
-                 "Nodes Used", ha="center", va="center", fontsize=12,
+                 "Nodes Used", ha="center", va="center", fontsize=14,
                  fontweight="bold", rotation=90)
         y_cursor -= _JD_XLABEL_H + _JD_PANEL_GAP
 
     save_fig(fig, out_path)
+
+def write_job_distribution_table(out_path, panels):
+    """CSV of job counts per heatmap cell, one row per (system, node-count
+    row, requested-walltime bucket) -- the raw numbers behind
+    job_distribution.png. `panels` is the same list passed to
+    plot_job_distribution()."""
+    d = os.path.dirname(out_path)
+    os.makedirs(d if d else ".", exist_ok=True)
+    with open(out_path, "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow([
+            "System", "System_Total_Jobs", "Size_Class", "Node_Row",
+            "Requested_Walltime", "Job_Count", "Pct_Of_System_Total_Jobs",
+        ])
+        for panel in panels:
+            job_dist = panel["job_dist"]
+            total_jobs = job_dist["total_jobs"]
+            for row in job_dist["rows"]:
+                for wt_label, count in zip(WT_LABELS, row["counts"]):
+                    pct = 100.0 * count / total_jobs if total_jobs else 0.0
+                    writer.writerow([
+                        panel["label"], total_jobs, row["group"], row["label"],
+                        wt_label, count, f"{pct:.4f}",
+                    ])
+    print(f"  Saved: {out_path}")
 
 # ─── drain/ figures ───────────────────────────────────────────────────────────
 def _build_backfill_drain_grid_panel(results_dir, procs_map, system, label):
@@ -2373,13 +2398,14 @@ def main():
                                        year_start_a, year_end_a)
     job_dist_b = load_job_distribution(procs_b, submit_b, walltimes_b, sys_b,
                                        year_start_b, year_end_b)
+    job_dist_panels = [
+        {"label": f"Polaris ({year_b})", "job_dist": job_dist_b, "sys_size": size_b},
+        {"label": f"Theta ({year_a})",   "job_dist": job_dist_a, "sys_size": size_a},
+    ]
     plot_job_distribution(
-        [
-            {"label": f"Polaris ({year_b})", "job_dist": job_dist_b, "sys_size": size_b},
-            {"label": f"Theta ({year_a})",   "job_dist": job_dist_a, "sys_size": size_a},
-        ],
-        os.path.join(out_dir, "workload", "job_distribution.png"),
-    )
+        job_dist_panels, os.path.join(out_dir, "workload", "job_distribution.png"))
+    write_job_distribution_table(
+        os.path.join(out_dir, "workload", "job_distribution.csv"), job_dist_panels)
 
     def _tags_for_plots(drivers, results_dir):
         """Ordered tags, skipping plot-excluded and those without data."""
