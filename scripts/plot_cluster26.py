@@ -1554,7 +1554,7 @@ def _cell_text_color(value, norm, cmap):
 # gridspec/aspect layout.
 _JD_CELL          = 0.95   # square cell edge length
 _JD_ROWLABEL_W    = 1.90   # row label column ("<=1024\n(25.0%)")
-_JD_YLABEL_W      = 0.085   # rotated "Nodes Used" column
+_JD_YLABEL_W      = 0.05   # rotated "Nodes Used" column
 _JD_RIGHTLABEL_W  = 0.85   # group letter + cumulative % column
 _JD_TITLE_H       = 0.40   # panel title
 _JD_XLABEL_H      = 0.48   # xtick labels + "Requested Walltime"
@@ -1590,7 +1590,8 @@ def _draw_job_distribution_panel(ax, job_dist, sys_size, title, norm, cmap):
     ax.set_xlim(0, n_cols)
     ax.set_ylim(n_rows, 0)
     ax.set_xticks(np.arange(n_cols) + 0.5)
-    ax.set_xticklabels(WT_LABELS, fontsize=13, fontweight="bold")
+    ax.set_xticklabels(WT_LABELS, fontsize=17, fontweight="bold")
+    ax.tick_params(axis="x", length=6, width=1.3)
     ax.set_yticks([])
     for spine in ax.spines.values():
         spine.set_visible(False)
@@ -1603,7 +1604,7 @@ def _draw_job_distribution_panel(ax, job_dist, sys_size, title, norm, cmap):
     for r, row in enumerate(rows):
         pct_of_sys = 100.0 * row["anchor"] / sys_size
         ax.text(-0.02, r + 0.5, f"{row['label']}\n({pct_of_sys:.1f}%)",
-                ha="right", va="center", fontsize=13.5, fontweight="bold",
+                ha="right", va="center", fontsize=16, fontweight="bold",
                 transform=row_trans)
 
     # Group dividers, right-hand S/M/L/XL labels, and cumulative %-of-jobs.
@@ -1670,10 +1671,10 @@ def plot_job_distribution(panels, out_path):
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
     cbar = fig.colorbar(sm, cax=cax, orientation="horizontal", ticks=cbar_ticks)
     cbar.ax.set_xticklabels([f"{t:g}" for t in cbar_ticks])
-    cbar.set_label("% of total jobs", fontsize=14, fontweight="bold", labelpad=4)
+    cbar.set_label("% of total jobs", fontsize=17, fontweight="bold", labelpad=4)
     cbar.ax.xaxis.set_label_position("top")
     cbar.ax.xaxis.set_ticks_position("bottom")
-    cax.tick_params(labelsize=12)
+    cax.tick_params(labelsize=16, length=5, width=1.3)
     y_cursor -= _JD_CBAR_GAP
 
     for i, panel in enumerate(panels):
@@ -1683,9 +1684,9 @@ def plot_job_distribution(panels, out_path):
                            heatmap_w / fig_w, (n_rows * _JD_CELL) / fig_h])
         _draw_job_distribution_panel(
             ax, panel["job_dist"], panel["sys_size"], panel["label"], norm, cmap)
-        ax.set_xlabel("Requested Walltime", fontsize=14, fontweight="bold", labelpad=4)
+        ax.set_xlabel("Requested Walltime", fontsize=17, fontweight="bold", labelpad=4)
         fig.text(_JD_PAD + _JD_YLABEL_W / 2, y_cursor / fig_h + (n_rows * _JD_CELL / fig_h) / 2,
-                 "Nodes Used", ha="center", va="center", fontsize=14,
+                 "Nodes Used", ha="center", va="center", fontsize=17,
                  fontweight="bold", rotation=90)
         y_cursor -= _JD_XLABEL_H + _JD_PANEL_GAP
 
