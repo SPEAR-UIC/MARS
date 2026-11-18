@@ -1,0 +1,20 @@
+{
+  "output_dir": "results/schedtwin-theta",
+  "swf_path": "data/schedtwin-theta.swf",
+  "max_submits": 2147483647,
+  "start_job_index": 0,
+  "mode": "real",
+  "size_bins": [],
+  "walltime_bins": [],
+  "drivers": [
+    {"type": "lrf", "tag": "LRF", "window_size": 256, "backfilling": true},
+    {"type": "ljf", "tag": "LJF", "window_size": 256, "backfilling": true},
+    {"type": "random", "tag": "Random", "window_size": 256, "backfilling": true, "seed": 17},
+    {"type": "fcfs",  "tag": "FCFS",     "backfilling": true},
+    {"type": "sjf",   "tag": "SJF","window_size": 1024, "backfilling": true},
+    {"type": "f1",    "tag": "F1",  "window_size": 256,  "backfilling": true},
+    {"type": "wfp3",    "tag": "WFP",  "window_size": 256,  "backfilling": true},
+    {"type": "mcts", "tag": "MARS-CW", "window_size": 1024, "backfilling": true, "time_limit_ms": 15000, "max_depth": 50, "reward_type": "invcumwait", "exploration": 10000.0, "selection": "uct", "discount": 0.99, "dynamic_exploration": true, "num_cores": 48, "branching": "heuristic_windowed", "heuristic_windows": [["wfp3", 1024], ["fcfs", 1024], ["sjf", 1024], ["f1", 1024], ["unicep", 1024]], "seed": 17, "log_file": false},
+    {"type": "mcts", "tag": "MARS-CU", "window_size": 1024, "backfilling": true, "time_limit_ms": 15000, "max_depth": 50, "reward_type": "cumutil", "exploration": 10000.0, "selection": "uct", "discount": 0.99, "dynamic_exploration": true, "num_cores": 48, "branching": "heuristic_windowed", "heuristic_windows": [["wfp3", 1024], ["fcfs", 1024], ["sjf", 1024], ["f1", 1024], ["unicep", 1024]], "seed": 17, "log_file": false}
+  ]
+}
