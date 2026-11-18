@@ -9,7 +9,8 @@
 # first: sbatch exports the current environment to the jobs.
 #
 # What it does:
-#   1. builds cqsimcpp in Release mode and checks that it links OpenMP
+#   1. builds cqsimcpp in Release mode (build.sh if cmake is available, otherwise
+#      a direct g++ -O3 -fopenmp compile) and checks that it links OpenMP
 #   2. scripts/slurm_dist.py prepare: results/slurm_runs/<RUN_ID>/ (+ "latest")
 #   3. sbatch heavy.sbatch     one exclusive node per MARS driver (job array)
 #   4. sbatch light.sbatch     all baseline drivers together on one node
@@ -25,6 +26,8 @@
 #   MARS_SBATCH_ARGS     extra arguments for every sbatch call (e.g. --account=X)
 #   MARS_LIGHT_PARALLEL  max concurrent baseline drivers (default: CPUs on node)
 #   MARS_BINARY          simulator binary (default: ./cqsimcpp)
+#   MARS_DIRECT_BUILD=1  compile without CMake even if cmake is available
+#   CXX                  compiler for the direct build (default: g++)
 #
 # Monitor:    python3 scripts/slurm_dist.py status latest --watch 60
 # Aggregate:  python3 scripts/slurm_dist.py aggregate latest   (also automatic)
@@ -44,7 +47,7 @@ while [[ $# -gt 0 ]]; do
         --no-build) BUILD=0 ;;
         --smoke)    PREP_ARGS+=(--smoke) ;;
         --dry-run)  DRY=1 ;;
-        -h|--help)  sed -n '2,30p' "$0"; exit 0 ;;
+        -h|--help)  sed -n '2,32p' "$0"; exit 0 ;;
         -*)         echo "Unknown option: $1" >&2; exit 1 ;;
         *)          EXPS+=("$1") ;;
     esac
@@ -64,9 +67,34 @@ if [[ $DRY -eq 0 ]]; then
 fi
 
 # 1. Build (Release: the default Debug build gets far fewer MCTS iterations per budget)
+build_direct() {
+    # Same sources and Release flags as the cqsimcpp target in CMakeLists.txt,
+    # without CMake or the GoogleTest download.
+    local cxx="${CXX:-g++}"
+    command -v "$cxx" >/dev/null || die "cmake and $cxx are both missing; load a compiler module"
+    local srcs
+    srcs=$(sed -n '/set(HPCSCHED_SOURCES/,/)/p' CMakeLists.txt | grep -oE 'src/[^ )]+\.cpp' | tr '\n' ' ')
+    [[ -n "$srcs" ]] || die "could not read HPCSCHED_SOURCES from CMakeLists.txt"
+    local flags=(-std=c++17 -O3 -DNDEBUG -fopenmp -Isrc -Ithird_party)
+    say "compiling cqsimcpp directly with $cxx ($("$cxx" -dumpversion 2>/dev/null || echo '?'))"
+    # shellcheck disable=SC2086
+    if ! "$cxx" "${flags[@]}" $srcs -o cqsimcpp.tmp 2>/dev/null; then
+        # GCC 8 needs libstdc++fs for <filesystem>; rerun with it and show any errors.
+        # shellcheck disable=SC2086
+        "$cxx" "${flags[@]}" $srcs -o cqsimcpp.tmp -lstdc++fs \
+            || die "compile failed: needs a C++17 compiler with OpenMP (GCC 8 or newer)"
+    fi
+    mv cqsimcpp.tmp cqsimcpp
+}
+
 if [[ $BUILD -eq 1 ]]; then
-    say "building cqsimcpp (Release)"
-    bash build.sh --release
+    if [[ "${MARS_DIRECT_BUILD:-0}" != "1" ]] && command -v cmake >/dev/null; then
+        say "building cqsimcpp with CMake (Release)"
+        bash build.sh --release
+    else
+        [[ "${MARS_DIRECT_BUILD:-0}" == "1" ]] || say "cmake not found, building without it"
+        build_direct
+    fi
 fi
 BIN="${MARS_BINARY:-./cqsimcpp}"
 [[ -x "$BIN" ]] || die "$BIN not found; build it or drop --no-build"

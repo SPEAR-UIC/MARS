@@ -37,9 +37,11 @@ WFP baselines.
 ### Requirements
 
 - The repository is on a filesystem shared by the login and compute nodes.
-- The login node has a C++17 compiler with OpenMP, CMake 3.20 or newer, and
-  Python 3.6 or newer. The first build downloads GoogleTest, so the login node
-  also needs internet access.
+- The login node has a C++17 compiler with OpenMP (GCC 8 or newer) and
+  Python 3.6 or newer. CMake is optional. If `cmake` is on the `PATH`,
+  `submit.sh` builds with `build.sh`, which downloads GoogleTest on its first
+  run and so needs internet access. Otherwise it compiles `cqsimcpp` directly
+  with `g++`.
 - Compute nodes have 48 CPUs. For other node sizes, change `--cpus-per-task`
   in `slurm/*.sbatch` and `num_cores` in the experiment files.
 - The partition allows multi-day jobs. On the full traces a MARS driver runs
@@ -51,7 +53,7 @@ Run these on the login node from the repository root. The jobs inherit the
 environment you submit from, so load your modules first.
 
 ```bash
-module load gcc cmake python         # module names depend on your cluster
+module load gcc python               # module names depend on your cluster
 slurm/submit.sh --smoke              # end-to-end test on ~400 jobs, a few minutes
 slurm/submit.sh                      # full run
 python3 scripts/slurm_dist.py status latest --watch 60
@@ -88,6 +90,8 @@ slurm/submit.sh [--no-build] [--smoke] [--dry-run] [experiment ...]
 | `MARS_PARTITION` | `compute` | Partition for every job. |
 | `MARS_SBATCH_ARGS` | none | Extra `sbatch` arguments, for example `--account=myproject`. |
 | `MARS_LIGHT_PARALLEL` | CPUs on the node | Maximum number of baseline drivers running at once. |
+| `MARS_DIRECT_BUILD` | `0` | Set to `1` to compile without CMake even when `cmake` is available. |
+| `CXX` | `g++` | Compiler for the build without CMake. |
 
 ### Monitoring
 
