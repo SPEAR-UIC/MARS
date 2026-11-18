@@ -112,8 +112,14 @@ N_LIGHT=$(grep -c . "$RUN_DIR/light.list" || true)
 
 # shellcheck disable=SC2206
 EXTRA=(${MARS_SBATCH_ARGS:-})
+# Pass exactly --export=ALL. Any other value (even "ALL,VAR=x") makes sbatch set
+# SLURM_GET_USER_ENV=1, so each compute node re-creates the login environment
+# with "su - $USER"; where that fails, Slurm requeues and holds the job
+# ("user env retrieval failed requeued held").
+export MARS_REPO_DIR="$REPO_DIR"
+unset SLURM_GET_USER_ENV SBATCH_GET_USER_ENV
 COMMON=(--parsable --partition="$PARTITION" --chdir="$REPO_DIR"
-        --export="ALL,MARS_REPO_DIR=$REPO_DIR" ${EXTRA[@]+"${EXTRA[@]}"})
+        --export=ALL ${EXTRA[@]+"${EXTRA[@]}"})
 
 submit() {  # prints the job id
     if [[ $DRY -eq 1 ]]; then
