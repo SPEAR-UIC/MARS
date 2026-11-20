@@ -55,7 +55,12 @@ enum class RewardType {
     NegP99Wait       = 6,  // -p99_wait_hours (raw P99 hours, unbounded negative)
     Constant         = 7,  // always 1.0; use reward_scale to set the effective value
     InvCumP99MaxWait = 8,  // (1/(1+avg_wait_h))^avg_lambda * (1/(1+p99_wait_h))^p99_lambda * (1/(1+max_wait_h))^max_lambda
-    ExpWait          = 9   // exp(-exp_scale*(avg_lambda*avg_wait_h + p99_lambda*p99_wait_h + max_lambda*max_wait_h))
+    ExpWait          = 9,  // exp(-exp_scale*(avg_lambda*avg_wait_h + p99_lambda*p99_wait_h + max_lambda*max_wait_h))
+    StartShare       = 10  // per decision step, from the queue before it:
+                           //   w_count * N_start/N_queue + w_age * A_start/A_queue,
+                           //   w_count + w_age = 1. N_start counts backfilled jobs;
+                           //   A = accumulated wait (now - submit) of the started /
+                           //   queued jobs; A_start/A_queue = 0 when A_queue = 0.
 };
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -191,6 +196,8 @@ struct MctsConfig {
     double       max_lambda        = 1.0;  // exponent on the max-wait term for InvCumP99MaxWait / ExpWait
     double       exp_scale         = 1.0;  // overall scale on the exponent for ExpWait
     double       reward_scale      = 1.0;  // multiplier applied to every reward value
+    double       w_count           = 0.75;  // StartShare weight on N_start / N_queue
+    double       w_age             = 0.25;  // StartShare weight on A_start / A_queue (w_count + w_age = 1)
 };
 
 // ── MctsNode ──────────────────────────────────────────────────────────────────

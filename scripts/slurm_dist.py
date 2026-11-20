@@ -7,10 +7,12 @@ and the results are merged and summarised once all drivers have finished.
 
 Subcommands
 -----------
-  prepare    [--smoke] [--run-id ID] <exp> [<exp> ...]
+  prepare    [--smoke] [--merge] [--run-id ID] <exp> [<exp> ...]
              Create results/slurm_runs/<RUN_ID>/ with per-driver configs, a
              manifest, initial status files and heavy.list / light.list.
              Prints the run directory on stdout (all other output -> stderr).
+             --merge marks the run as adding drivers to an output_dir that
+             already holds results (see aggregate).
 
   run-driver <run_dir> <key> [--interval SECONDS]
              Run one driver (called from the sbatch scripts). Streams the
@@ -20,9 +22,11 @@ Subcommands
   status     [<run_dir>|latest] [--watch SECONDS] [--stale SECONDS]
              Per-driver progress table (state, %, elapsed, ETA, node, job).
 
-  aggregate  [<run_dir>|latest]
+  aggregate  [<run_dir>|latest] [--merge]
              Merge per-driver outputs into each experiment's output_dir and
-             write target-job metrics:
+             write target-job metrics (with --merge, or for a run prepared
+             with --merge, rows for tags this run did not produce are kept
+             and experiment.log is appended to instead of replaced):
                <output_dir>/summary.csv            C++ all-jobs metrics
                <output_dir>/summary_target.{csv,json}
                <run_dir>/aggregate/summary.{csv,json,md}   all experiments
@@ -175,6 +179,7 @@ def cmd_prepare(args):
 
     manifest = {"run_id": run_id, "run_dir": run_dir, "repo_dir": REPO_DIR,
                 "created": time.time(), "smoke": bool(args.smoke),
+                "merge": bool(args.merge) and not args.smoke,
                 "experiments": {}, "drivers": []}
     heavy, light = [], []
 
@@ -615,6 +620,9 @@ def cmd_aggregate(args):
     agg_dir = os.path.join(run_dir, "aggregate")
     os.makedirs(agg_dir, exist_ok=True)
 
+    merge = bool(getattr(args, "merge", False) or manifest.get("merge"))
+    if merge:
+        log("Merge mode: keeping existing rows for tags not in this run")
     all_rows = []
     md = ["# MARS results: run %s%s" % (manifest["run_id"], " [SMOKE]" if manifest.get("smoke") else ""), ""]
     target_cols = ["exp", "tag", "type", "state", "complete", "target_jobs", "completed"] + METRIC_COLS
@@ -634,8 +642,23 @@ def cmd_aggregate(args):
         log("== %s: %s" % (exp, note))
 
         exp_log = os.path.join(dest, "experiment.log")
-        with open(exp_log, "w"):
-            pass
+        run_tags = {d["tag"] for d in manifest["drivers"] if d["exp"] == exp}
+        kept_rows, kept_summary, kept_header = [], [], None
+        if merge:
+            old = load_json(os.path.join(dest, "summary_target.json"), {}) or {}
+            kept_rows = [r for r in old.get("drivers", []) if r.get("tag") not in run_tags]
+            old_sum = os.path.join(dest, "summary.csv")
+            if os.path.isfile(old_sum):
+                with open(old_sum) as f:
+                    r = list(csv.reader(f))
+                if r:
+                    kept_header = r[0]
+                    kept_summary = [x for x in r[1:] if x and x[0] not in run_tags]
+            log("  keeping %d existing driver(s): %s" % (
+                len(kept_rows), ", ".join(r.get("tag", "?") for r in kept_rows) or "none"))
+        else:
+            with open(exp_log, "w"):
+                pass
         summary_rows, summary_header = [], None
         rows = []
         for d in (d for d in manifest["drivers"] if d["exp"] == exp):
@@ -676,6 +699,9 @@ def cmd_aggregate(args):
                 d["tag"], row["state"], row["completed"], row["target_jobs"],
                 fmt_num(row.get("wait_avg_h"), 2) or "-"))
 
+        summary_header = summary_header or kept_header
+        summary_rows = kept_summary + summary_rows
+        rows = kept_rows + rows
         if summary_header:
             with open(os.path.join(dest, "summary.csv"), "w", newline="") as f:
                 w = csv.writer(f)
@@ -717,6 +743,8 @@ def main():
     sp.add_argument("--smoke", action="store_true",
                     help="tiny run: ~%d jobs around the first target job, short MCTS budget"
                          % SMOKE_MAX_SUBMITS)
+    sp.add_argument("--merge", action="store_true",
+                    help="add these drivers to existing results in output_dir")
     sp.add_argument("--run-id")
     sp.set_defaults(func=cmd_prepare)
 
@@ -736,6 +764,8 @@ def main():
 
     sp = sub.add_parser("aggregate", help="merge outputs and compute target-job metrics")
     sp.add_argument("run_dir", nargs="?", default="latest")
+    sp.add_argument("--merge", action="store_true",
+                    help="keep existing rows for tags not in this run")
     sp.set_defaults(func=cmd_aggregate)
 
     args = p.parse_args()

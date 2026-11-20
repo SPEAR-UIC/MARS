@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # slurm/submit.sh: launch MARS experiments on Slurm as per-driver jobs.
 #
-#   slurm/submit.sh [--no-build] [--smoke] [--dry-run] [exp ...]
+#   slurm/submit.sh [--no-build] [--smoke] [--merge] [--dry-run] [exp ...]
 #
 # Default experiments: schedtwin-aurora schedtwin-frontier schedtwin-polaris
 # schedtwin-theta. Run from a login node; the repo must be on a filesystem
@@ -20,6 +20,8 @@
 #   --no-build   reuse the existing ./cqsimcpp
 #   --smoke      tiny end-to-end test (~400 jobs, 200 ms MCTS budget, 4 cores)
 #   --dry-run    prepare the run directory but only print the sbatch commands
+#   --merge      add the drivers to existing results in each output_dir: the
+#                summaries keep rows for tags this run does not produce
 #
 # Environment:
 #   MARS_PARTITION       Slurm partition (default: compute)
@@ -47,7 +49,8 @@ while [[ $# -gt 0 ]]; do
         --no-build) BUILD=0 ;;
         --smoke)    PREP_ARGS+=(--smoke) ;;
         --dry-run)  DRY=1 ;;
-        -h|--help)  sed -n '2,32p' "$0"; exit 0 ;;
+        --merge)    PREP_ARGS+=(--merge) ;;
+        -h|--help)  sed -n '2,/^set -euo/p' "$0" | sed '$d'; exit 0 ;;
         -*)         echo "Unknown option: $1" >&2; exit 1 ;;
         *)          EXPS+=("$1") ;;
     esac

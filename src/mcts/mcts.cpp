@@ -528,6 +528,27 @@ static double p99_from_sorted(const std::vector<double>& sorted) {
     return sorted[std::min(idx, sorted.size() - 1)];
 }
 
+// StartShare step reward for one decision taken in `before` that started the
+// jobs in `started` (all queued in `before`, backfilled ones included):
+//   w_count * N_start/N_queue + w_age * A_start/A_queue,  w_count + w_age = 1,
+// where A is the wait already accumulated (now - submit). The age term is 0
+// when A_queue = 0.
+static double start_share_reward(const Simulator& before,
+                                 const std::vector<int>& started,
+                                 double w_count, double w_age) {
+    const auto& queue = before.get_job_queue();
+    if (queue.empty()) return 0.0;
+
+    double a_queue = 0.0;
+    for (int id : queue) a_queue += std::max(0.0, get_wait_s(before, id));
+    double a_start = 0.0;
+    for (int id : started) a_start += std::max(0.0, get_wait_s(before, id));
+
+    double count = static_cast<double>(started.size()) / static_cast<double>(queue.size());
+    double age   = a_queue > 0.0 ? a_start / a_queue : 0.0;
+    return w_count * count + w_age * age;
+}
+
 static double calc_reward(RewardType type, const Simulator& sim,
                           double cum_wait_s, int cum_count, double cum_bsld,
                           double cum_used_proc_s, double cum_elapsed_s,
@@ -609,6 +630,8 @@ static double calc_reward(RewardType type, const Simulator& sim,
                            : avg_wait_h;
             return std::exp(-exp_scale * (avg_lambda * avg_wait_h + p99_lambda * p99_h + max_lambda * max_h));
         }
+        case RewardType::StartShare:
+            return 0.0;  // per-step reward: computed by start_share_reward()
     }
 
     return 0.0;
@@ -1020,16 +1043,22 @@ MctsNode* Mcts::expand(MctsNode* node) {
         insert_sorted(child->cum_wait_sorted, w);
     }
 
-    child->immediate_reward = config_.reward_scale *
-                              calc_reward(config_.reward_type, *child->state,
-                                          child->cum_wait_s, child->cum_count,
-                                          child->cum_bsld, child->cum_used_proc_s,
-                                          child->cum_elapsed_s,
-                                          config_.p99_lambda,
-                                          &child->cum_wait_sorted,
-                                          config_.max_lambda,
-                                          config_.avg_lambda,
-                                          config_.exp_scale);
+    if (config_.reward_type == RewardType::StartShare) {
+        child->immediate_reward = config_.reward_scale *
+                                  start_share_reward(*node->state, potential.outcome,
+                                                     config_.w_count, config_.w_age);
+    } else {
+        child->immediate_reward = config_.reward_scale *
+                                  calc_reward(config_.reward_type, *child->state,
+                                              child->cum_wait_s, child->cum_count,
+                                              child->cum_bsld, child->cum_used_proc_s,
+                                              child->cum_elapsed_s,
+                                              config_.p99_lambda,
+                                              &child->cum_wait_sorted,
+                                              config_.max_lambda,
+                                              config_.avg_lambda,
+                                              config_.exp_scale);
+    }
 
     if (child->solved) mark_solved(child.get());
     node->children.push_back(std::move(child));
@@ -1095,12 +1124,15 @@ double Mcts::rollout(Simulator state, int current_depth,
             if (!before.get_job_queue().empty() && outcome.empty()) continue;
 
             double step_reward = config_.reward_scale *
-                                 calc_reward(config_.reward_type, state,
-                                             cum_wait_s, cum_count, cum_bsld,
-                                             cum_used_proc_s, cum_elapsed_s,
-                                             config_.p99_lambda, &cum_wait_sorted,
-                                             config_.max_lambda, config_.avg_lambda,
-                                             config_.exp_scale);
+                (config_.reward_type == RewardType::StartShare
+                     ? start_share_reward(before, outcome, config_.w_count,
+                                          config_.w_age)
+                     : calc_reward(config_.reward_type, state,
+                                   cum_wait_s, cum_count, cum_bsld,
+                                   cum_used_proc_s, cum_elapsed_s,
+                                   config_.p99_lambda, &cum_wait_sorted,
+                                   config_.max_lambda, config_.avg_lambda,
+                                   config_.exp_scale));
             cumulative += gamma_pow * step_reward;
             gamma_pow  *= config_.discount;
             current_depth++;

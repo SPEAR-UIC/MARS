@@ -135,6 +135,52 @@ The aggregation job writes:
 | `results/<experiment>/summary_target.{csv,json}` | Wait time, bounded slowdown and utilization over the target jobs only. |
 | `results/slurm_runs/<RUN_ID>/aggregate/summary.md` | One table per experiment, comparing each MARS driver with the best baseline. |
 
+### Adding a driver to existing results
+
+`slurm/submit_ss.sh` runs only the MARS-SS driver on the four SchedTwin traces
+and adds it to the results already in `results/schedtwin-*`. MARS-SS uses the
+StartShare reward, `w_count * N_start/N_queue + w_age * A_start/A_queue` with
+`w_count = 0.75` and `w_age = 0.25`. It uses 4 nodes and takes about as long as
+the other MARS drivers.
+
+Run these on the login node from the repository root:
+
+```bash
+module load gcc python         # module names depend on your cluster
+slurm/submit_ss.sh --smoke     # a few minutes; writes only to the run directory
+slurm/submit_ss.sh             # full run
+python3 scripts/slurm_dist.py status latest --watch 60
+```
+
+`submit_ss.sh` accepts `--no-build`, `--smoke` and `--dry-run`, which work as
+they do for `submit.sh`. Unless you pass `--no-build`, it rebuilds `cqsimcpp`.
+The rebuild is required the first time, because older binaries don't have the
+StartShare reward.
+
+Its configs are `experiments/schedtwin-*-ss.json`. Each one copies that trace's
+MARS-CU driver and changes only the tag, `reward_type` (`startshare`),
+`w_count` and `w_age`. The weights must be non-negative and sum to 1, and the
+simulator stops at startup if they don't. `N_start` counts every job that
+leaves the queue during the cycle, including backfilled jobs. The age term is
+0 when no queued job has waited.
+
+The configs write to the same `output_dir` as the full experiments, and the run
+aggregates in merge mode (`slurm/submit.sh --merge`). As a result,
+`summary.csv` and `summary_target.{csv,json}` keep every existing driver and
+gain a MARS-SS row. A previous MARS-SS result is replaced. Smoke runs never
+write to `results/`. The same mechanism adds any other driver: put it alone in
+an experiment JSON with the same `output_dir` and run `slurm/submit.sh --merge`.
+
+When the run finishes, regenerate the SchedTwin plots so they include MARS-SS:
+
+```bash
+python3 scripts/plot_schedtwin26.py   # writes to SchedTwin26/
+```
+
+MARS-SS appears in every plot except two in `SchedTwin26/drain/`: the drain
+overview and the drain-sequence comparison, which show only MARS-CW and
+MARS-CU.
+
 The SchedTwin traces pad the 10,000 target jobs with warm-up and cool-down
 jobs, and their SWF headers give the target ID range. For traces without that
 header line, the target metrics cover all jobs.

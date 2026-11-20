@@ -1083,3 +1083,63 @@ TEST(MctsTest, TimeLimitRespected) {
     // Allow 10× headroom for slow CI machines
     EXPECT_LT(elapsed_ms, 1000);
 }
+
+// ── StartShare reward ─────────────────────────────────────────────────────────
+
+// At t=1000 job 0 ends and the queue holds job 1 (4 procs, waited 999 s) and
+// jobs 2, 3 (2 procs each, waited 100 s). SJF starts {2, 3}; FCFS starts {1}.
+static Simulator start_share_scenario() {
+    std::vector<SimJob> jobs = {
+        make_job(0, 0,   1000, 1000, 4),
+        make_job(1, 1,   500,  500,  4),
+        make_job(2, 900, 200,  200,  2),
+        make_job(3, 900, 200,  200,  2),
+    };
+    auto sim = make_sim(jobs, 1, 4);
+    sim.set_backfilling(true);
+    while (!sim.is_done()) {
+        auto e = sim.peek();
+        if (e && e->type == EventType::SchedulingCycle && sim.current_time() >= 1000
+            && sim.get_job_queue().size() == 3)
+            break;
+        sim.step();
+    }
+    return sim;
+}
+
+static MctsConfig start_share_config(double wc, double wa) {
+    MctsConfig c = fast_config();
+    c.reward_type   = RewardType::StartShare;
+    c.discount      = 0.99;
+    c.time_limit_ms = 200;
+    c.heuristics    = { HeuristicPolicy::SJF, HeuristicPolicy::FCFS };
+    c.w_count = wc; c.w_age = wa;
+    return c;
+}
+
+TEST(MctsTest, StartShareRewardTypeRuns) {
+    auto sim = start_share_scenario();
+    ASSERT_FALSE(sim.is_done());
+    Mcts mcts(start_share_config(0.5, 0.5));
+    std::vector<int> window;
+    EXPECT_NO_THROW(window = mcts.search(sim));
+    EXPECT_FALSE(window.empty());
+}
+
+TEST(MctsTest, StartShareAgeTermPrefersOldestJob) {
+    auto sim = start_share_scenario();
+    ASSERT_EQ(sim.get_job_queue().size(), 3u);
+    Mcts mcts(start_share_config(0.0, 1.0));
+    auto window = mcts.search(sim);
+    ASSERT_FALSE(window.empty());
+    EXPECT_EQ(window.front(), 1);
+}
+
+TEST(MctsTest, StartShareCountTermPrefersMoreStarts) {
+    auto sim = start_share_scenario();
+    ASSERT_EQ(sim.get_job_queue().size(), 3u);
+    Mcts mcts(start_share_config(1.0, 0.0));
+    auto window = mcts.search(sim);
+    ASSERT_FALSE(window.empty());
+    EXPECT_NE(window.front(), 1);
+}

@@ -1,4 +1,6 @@
 #include "json_experiment.h"
+#include <cmath>
+#include <stdexcept>
 #include "../io/swf_reader.h"
 #include "../io/maintenance_reader.h"
 #include "../mcts/mcts.h"
@@ -49,6 +51,8 @@ static RewardType parse_reward_type(const std::string& s) {
         return RewardType::InvCumP99MaxWait;
     if (s == "expwait" || s == "exp_wait")
         return RewardType::ExpWait;
+    if (s == "startshare" || s == "start_share")
+        return RewardType::StartShare;
     std::cerr << "Warning: unknown reward_type '" << s
               << "', defaulting to invcumwait\n";
     return RewardType::InvCumWait;
@@ -193,6 +197,13 @@ void JsonExperiment::driver_initialization() {
             mc.max_lambda        = d.value("max_lambda",      1.0);
             mc.exp_scale         = d.value("exp_scale",       1.0);
             mc.reward_scale      = d.value("reward_scale",    1.0);
+            mc.w_count           = d.value("w_count",         0.75);
+            mc.w_age             = d.value("w_age",           0.25);
+            if (mc.reward_type == RewardType::StartShare
+                && (mc.w_count < 0.0 || mc.w_age < 0.0
+                    || std::abs(mc.w_count + mc.w_age - 1.0) > 1e-6))
+                throw std::runtime_error("startshare reward needs w_count, w_age >= 0 "
+                                         "with w_count + w_age = 1");
 
             std::string branch_str = d.value("branching", "heuristic");
             if (branch_str == "permutation")
